@@ -22,8 +22,8 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         }
         TextView tvLocation = (TextView) convertView.findViewById(R.id.tvPumpLocation);
         TextView tvStatus = (TextView) convertView.findViewById(R.id.tvPumpStatus);
-        tvLocation.setText(String.format("(%f, %f)", pump.location.getLatitude(), pump.location.getLongitude()));
-        tvStatus.setText(pump.statusString);
+        tvLocation.setText(String.format("(%f, %f)", pump.getLocation().getLatitude(), pump.getLocation().getLongitude()));
+        tvStatus.setText(pump.getStatus().getHumanReadableStatus());
         return convertView;
     }
 }
