@@ -26,6 +26,10 @@
             android:name=".activity.PumpDetails"
             android:label="@string/title_activity_pump_details" >
         </activity>
+        <activity
+            android:name=".activity.CreateReportActivity"
+            android:label="@string/title_activity_create_report" >
+        </activity>
     </application>
 
 </manifest>

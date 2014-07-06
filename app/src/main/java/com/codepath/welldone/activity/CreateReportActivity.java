@@ -1,27 +1,24 @@
 package com.codepath.welldone.activity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-
 import com.codepath.welldone.R;
 
-public class PumpDetails extends Activity {
+public class CreateReportActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pump_details);
+        setContentView(R.layout.activity_create_report);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.pump_details, menu);
+        getMenuInflater().inflate(R.menu.create_report, menu);
         return true;
     }
 
@@ -35,10 +32,5 @@ public class PumpDetails extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void onNewReportClicked(View view) {
-        Intent i = new Intent(this, CreateReportActivity.class);
-        startActivity(i);
     }
 }
