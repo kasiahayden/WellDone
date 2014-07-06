@@ -3,6 +3,7 @@
     package="com.codepath.welldone"
     android:versionCode="1"
     android:versionName="1.0" >
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -20,6 +21,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.PumpDetails"
+            android:label="@string/title_activity_pump_details" >
         </activity>
     </application>
 
