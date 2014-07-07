@@ -1,75 +1,37 @@
 package com.codepath.welldone.activity;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.app.FragmentTransaction;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.R;
+import com.codepath.welldone.fragment.PumpListFragment;
 import com.codepath.welldone.model.Pump;
-import com.parse.FindCallback;
 import com.parse.ParseAnalytics;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-
-import java.util.List;
 
 
-public class PumpList extends Activity {
+public class PumpList extends Activity implements PumpListFragment.OnFragmentInteractionListener {
 
-    private ArrayAdapter<Pump> mPumpArrayAdapter;
-    private ListView mPumpList;
+    private Pump mPump;
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pump_list);
-
-        mPumpArrayAdapter = new PumpListAdapter(this);
-        mPumpList = (ListView)findViewById(R.id.lvPumps);
-        mPumpList.setAdapter(mPumpArrayAdapter);
         ParseAnalytics.trackAppOpened(getIntent());
-
-        mPumpList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Pump pump = (Pump)parent.getItemAtPosition(position);
-                Intent intent = new Intent(PumpList.this, PumpDetails.class);
-                intent.putExtra("pump", pump);
-                startActivity(intent);
-            }
-        });
-
-        triggerFetchAndRedraw();
-
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        mPump = (Pump)getIntent().getSerializableExtra(PumpListFragment.ARG_PUMP);
+        ft.add(R.id.vgFragmentContainer, PumpListFragment.newInstance(mPump));
+        ft.commit();
     }
-
-    void triggerFetchAndRedraw() {
-
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Pump");
-        query.include("currentStatus");
-        query.fromLocalDatastore();
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(final List<ParseObject> parseObjects, ParseException e) {
-                ParseObject.pinAllInBackground(parseObjects);
-                for (ParseObject object : parseObjects) {
-                    Pump pump = (Pump)object;
-                    mPumpArrayAdapter.notifyDataSetChanged();
-                    mPumpArrayAdapter.add(pump);
-                }
-            }
-        });
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
