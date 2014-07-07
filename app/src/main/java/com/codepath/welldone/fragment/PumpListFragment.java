@@ -100,11 +100,13 @@ public class PumpListFragment extends Fragment {
 
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Pump");
-        query.include("currentStatus");
-        query.fromLocalDatastore();
+//        query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(final List<ParseObject> parseObjects, ParseException e) {
+                if (e != null) {
+                    e.printStackTrace();
+                }
                 ParseObject.pinAllInBackground(parseObjects);
                 for (ParseObject object : parseObjects) {
                     Pump pump = (Pump)object;

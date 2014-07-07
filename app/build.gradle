@@ -1,12 +1,12 @@
 apply plugin: 'android'
 
 android {
-    compileSdkVersion 20
+    compileSdkVersion 'android-L'
     buildToolsVersion '20.0.0'
     defaultConfig {
         applicationId 'com.codepath.welldone'
-        minSdkVersion 15
-        targetSdkVersion 20
+        minSdkVersion 'android-L'
+        targetSdkVersion 'android-L'
         versionCode 1
         versionName '1.0'
     }
