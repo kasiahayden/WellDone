@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,11 @@ import com.parse.ParseQuery;
 import java.util.List;
 
 public class PumpListFragment extends Fragment {
+
     public static final String ARG_PUMP = "pump";
 
+    // XXX debug option only: toggle this to select local vs. remote DB.
+    private static final boolean useLocal = true;
     private ArrayAdapter<Pump> mPumpArrayAdapter;
     private ListView mPumpList;
 
@@ -98,23 +102,49 @@ public class PumpListFragment extends Fragment {
 
     void triggerFetchAndRedraw() {
 
+        mPumpArrayAdapter.clear();
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Pump");
-        query.include("currentStatus");
+        if (useLocal) {
+            fetchFromLocalDataStore();
+        } else {
+            fetchFromRemoteDataSource();
+        }
+    }
+
+    private void fetchFromLocalDataStore() {
+
+        Log.d("debug", "Fetching data from local data source");
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Pump");
+        //query.include("currentStatus");
         query.fromLocalDatastore();
+        runQueryInBackground(query);
+    }
+
+    private void fetchFromRemoteDataSource() {
+
+        Log.d("debug", "Fetching data from remote data source");
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Pump");
+        runQueryInBackground(query);
+    }
+
+    private void runQueryInBackground(ParseQuery<ParseObject> query) {
+
         query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(final List<ParseObject> parseObjects, ParseException e) {
-                ParseObject.pinAllInBackground(parseObjects);
-                for (ParseObject object : parseObjects) {
-                    Pump pump = (Pump)object;
-                    mPumpArrayAdapter.notifyDataSetChanged();
-                    mPumpArrayAdapter.add(pump);
+
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    ParseObject.pinAllInBackground(objects);
+                    for (ParseObject object : objects) {
+                        final Pump pump = (Pump) object;
+                        Log.d("debug", "Fetched pump: " + pump.getStatus() + " " + pump.getObjectId());
+                        //mPumpArrayAdapter.notifyDataSetChanged();
+                        mPumpArrayAdapter.add(pump);
+                    }
+                } else {
+                    Log.d("debug", "Exception: " + e);
                 }
             }
         });
     }
-
-
 
 }
