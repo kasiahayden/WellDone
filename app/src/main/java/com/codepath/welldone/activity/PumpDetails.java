@@ -15,7 +15,7 @@ public class PumpDetails extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pump_details);
+        setContentView(R.layout.fragment_pump_map_view);
     }
 
 

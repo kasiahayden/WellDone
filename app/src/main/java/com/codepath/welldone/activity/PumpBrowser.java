@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import com.codepath.welldone.R;
 import com.codepath.welldone.fragment.PumpListFragment;
-import com.codepath.welldone.model.Pump;
+import com.codepath.welldone.fragment.PumpMapFragment;
 import com.parse.ParseAnalytics;
 
 
@@ -18,7 +18,9 @@ import com.parse.ParseAnalytics;
  */
 public class PumpBrowser extends Activity implements PumpListFragment.OnFragmentInteractionListener {
 
-    private Pump mPump;
+    PumpMapFragment mMapFragment;
+    PumpListFragment mListFragment;
+    private MenuItem mMapToggleMenuItem;
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -30,20 +32,22 @@ public class PumpBrowser extends Activity implements PumpListFragment.OnFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pump_list);
         ParseAnalytics.trackAppOpened(getIntent());
-        mPump = (Pump)getIntent().getSerializableExtra(PumpListFragment.ARG_PUMP);
+        mListFragment = PumpListFragment.newInstance();
 
         addInitialListFragment();
     }
 
     void addInitialListFragment() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.add(R.id.vgFragmentContainer, PumpListFragment.newInstance(mPump));
+        mListFragment = PumpListFragment.newInstance();
+        ft.add(R.id.vgFragmentContainer, mListFragment);
         ft.commit();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.pump_list, menu);
+        getMenuInflater().inflate(R.menu.pump_browser, menu);
+        mMapToggleMenuItem = menu.findItem(R.id.action_map_me_bro);
         return true;
     }
 
@@ -51,16 +55,44 @@ public class PumpBrowser extends Activity implements PumpListFragment.OnFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_map_me_bro) {
-            swapInMapFragment();
+            if (item.getTitle().equals("Map")) {
+                swapInMapFragment();
+            }
+            else {
+                swapInListFragment();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void swapInMapFragment() {
-//        FragmentTransaction ft = getFragmentManager().beginTransaction();
-//        ft.replace(R.id.vgFragmentContainer, Pump)
-//        ft.commit();
+        createMapFragmentIfNecessary();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.vgFragmentContainer, mMapFragment);
+        ft.commit();
 
+        swapMenuItemText();
+    }
+
+
+    private void swapInListFragment() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.vgFragmentContainer, mListFragment);
+        ft.commit();
+        swapMenuItemText();
+    }
+
+    private void swapMenuItemText() {
+        if (mMapToggleMenuItem.getTitle().equals("Map")) {
+            mMapToggleMenuItem.setTitle("List");
+        }
+        else {
+            mMapToggleMenuItem.setTitle("Map");
+        }
+    }
+
+    private void createMapFragmentIfNecessary() {
+        mMapFragment = PumpMapFragment.newInstance(mListFragment.getCurrentPump());
     }
 }

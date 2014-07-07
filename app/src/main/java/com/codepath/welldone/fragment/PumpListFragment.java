@@ -16,7 +16,7 @@ import android.widget.ListView;
 
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.R;
-import com.codepath.welldone.activity.CreateReportActivity;
+import com.codepath.welldone.activity.PumpDetails;
 import com.codepath.welldone.model.Pump;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -28,31 +28,33 @@ import java.util.List;
 public class PumpListFragment extends Fragment implements PumpListAdapter.PumpListListener {
 
     public static final String ARG_PUMP = "pump";
-
     // XXX debug option only: toggle this to select local vs. remote DB.
     private static final boolean useLocal = true;
     private PumpListAdapter  mPumpArrayAdapter;
     private ListView mPumpList;
-
-    Pump mPump;
-
     public OnFragmentInteractionListener mListener;
+
 
     public PumpListFragment() {}
 
-    public static PumpListFragment newInstance(Pump pump) {
-        PumpListFragment fragment = new PumpListFragment();
-        Bundle args = new Bundle();
-        //args.putSerializable(ARG_PUMP, pump);
-        fragment.setArguments(args);
-        return fragment;
+    /**
+     * @return the currently highlighted (expanded) pump
+     */
+    public Pump getCurrentPump() {
+        return mPumpArrayAdapter.getItem(0);
     }
+
+    public static PumpListFragment newInstance() {
+        PumpListFragment fragment = new PumpListFragment();
+        return fragment ;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mPump = (Pump)getArguments().getSerializable(ARG_PUMP);
-        }
+        mPumpArrayAdapter = new PumpListAdapter((Activity)mListener);
+        triggerFetchAndRedraw();
+
     }
 
     @Override
@@ -60,7 +62,6 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pump_list, container, false);
 
-        mPumpArrayAdapter = new PumpListAdapter((Activity)mListener);
         mPumpList = (ListView)v.findViewById(R.id.lvPumps);
         mPumpList.setAdapter(mPumpArrayAdapter);
         mPumpArrayAdapter.rowListener = this;
@@ -105,7 +106,7 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
 
     @Override
     public void onNewReportClicked(Pump pump) {
-        Intent intent = new Intent((Activity)mListener, CreateReportActivity.class);
+        Intent intent = new Intent((Activity)mListener, PumpDetails.class);
         intent.putExtra("pumpObjectId", pump.getObjectId());
         startActivity(intent);
     }
