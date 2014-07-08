@@ -1,16 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/ivPump"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:src="@android:drawable/screen_background_light_transparent"
+        android:contentDescription="@android:color/transparent" />
+
+    <TextView
+        android:id="@+id/tvPumpName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivPump"
+        android:layout_alignTop="@+id/ivPump"
+        android:layout_marginLeft="15dp"
+        android:gravity="left|center"
+        android:text="@string/pump_name_label" />
+
     <TextView
         android:id="@+id/tvPumpLocation"
         android:layout_width="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_height="wrap_content" />
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/tvPumpName"
+        android:layout_marginRight="5dp"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:text="@string/pump_location_label" />
+
     <TextView
-        android:id="@+id/tvPumpStatus"
-        android:layout_width="match_parent"
-        android:layout_toRightOf="@id/tvPumpLocation"
-        android:layout_height="wrap_content" />
+        android:id="@+id/tvPumpLastUpdated"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/tvPumpLocation"
+        android:layout_alignRight="@+id/tvPumpLocation"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:text="@string/pump_last_updated_date_label" />
+
+    <TextView
+        android:id="@+id/tvPumpLastUpdatedLabel"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/tvPumpLocation"
+        android:layout_toLeftOf="@+id/tvPumpLastUpdated"
+        android:layout_alignTop="@+id/tvPumpLastUpdated"
+        android:layout_marginRight="5dp"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:text="@string/pump_last_updated_label"
+        android:textStyle="bold"/>
+
 </RelativeLayout>
