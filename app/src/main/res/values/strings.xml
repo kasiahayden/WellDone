@@ -11,5 +11,14 @@
     <string name="pump_location_label">Pump Location</string>
     <string name="pump_last_updated_label">Last Updated: </string>
     <string name="pump_last_updated_date_label">Last Updated Date</string>
+    <string name="report_date_label">Report Label</string>
+    <string name="report_date_date">Today\'s Date</string>
+    <string name="report_name_label">Report Name</string>
+    <string name="report_name_name">Default Report Name</string>
+    <string name="pump_status_label">Status</string>
+    <string name="pump_status_prompt">Select Status</string>
+    <string name="report_notes_label">Notes</string>
+    <string name="report_notes_note">Add any other notes here.</string>
+    <string name="submit_report">Submit Report</string>
 
 </resources>

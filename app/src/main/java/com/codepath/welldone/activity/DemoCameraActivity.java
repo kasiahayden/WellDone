@@ -1,10 +1,10 @@
 package com.codepath.welldone.activity;
 
+import com.codepath.welldone.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.codepath.welldone.activity.R;
 
 public class DemoCameraActivity extends Activity {
 
@@ -13,7 +13,6 @@ public class DemoCameraActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo_camera);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
