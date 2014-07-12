@@ -12,12 +12,11 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.R;
-import com.codepath.welldone.activity.PumpDetails;
+import com.codepath.welldone.activity.CreateReportActivity;
 import com.codepath.welldone.model.Pump;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -26,18 +25,20 @@ import com.parse.ParseQuery;
 
 import java.util.List;
 
-public class PumpListFragment extends Fragment {
+public class PumpListFragment extends Fragment implements PumpListAdapter.PumpListListener {
 
     public static final String ARG_PUMP = "pump";
 
     // XXX debug option only: toggle this to select local vs. remote DB.
     private static final boolean useLocal = true;
-    private ArrayAdapter<Pump> mPumpArrayAdapter;
+    private PumpListAdapter  mPumpArrayAdapter;
     private ListView mPumpList;
 
     Pump mPump;
 
     public OnFragmentInteractionListener mListener;
+
+    public PumpListFragment() {}
 
     public static PumpListFragment newInstance(Pump pump) {
         PumpListFragment fragment = new PumpListFragment();
@@ -46,9 +47,6 @@ public class PumpListFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-    public PumpListFragment() {
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,13 +63,12 @@ public class PumpListFragment extends Fragment {
         mPumpArrayAdapter = new PumpListAdapter((Activity)mListener);
         mPumpList = (ListView)v.findViewById(R.id.lvPumps);
         mPumpList.setAdapter(mPumpArrayAdapter);
+        mPumpArrayAdapter.rowListener = this;
 
         mPumpList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Pump pump = (Pump)parent.getItemAtPosition(position);
-                Intent intent = new Intent((Activity)mListener, PumpDetails.class);
-                intent.putExtra("pump", pump);
                 Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
                 ViewGroup.LayoutParams params = view.getLayoutParams();
 
@@ -104,6 +101,13 @@ public class PumpListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onNewReportClicked(Pump pump) {
+        Intent intent = new Intent((Activity)mListener, CreateReportActivity.class);
+        intent.putExtra("pump", pump);
+        startActivity(intent);
     }
 
     public interface OnFragmentInteractionListener {

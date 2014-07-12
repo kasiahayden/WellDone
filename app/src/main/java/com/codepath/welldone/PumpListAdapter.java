@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,6 +20,11 @@ import com.codepath.welldone.model.Pump;
  */
 public class PumpListAdapter extends ArrayAdapter<Pump> {
 
+    public interface PumpListListener {
+        public void onNewReportClicked(Pump pump);
+    }
+
+    public PumpListListener rowListener;
     private ImageView ivPump;
     private TextView tvLastUpdated;
     private TextView tvLocation;
@@ -31,7 +37,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        Pump pump = getItem(position);
+        final Pump pump = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_pump, parent, false);
         }
@@ -46,6 +52,14 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         tvLastUpdated = (TextView) convertView.findViewById(R.id.tvPumpLastUpdated);
         tvLocation = (TextView) convertView.findViewById(R.id.tvPumpLocation);
         tvPumpName = (TextView) convertView.findViewById(R.id.tvPumpName);
+        Button newReport = (Button)convertView.findViewById(R.id.btnNewReport);
+        newReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rowListener.onNewReportClicked(pump);
+            }
+        });
+
 
         // The last updated date is wrt the local time zone.
         tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
