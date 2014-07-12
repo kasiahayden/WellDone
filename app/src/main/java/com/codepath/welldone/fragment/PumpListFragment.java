@@ -73,12 +73,12 @@ public class PumpListFragment extends Fragment {
                 Intent intent = new Intent((Activity)mListener, PumpDetails.class);
                 intent.putExtra("pump", pump);
                 Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
-                startActivity(intent);
                 ViewGroup.LayoutParams params = view.getLayoutParams();
 
 
                 View v = view.findViewById(R.id.vgDetailsContainer);
-                DropDownAnim anim = new DropDownAnim(v, 100, true);
+                v.setVisibility(View.VISIBLE);
+                DropDownAnim anim = new DropDownAnim(v, 200, true);
                 anim.setDuration(500);
                 v.startAnimation(anim);
 

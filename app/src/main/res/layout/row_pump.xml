@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"><include layout="@layout/pump_expanded_details" />
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/ivPump"
@@ -14,8 +14,6 @@
         android:layout_marginBottom="5dp"
         android:src="@android:drawable/screen_background_light_transparent"
         android:contentDescription="@android:color/transparent" />
-
-    <include layout="@layout/pump_expanded_details"/>
 
     <TextView
         android:id="@+id/tvPumpName"
@@ -57,5 +55,23 @@
         android:gravity="left|center"
         android:text="@string/pump_last_updated_label"
         android:textStyle="bold"/>
+
+    <RelativeLayout
+        android:id="@+id/vgDetailsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:layout_below="@id/ivPump">
+       <TextView
+           android:id="@+id/tvFlavor"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Flavor text for this pump."/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvFlavor"
+            android:text="New Report Bro"/>
+    </RelativeLayout>
 
 </RelativeLayout>
