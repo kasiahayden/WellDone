@@ -25,4 +25,9 @@ public class DateTimeUtil {
         return sdf.format(date);
     }
 
+    public static String getFriendlyTimeStamp() {
+
+        return new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+    }
+
 }
