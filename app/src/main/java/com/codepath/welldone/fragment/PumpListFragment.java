@@ -29,7 +29,8 @@ public class PumpListFragment extends Fragment {
     public static final String ARG_PUMP = "pump";
 
     // XXX debug option only: toggle this to select local vs. remote DB.
-    private static final boolean useLocal = true;
+    //private static final boolean useLocal = true;
+    private static final boolean useLocal = false;
     private ArrayAdapter<Pump> mPumpArrayAdapter;
     private ListView mPumpList;
 
