@@ -42,7 +42,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
 
         // The last updated date is wrt the local time zone.
         tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
-        tvPumpName.setText("Pump Name");
+        tvPumpName.setText(pump.getName());
         setPumpColorBasedOnStatus(pump.getStatus());
 
         // XXX These should be reverse geo-coded to be human-readable

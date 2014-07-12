@@ -1,5 +1,6 @@
 package com.codepath.welldone.activity;
 
+import com.codepath.welldone.R;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -19,8 +20,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.codepath.welldone.R;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +38,6 @@ public class DemoCameraActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo_camera);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

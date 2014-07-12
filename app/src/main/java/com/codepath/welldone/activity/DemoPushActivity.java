@@ -1,9 +1,11 @@
 package com.codepath.welldone.activity;
 
+import com.codepath.welldone.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+<<<<<<< HEAD
 
 import com.codepath.welldone.R;
 
@@ -25,6 +27,8 @@ import com.parse.ParseObject;
 import com.parse.PushService;
 import com.parse.RefreshCallback;
 import com.parse.SaveCallback;
+=======
+>>>>>>> 33d825fdebb36f9faf20c87609b355f3d2666d6c
 
 public class DemoPushActivity extends Activity {
 
