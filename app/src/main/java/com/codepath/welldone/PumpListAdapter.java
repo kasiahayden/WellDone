@@ -52,10 +52,18 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         tvPumpName.setText(pump.getName());
         setPumpColorBasedOnStatus(pump.getCurrentStatus());
 
-        // XXX These should be reverse geo-coded to be human-readable
-        tvLocation.setText(String.format("(%f, %f)",
-                pump.getLocation().getLatitude(), pump.getLocation().getLongitude()));
+        setupLocationLabel(tvLocation, pump);
+
         return convertView;
+    }
+
+    private void setupLocationLabel(TextView locationTextView, Pump pump) {
+        // XXX These should be reverse geo-coded to be human-readable
+        if (pump == null || pump.getLocation() == null) {
+            return;
+        }
+        locationTextView.setText(String.format("(%f, %f)",
+                pump.getLocation().getLatitude(), pump.getLocation().getLongitude()));
     }
 
     // Set the color of a pump number based on its work state
@@ -63,7 +71,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
 
         // XXX Status should probably be an enum, in which case this would
         // reduce to a switch case.
-        if (pumpStatus.equalsIgnoreCase("broken_permanent")) {
+        if (pumpStatus == null || pumpStatus.equalsIgnoreCase("broken_permanent")) {
             ivPump.setBackgroundColor(Color.RED);
         } else if (pumpStatus.equalsIgnoreCase("fix_in_progress")) {
             ivPump.setBackgroundColor(Color.YELLOW);
