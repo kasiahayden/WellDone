@@ -18,6 +18,9 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.codepath.welldone.fragment.PumpListFragment;
+import com.codepath.welldone.model.Pump;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 

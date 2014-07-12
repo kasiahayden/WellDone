@@ -101,7 +101,7 @@ public class PumpListFragment extends Fragment {
     }
 
 
-    void triggerFetchAndRedraw() {
+    public void triggerFetchAndRedraw() {
 
         mPumpArrayAdapter.clear();
 

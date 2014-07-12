@@ -1,17 +1,11 @@
 package com.codepath.welldone.activity;
 
-import com.codepath.welldone.R;
+
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-<<<<<<< HEAD
-
-import com.codepath.welldone.R;
-
-import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -19,16 +13,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.parse.Parse;
+import com.codepath.welldone.R;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
-import com.parse.PushService;
 import com.parse.RefreshCallback;
 import com.parse.SaveCallback;
-=======
->>>>>>> 33d825fdebb36f9faf20c87609b355f3d2666d6c
+
 
 public class DemoPushActivity extends Activity {
 
