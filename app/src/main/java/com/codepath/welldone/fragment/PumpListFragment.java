@@ -73,8 +73,6 @@ public class PumpListFragment extends Fragment {
                 Intent intent = new Intent((Activity)mListener, PumpDetails.class);
                 intent.putExtra("pump", pump);
                 Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
-                startActivity(intent);
-                ViewGroup.LayoutParams params = view.getLayoutParams();
 
 
                 View v = view.findViewById(R.id.vgDetailsContainer);
@@ -126,7 +124,6 @@ public class PumpListFragment extends Fragment {
 
         Log.d("debug", "Fetching data from local data source");
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("Pump");
-        //query.include("currentStatus");
         query.fromLocalDatastore();
         runQueryInBackground(query);
     }
