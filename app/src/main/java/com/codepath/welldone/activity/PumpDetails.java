@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.codepath.welldone.R;
-import com.codepath.welldone.model.Pump;
 
 public class PumpDetails extends Activity {
 
