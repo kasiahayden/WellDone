@@ -1,6 +1,7 @@
 package com.codepath.welldone.model;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 import java.io.Serializable;
@@ -15,11 +16,17 @@ public class Report extends ParseObject implements Serializable {
 
     }
 
-    public Report(String title, String notes, String reportedStatus, Pump pump) {
+    public Report(Pump pump, String reportedStatus, String title, String notes) {
+        setPump(pump);
+        setReportedStatus(reportedStatus);
         setTitle(title);
         setNotes(notes);
-        setReportedStatus(reportedStatus);
-        setPump(pump);
+    }
+
+    public Report(Pump pump, String reportedStatus, String title, String notes, ParseFile photo) {
+
+        this(pump, reportedStatus, title, notes);
+        setPhoto(photo);
     }
 
     public String getTitle() {
@@ -52,5 +59,13 @@ public class Report extends ParseObject implements Serializable {
 
     public void setReportedStatus(String reportedStatus) {
         put("reportedStatus", reportedStatus);
+    }
+
+    public ParseFile getPhoto() {
+        return getParseFile("photo");
+    }
+
+    public void setPhoto(ParseFile photo) {
+        put("photo", photo);
     }
 }

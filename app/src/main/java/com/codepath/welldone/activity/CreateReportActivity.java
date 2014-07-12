@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,10 +20,16 @@ import android.widget.Toast;
 
 import com.codepath.welldone.R;
 import com.codepath.welldone.helper.DateTimeUtil;
+import com.codepath.welldone.helper.ImageUtil;
 import com.codepath.welldone.helper.StringUtil;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.Report;
+import com.codepath.welldone.persister.ReportPersister;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -32,15 +39,19 @@ import java.io.IOException;
 public class CreateReportActivity extends Activity {
 
     public static final String APP_TAG = "WellDone";
-    public static final String PHOTO_FILE_EXTENSION = ".jpg";
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
-    
-    private String fixedPumpPhotoFileName;
+    // Reduce the image quality by 50% to reduce performance overhead in saving/retrieving
+    public static final int COMPRESSION_FACTOR = 50;
+    public static final String PHOTO_FILE_EXTENSION = ".jpg";
 
     private EditText etReportNotes;
     private EditText etReportTitle;
     private ImageView ivFixedPump;
     private Spinner spPumpStatus;
+
+    private Pump pumpToBeReported;
+    private String fixedPumpPhotoFileName;
+    private Bitmap newImageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +59,8 @@ public class CreateReportActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_report);
 
+        pumpToBeReported = (Pump) getIntent().getSerializableExtra("pump");
+        Log.d("debug", "Working with pump: " + pumpToBeReported.getObjectId() + " " + pumpToBeReported.getName());
         setupViews();
         setupListeners();
     }
@@ -82,7 +95,9 @@ public class CreateReportActivity extends Activity {
             final Bitmap takenImage = BitmapFactory.decodeFile(fixedPumpPhotoUri.getPath());
             // Load the taken image into a preview
             ivFixedPump.setImageBitmap(takenImage);
+            newImageBitmap = takenImage;
         } else { // Result was a failure
+            newImageBitmap = null;
             Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -91,13 +106,27 @@ public class CreateReportActivity extends Activity {
 
         Toast.makeText(this, "On Report Submitted", Toast.LENGTH_SHORT).show();
 
-        final Pump pump = (Pump) getIntent().getSerializableExtra("pump");
         final String pumpStatusToBeReported = spPumpStatus.getSelectedItem().toString();
         final String reportNotes = etReportNotes.getText().toString();
         final String reportTitle = etReportTitle.getText().toString();
-        final Report report = new Report(reportTitle, reportNotes, pumpStatusToBeReported, pump);
-        Log.d("debug", "Saving: " + reportTitle);
-        report.saveEventually();
+        final Report reportToBePersisted = new Report(pumpToBeReported, pumpStatusToBeReported,
+                reportTitle, reportNotes);
+
+        if (newImageBitmap == null) {
+            ReportPersister.persistReport(reportToBePersisted);
+            return;
+        }
+
+        final byte[] newImageByteArray =
+                ImageUtil.getByteArrayFromBitmap(newImageBitmap, COMPRESSION_FACTOR);
+        final ParseFile imageForParse = new ParseFile("image.jpeg", newImageByteArray);
+        imageForParse.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                reportToBePersisted.setPhoto(imageForParse);
+                ReportPersister.persistReport(reportToBePersisted);
+            }
+        });
     }
 
     /* Private methods */
@@ -124,9 +153,9 @@ public class CreateReportActivity extends Activity {
     // Get the newly created file name and start the camera activity
     private void startTakePictureIntent() {
 
-        final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        final Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+        if (takePhotoIntent.resolveActivity(getPackageManager()) != null) {
 
             // Create the File where the photo should go
             File photoFile = null;
@@ -138,8 +167,8 @@ public class CreateReportActivity extends Activity {
             }
 
             if (photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                startActivityForResult(takePhotoIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
             }
         }
     }
@@ -149,7 +178,9 @@ public class CreateReportActivity extends Activity {
 
         // Create an image file name
         final String timeStamp = DateTimeUtil.getFriendlyTimeStamp();
-        final String imageFileName = StringUtil.getConcatenatedString(APP_TAG, "_fixedPump_", timeStamp);
+        final String imageFileName =
+                StringUtil.getConcatenatedString(APP_TAG, "_", pumpToBeReported.getName(), "_",
+                        timeStamp);
         final File storageDir =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 

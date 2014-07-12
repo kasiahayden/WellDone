@@ -20,8 +20,8 @@ public class Pump extends ParseObject implements Serializable {
         return getParseGeoPoint("location");
     }
 
-    public String getStatus() {
-        return getString("status");
+    public String getCurrentStatus() {
+        return getString("currentStatus");
     }
 
     public String getName() {

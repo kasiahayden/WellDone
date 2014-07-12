@@ -50,7 +50,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         // The last updated date is wrt the local time zone.
         tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
         tvPumpName.setText(pump.getName());
-        setPumpColorBasedOnStatus(pump.getStatus());
+        setPumpColorBasedOnStatus(pump.getCurrentStatus());
 
         // XXX These should be reverse geo-coded to be human-readable
         tvLocation.setText(String.format("(%f, %f)",
@@ -63,7 +63,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
 
         // XXX Status should probably be an enum, in which case this would
         // reduce to a switch case.
-        if (pumpStatus == null || pumpStatus.equalsIgnoreCase("broken_permanent")) {
+        if (pumpStatus.equalsIgnoreCase("broken_permanent")) {
             ivPump.setBackgroundColor(Color.RED);
         } else if (pumpStatus.equalsIgnoreCase("fix_in_progress")) {
             ivPump.setBackgroundColor(Color.YELLOW);

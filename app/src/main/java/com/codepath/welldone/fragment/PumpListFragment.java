@@ -31,7 +31,6 @@ public class PumpListFragment extends Fragment {
     public static final String ARG_PUMP = "pump";
 
     // XXX debug option only: toggle this to select local vs. remote DB.
-    //private static final boolean useLocal = true;
     private static final boolean useLocal = false;
     private ArrayAdapter<Pump> mPumpArrayAdapter;
     private ListView mPumpList;
@@ -73,6 +72,7 @@ public class PumpListFragment extends Fragment {
                 Pump pump = (Pump)parent.getItemAtPosition(position);
                 Intent intent = new Intent((Activity)mListener, PumpDetails.class);
                 intent.putExtra("pump", pump);
+                Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
                 startActivity(intent);
                 ViewGroup.LayoutParams params = view.getLayoutParams();
 
@@ -182,7 +182,7 @@ public class PumpListFragment extends Fragment {
                     ParseObject.pinAllInBackground(objects);
                     for (ParseObject object : objects) {
                         final Pump pump = (Pump) object;
-                        Log.d("debug", "Fetched pump: " + pump.getStatus() + " " + pump.getObjectId());
+                        Log.d("debug", "Fetched pump: " + pump.getName() + " " + pump.getObjectId());
                         //mPumpArrayAdapter.notifyDataSetChanged();
                         mPumpArrayAdapter.add(pump);
                     }
