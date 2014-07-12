@@ -18,7 +18,11 @@ public class Pump extends ParseObject implements Serializable {
     }
 
     public String getStatus() {
-        return getString("currentStatus");
+        return getString("status");
+    }
+
+    public String getName() {
+        return getString("name");
     }
 
 }
