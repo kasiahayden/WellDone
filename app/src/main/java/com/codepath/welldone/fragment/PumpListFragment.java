@@ -73,7 +73,7 @@ public class PumpListFragment extends Fragment {
                 Pump pump = (Pump)parent.getItemAtPosition(position);
                 Intent intent = new Intent((Activity)mListener, PumpDetails.class);
                 intent.putExtra("pump", pump);
-//                startActivity(intent);
+                startActivity(intent);
                 ViewGroup.LayoutParams params = view.getLayoutParams();
 
 

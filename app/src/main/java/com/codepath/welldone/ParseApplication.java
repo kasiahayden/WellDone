@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.codepath.welldone.activity.DemoPushActivity;
 import com.codepath.welldone.model.Pump;
+import com.codepath.welldone.model.Report;
 import com.parse.Parse;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -18,6 +19,7 @@ public class ParseApplication extends Application {
 
         Parse.enableLocalDatastore(this);
         ParseObject.registerSubclass(Pump.class);
+        ParseObject.registerSubclass(Report.class);
 
         Parse.initialize(this, "zs3GmrOhOzJCIyPE9Nu8k35FOfscjofe1NAa7HPP", "RBNwokWUIVKwv9dh8jtZmk90EKvYOiNRNlK2bXNP");
 

@@ -6,6 +6,9 @@ import com.parse.ParseObject;
 
 import java.io.Serializable;
 
+/**
+ * Class to represent a pump.
+ */
 @ParseClassName("Pump")
 public class Pump extends ParseObject implements Serializable {
 

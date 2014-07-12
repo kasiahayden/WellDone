@@ -12,16 +12,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.codepath.welldone.R;
 import com.codepath.welldone.helper.DateTimeUtil;
 import com.codepath.welldone.helper.StringUtil;
+import com.codepath.welldone.model.Pump;
+import com.codepath.welldone.model.Report;
 
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Class to handle creation and persistence of a report.
+ */
 public class CreateReportActivity extends Activity {
 
     public static final String APP_TAG = "WellDone";
@@ -30,7 +37,10 @@ public class CreateReportActivity extends Activity {
     
     private String fixedPumpPhotoFileName;
 
+    private EditText etReportNotes;
+    private EditText etReportTitle;
     private ImageView ivFixedPump;
+    private Spinner spPumpStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +74,7 @@ public class CreateReportActivity extends Activity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        // On successful return of camera activity, show the taken image
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
 
             final Uri fixedPumpPhotoUri = Uri.fromFile(new File(fixedPumpPhotoFileName));
@@ -76,12 +87,27 @@ public class CreateReportActivity extends Activity {
         }
     }
 
+    public void onReportSubmit(View v) {
+
+        Toast.makeText(this, "On Report Submitted", Toast.LENGTH_SHORT).show();
+
+        final Pump pump = (Pump) getIntent().getSerializableExtra("pump");
+        final String pumpStatusToBeReported = spPumpStatus.getSelectedItem().toString();
+        final String reportNotes = etReportNotes.getText().toString();
+        final String reportTitle = etReportTitle.getText().toString();
+        final Report report = new Report(reportTitle, reportNotes, pumpStatusToBeReported, pump);
+        Log.d("debug", "Saving: " + reportTitle);
+        report.saveEventually();
+    }
 
     /* Private methods */
     private void setupViews() {
 
         ivFixedPump = (ImageView) findViewById(R.id.ivFixedPump);
         //ivFixedPump.setImageResource(android.R.color.transparent);
+        etReportNotes = (EditText) findViewById(R.id.etReportNotes);
+        etReportTitle = (EditText) findViewById(R.id.etReportTitle);
+        spPumpStatus = (Spinner) findViewById(R.id.spPumpStatus);
     }
 
     private void setupListeners() {
@@ -95,6 +121,7 @@ public class CreateReportActivity extends Activity {
         });
     }
 
+    // Get the newly created file name and start the camera activity
     private void startTakePictureIntent() {
 
         final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -115,9 +142,9 @@ public class CreateReportActivity extends Activity {
                 startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
             }
         }
-
     }
 
+    // Create a file name that the taken image will be saved under
     private File createImageFile() throws IOException {
 
         // Create an image file name

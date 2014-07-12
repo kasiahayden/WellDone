@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.codepath.welldone.R;
+import com.codepath.welldone.model.Pump;
 
 public class PumpDetails extends Activity {
 
@@ -34,7 +35,10 @@ public class PumpDetails extends Activity {
     }
 
     public void onNewReportClicked(View view) {
-        Intent i = new Intent(this, CreateReportActivity.class);
-        startActivity(i);
+
+        final Pump pump = (Pump) getIntent().getSerializableExtra("pump");
+        final Intent reportActivityIntent = new Intent(this, CreateReportActivity.class);
+        reportActivityIntent.putExtra("pump", pump);
+        startActivity(reportActivityIntent);
     }
 }
