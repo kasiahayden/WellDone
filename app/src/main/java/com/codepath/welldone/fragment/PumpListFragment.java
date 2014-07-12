@@ -31,7 +31,7 @@ public class PumpListFragment extends Fragment {
     public static final String ARG_PUMP = "pump";
 
     // XXX debug option only: toggle this to select local vs. remote DB.
-    private static final boolean useLocal = false;
+    private static final boolean useLocal = true;
     private ArrayAdapter<Pump> mPumpArrayAdapter;
     private ListView mPumpList;
 
@@ -73,12 +73,12 @@ public class PumpListFragment extends Fragment {
                 Intent intent = new Intent((Activity)mListener, PumpDetails.class);
                 intent.putExtra("pump", pump);
                 Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
-                startActivity(intent);
                 ViewGroup.LayoutParams params = view.getLayoutParams();
 
 
                 View v = view.findViewById(R.id.vgDetailsContainer);
-                DropDownAnim anim = new DropDownAnim(v, 100, true);
+                v.setVisibility(View.VISIBLE);
+                DropDownAnim anim = new DropDownAnim(v, 200, true);
                 anim.setDuration(500);
                 v.startAnimation(anim);
 
