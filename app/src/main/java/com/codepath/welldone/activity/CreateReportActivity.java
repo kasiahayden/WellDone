@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,12 +23,12 @@ import com.codepath.welldone.helper.ImageUtil;
 import com.codepath.welldone.helper.StringUtil;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.Report;
+import com.codepath.welldone.persister.PumpPersister;
 import com.codepath.welldone.persister.ReportPersister;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.SaveCallback;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -59,7 +58,8 @@ public class CreateReportActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_report);
 
-        pumpToBeReported = (Pump) getIntent().getSerializableExtra("pump");
+        final String pumpObjectId = (String) getIntent().getStringExtra("pumpObjectId");
+        pumpToBeReported = PumpPersister.getPumpByObjectIdSyncly(pumpObjectId);
         Log.d("debug", "Working with pump: " + pumpToBeReported.getObjectId() + " " + pumpToBeReported.getName());
         setupViews();
         setupListeners();

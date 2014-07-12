@@ -4,13 +4,11 @@ import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
-import java.io.Serializable;
-
 /**
  * Class to represent to a report when a pump has been fixed/looked at.
  */
 @ParseClassName("Report")
-public class Report extends ParseObject implements Serializable {
+public class Report extends ParseObject {
 
     public Report() {
 

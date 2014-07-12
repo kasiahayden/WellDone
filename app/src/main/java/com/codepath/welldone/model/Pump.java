@@ -4,13 +4,11 @@ import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
-import java.io.Serializable;
-
 /**
  * Class to represent a pump.
  */
 @ParseClassName("Pump")
-public class Pump extends ParseObject implements Serializable {
+public class Pump extends ParseObject {
 
     public Pump() {
 

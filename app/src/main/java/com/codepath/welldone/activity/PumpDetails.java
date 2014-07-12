@@ -37,16 +37,10 @@ public class PumpDetails extends Activity {
 
     public void onNewReportClicked(View view) {
 
-        final Pump pump = (Pump) getIntent().getSerializableExtra("pump");
-        if (pump == null) {
-            Log.d("debug", "null pump");
-        } else {
-            Log.d("debug", "good pump");
-        }
-        Log.d("debug", "Passed pump from list to details: " + pump.getObjectId() + " " + pump.getName());
-        Log.d("debug", "Passed " + pump.getCurrentStatus() + " " + pump.getLocation() + " " + pump.toString());
+        final String pumpObjectId = (String) getIntent().getStringExtra("pumpObjectId");
+        Log.d("debug", "Passed pump from list to details: " + pumpObjectId);
         final Intent reportActivityIntent = new Intent(this, CreateReportActivity.class);
-        reportActivityIntent.putExtra("pump", pump);
+        reportActivityIntent.putExtra("pumpObjectId", pumpObjectId);
         startActivity(reportActivityIntent);
     }
 }

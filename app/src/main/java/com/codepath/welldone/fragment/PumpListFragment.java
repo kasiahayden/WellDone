@@ -43,7 +43,7 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
     public static PumpListFragment newInstance(Pump pump) {
         PumpListFragment fragment = new PumpListFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PUMP, pump);
+        //args.putSerializable(ARG_PUMP, pump);
         fragment.setArguments(args);
         return fragment;
     }
@@ -106,7 +106,7 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
     @Override
     public void onNewReportClicked(Pump pump) {
         Intent intent = new Intent((Activity)mListener, CreateReportActivity.class);
-        intent.putExtra("pump", pump);
+        intent.putExtra("pumpObjectId", pump.getObjectId());
         startActivity(intent);
     }
 
@@ -187,7 +187,6 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
                     for (ParseObject object : objects) {
                         final Pump pump = (Pump) object;
                         Log.d("debug", "Fetched pump: " + pump.getName() + " " + pump.getObjectId());
-                        //mPumpArrayAdapter.notifyDataSetChanged();
                         mPumpArrayAdapter.add(pump);
                     }
                 } else {

@@ -2,7 +2,6 @@ package com.codepath.welldone.persister;
 
 import android.util.Log;
 
-import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.Report;
 
 /**
