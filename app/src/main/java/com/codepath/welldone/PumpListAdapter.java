@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codepath.welldone.helper.DateTimeUtil;
@@ -34,6 +35,12 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_pump, parent, false);
         }
+        else {
+            View expandedContainer = convertView.findViewById(R.id.vgDetailsContainer);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)expandedContainer.getLayoutParams();
+            params.height = 0;
+            expandedContainer.setLayoutParams(params);
+        }
 
         ivPump = (ImageView) convertView.findViewById(R.id.ivPump);
         tvLastUpdated = (TextView) convertView.findViewById(R.id.tvPumpLastUpdated);
@@ -56,7 +63,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
 
         // XXX Status should probably be an enum, in which case this would
         // reduce to a switch case.
-        if (pumpStatus.equalsIgnoreCase("broken_permanent")) {
+        if (pumpStatus == null || pumpStatus.equalsIgnoreCase("broken_permanent")) {
             ivPump.setBackgroundColor(Color.RED);
         } else if (pumpStatus.equalsIgnoreCase("fix_in_progress")) {
             ivPump.setBackgroundColor(Color.YELLOW);

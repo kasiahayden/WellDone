@@ -19,7 +19,7 @@ public class ParseApplication extends Application {
         Parse.enableLocalDatastore(this);
         ParseObject.registerSubclass(Pump.class);
 
-        Parse.initialize(this, "AFAHbFnBBMRWBl8A1BynRocSsRJfopRDC7pkPuEO", "azgmOiqrSKjiSaKzn0x9nODajWJEGH6A90t1Yfew");
+        Parse.initialize(this, "zs3GmrOhOzJCIyPE9Nu8k35FOfscjofe1NAa7HPP", "RBNwokWUIVKwv9dh8jtZmk90EKvYOiNRNlK2bXNP");
 
         PushService.setDefaultPushCallback(this, DemoPushActivity.class); //TODO change to activity where saveInBackground is called
                                                                           // on current installation of Parse (then import)
