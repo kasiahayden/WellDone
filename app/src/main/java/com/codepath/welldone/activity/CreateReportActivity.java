@@ -104,27 +104,36 @@ public class CreateReportActivity extends Activity {
 
     public void onReportSubmit(View v) {
 
-        Toast.makeText(this, "On Report Submitted", Toast.LENGTH_SHORT).show();
-
         final String pumpStatusToBeReported = spPumpStatus.getSelectedItem().toString();
         final String reportNotes = etReportNotes.getText().toString();
         final String reportTitle = etReportTitle.getText().toString();
         final Report reportToBePersisted = new Report(pumpToBeReported, pumpStatusToBeReported,
                 reportTitle, reportNotes);
 
+        // If no new image was taken, submit report without one.
         if (newImageBitmap == null) {
             ReportPersister.persistReport(reportToBePersisted);
             return;
         }
 
+        // Save image in background and persist report when done.
         final byte[] newImageByteArray =
                 ImageUtil.getByteArrayFromBitmap(newImageBitmap, COMPRESSION_FACTOR);
         final ParseFile imageForParse = new ParseFile("image.jpeg", newImageByteArray);
         imageForParse.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                reportToBePersisted.setPhoto(imageForParse);
-                ReportPersister.persistReport(reportToBePersisted);
+                if (e == null) {
+                    reportToBePersisted.setPhoto(imageForParse);
+                    ReportPersister.persistReport(reportToBePersisted);
+                    Toast.makeText(getApplicationContext(),
+                            "Report submitted successfully.",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Error submitting report!",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
