@@ -25,10 +25,15 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
     }
 
     public PumpListListener rowListener;
-    private ImageView ivPump;
-    private TextView tvLastUpdated;
-    private TextView tvLocation;
-    private TextView tvPumpName;
+
+    static class ViewHolder {
+
+        ImageView ivPump;
+        TextView tvLastUpdated;
+        TextView tvLocation;
+        TextView tvPumpName;
+    }
+    private ViewHolder viewHolder; // view lookup cache stored in tag
 
     public PumpListAdapter(Context context) {
         super(context, R.layout.row_pump);
@@ -38,20 +43,31 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         final Pump pump = getItem(position);
+
+        // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
+            viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_pump, parent, false);
+            viewHolder.ivPump = (ImageView) convertView.findViewById(R.id.ivPump);
+            viewHolder.tvLastUpdated = (TextView) convertView.findViewById(R.id.tvPumpLastUpdated);
+            viewHolder.tvLocation = (TextView) convertView.findViewById(R.id.tvPumpLocation);
+            viewHolder.tvPumpName = (TextView) convertView.findViewById(R.id.tvPumpName);
+            convertView.setTag(viewHolder);
         }
         else {
+            viewHolder = (ViewHolder) convertView.getTag();
             View expandedContainer = convertView.findViewById(R.id.vgDetailsContainer);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)expandedContainer.getLayoutParams();
             params.height = 0;
             expandedContainer.setLayoutParams(params);
         }
 
-        ivPump = (ImageView) convertView.findViewById(R.id.ivPump);
-        tvLastUpdated = (TextView) convertView.findViewById(R.id.tvPumpLastUpdated);
-        tvLocation = (TextView) convertView.findViewById(R.id.tvPumpLocation);
-        tvPumpName = (TextView) convertView.findViewById(R.id.tvPumpName);
+        // The last updated date is wrt the local time zone.
+        viewHolder.tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
+        viewHolder.tvPumpName.setText(pump.getName());
+        setPumpColorBasedOnStatus(pump.getCurrentStatus());
+        setupLocationLabel(pump);
+
         Button newReport = (Button)convertView.findViewById(R.id.btnNewReport);
         newReport.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,23 +76,12 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
             }
         });
 
-
-        // The last updated date is wrt the local time zone.
-        tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
-        tvPumpName.setText(pump.getName());
-        setPumpColorBasedOnStatus(pump.getCurrentStatus());
-
-        setupLocationLabel(tvLocation, pump);
-
         return convertView;
     }
 
-    private void setupLocationLabel(TextView locationTextView, Pump pump) {
+    private void setupLocationLabel(Pump pump) {
         // XXX These should be reverse geo-coded to be human-readable
-        if (pump == null || pump.getLocation() == null) {
-            return;
-        }
-        locationTextView.setText(String.format("(%f, %f)",
+        viewHolder.tvLocation.setText(String.format("(%f, %f)",
                 pump.getLocation().getLatitude(), pump.getLocation().getLongitude()));
     }
 
@@ -86,13 +91,13 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         // XXX Status should probably be an enum, in which case this would
         // reduce to a switch case.
         if (pumpStatus == null || pumpStatus.equalsIgnoreCase("broken_permanent")) {
-            ivPump.setBackgroundColor(Color.RED);
+            viewHolder.ivPump.setBackgroundColor(Color.RED);
         } else if (pumpStatus.equalsIgnoreCase("fix_in_progress")) {
-            ivPump.setBackgroundColor(Color.YELLOW);
+            viewHolder.ivPump.setBackgroundColor(Color.YELLOW);
         } else if (pumpStatus.equalsIgnoreCase("good")) {
-            ivPump.setBackgroundColor(Color.GREEN);
+            viewHolder.ivPump.setBackgroundColor(Color.GREEN);
         } else {
-            ivPump.setBackgroundColor(Color.DKGRAY);
+            viewHolder.ivPump.setBackgroundColor(Color.DKGRAY);
         }
     }
 }
