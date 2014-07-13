@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import com.codepath.welldone.R;
 import com.codepath.welldone.fragment.PumpListFragment;
 import com.codepath.welldone.fragment.PumpMapFragment;
+import com.codepath.welldone.persister.PumpPersister;
 import com.parse.ParseAnalytics;
 
 
