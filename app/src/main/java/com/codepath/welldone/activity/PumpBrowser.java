@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import com.codepath.welldone.R;
 import com.codepath.welldone.fragment.PumpListFragment;
 import com.codepath.welldone.fragment.PumpMapFragment;
-import com.codepath.welldone.persister.PumpPersister;
 import com.parse.ParseAnalytics;
 
 
@@ -31,6 +30,7 @@ public class PumpBrowser extends Activity implements PumpListFragment.OnFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_pump_list);
         ParseAnalytics.trackAppOpened(getIntent());
         mListFragment = PumpListFragment.newInstance();
@@ -68,6 +68,7 @@ public class PumpBrowser extends Activity implements PumpListFragment.OnFragment
     }
 
     private void swapInMapFragment() {
+
         createMapFragmentIfNecessary();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.vgFragmentContainer, mMapFragment);
