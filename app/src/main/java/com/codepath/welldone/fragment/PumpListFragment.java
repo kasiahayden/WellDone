@@ -19,13 +19,7 @@ import com.codepath.welldone.R;
 import com.codepath.welldone.activity.PumpDetails;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.persister.PumpPersister;
-import com.parse.DeleteCallback;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
-
-import java.util.List;
 
 public class PumpListFragment extends Fragment implements PumpListAdapter.PumpListListener {
 
@@ -50,10 +44,13 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         mPumpArrayAdapter = new PumpListAdapter((Activity)mListener);
 
-        fetchPumpsToBeDisplayed();
+        mPumpArrayAdapter.clear();
+        PumpPersister.fetchPumpsInBackground(mPumpArrayAdapter, ParseQuery.getQuery("Pump"));
     }
 
     @Override
@@ -144,65 +141,6 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
         public boolean willChangeBounds() {
             return true;
         }
-    }
-
-    private void fetchPumpsToBeDisplayed() {
-
-        mPumpArrayAdapter.clear();
-
-        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Pump");
-        boolean localFetch = true;
-        if (query.hasCachedResult()) {
-            Log.d("info", "Using local store to fetch pumps.");
-            query.fromLocalDatastore();
-        } else {
-            localFetch = false;
-            Log.d("info", "Using remote store to fetch pumps.");
-        }
-        fetchPumpsInBackground(query, localFetch);
-    }
-
-    private void fetchPumpsInBackground(ParseQuery<ParseObject> query, final boolean localFetch) {
-
-        final String fetchMode = localFetch == true ? "local" : "remote";
-
-        query.findInBackground(new FindCallback<ParseObject>() {
-
-            public void done(final List<ParseObject> pumpList, ParseException e) {
-                if (e == null) {
-                    Log.d("info", "Fetched " + pumpList.size() + " pumps from " + fetchMode + " DB.");
-                    for (ParseObject object : pumpList) {
-                        final Pump pump = (Pump) object;
-                        Log.d("debug", "Fetched pump: " + pump.getName() + " " + pump.getObjectId());
-                        mPumpArrayAdapter.add(pump);
-                    }
-                    // Add the latest results for this query to the cache.
-                    // XXX: Ideally, these should be pinned only on remote fetch, but hasCachedResult() always
-                    // returns false. So have to pin here.
-                    Log.d("debug", "Pinning newly retrieved objects");
-                    ParseObject.pinAllInBackground(PumpPersister.ALL_PUMPS, pumpList);
-                } else {
-                    Log.d("error", "Exception while fetching " + fetchMode + " pumps: " + e);
-                }
-
-                // If fetching from server, unpin previous fetched and pin new ones.
-                if (!localFetch) {
-                    // Release any objects previously pinned for this query.
-                    Log.d("debug", "Unpinning previously saved objects");
-                    ParseObject.unpinAllInBackground(PumpPersister.ALL_PUMPS, pumpList,
-                            new DeleteCallback() {
-                        public void done(ParseException e) {
-                            if (e != null) {
-                                // There was some error.
-                                return;
-                            } else {
-                                Log.d("info", pumpList.size() + " previous cached pumps deleted.");
-                            }
-                        }
-                    });
-                } //locatFetch
-            }
-        });
     }
 
 }
