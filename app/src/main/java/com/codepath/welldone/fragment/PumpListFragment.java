@@ -35,13 +35,15 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
     private ProgressBar pbLoading;
     public OnFragmentInteractionListener mListener;
 
+    private int mCurrentPumpIndex;
+
     public PumpListFragment() {}
 
     /**
      * @return the currently highlighted (expanded) pump
      */
     public Pump getCurrentPump() {
-        return mPumpArrayAdapter.getItem(0);
+        return mPumpArrayAdapter.getItem(mCurrentPumpIndex);
     }
 
     public static PumpListFragment newInstance() {
@@ -52,6 +54,7 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        mCurrentPumpIndex = 0;
 
         mPumpArrayAdapter = new PumpListAdapter((Activity)mListener);
     }
@@ -157,6 +160,7 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
                 DropDownAnim anim = new DropDownAnim(v, 200, true);
                 anim.setDuration(500);
                 v.startAnimation(anim);
+                mCurrentPumpIndex = position;
 
             }
         });
