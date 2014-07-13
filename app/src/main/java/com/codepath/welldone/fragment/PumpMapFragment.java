@@ -1,7 +1,6 @@
 package com.codepath.welldone.fragment;
 
 
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.codepath.welldone.R;
 import com.codepath.welldone.model.Pump;
+import com.google.android.gms.maps.MapFragment;
 
 public class PumpMapFragment extends Fragment {
 
@@ -33,6 +33,19 @@ public class PumpMapFragment extends Fragment {
         if (getArguments() != null) {
             mPumpID = getArguments().getString("pumpID");
         }
+    }
+
+    /**
+     * Hack to not crash when re-entering the map fragment
+     * http://stackoverflow.com/a/14484640/143913
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        MapFragment f = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.map);
+        if (f != null)
+            getFragmentManager().beginTransaction().remove(f).commit();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
