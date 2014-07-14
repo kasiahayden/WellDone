@@ -24,7 +24,8 @@
         android:layout_alignTop="@+id/ivPump"
         android:layout_marginLeft="15dp"
         android:gravity="left|center"
-        android:text="@string/pump_name_label" />
+        android:text="@string/pump_name_label"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvPumpLocation"
@@ -54,8 +55,7 @@
         android:layout_marginRight="5dp"
         android:layout_height="wrap_content"
         android:gravity="left|center"
-        android:text="@string/pump_last_updated_label"
-        android:textStyle="bold"/>
+        android:text="@string/pump_last_updated_label" />
 
     <RelativeLayout
         android:id="@+id/vgDetailsContainer"

@@ -1,16 +1,12 @@
 package com.codepath.welldone;
 
 import android.app.Application;
-import android.content.Intent;
-import android.util.Log;
 
 import com.codepath.welldone.activity.DemoPushActivity;
-import com.codepath.welldone.activity.PumpBrowser;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.Report;
 import com.parse.Parse;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 import com.parse.PushService;
 
 public class ParseApplication extends Application {

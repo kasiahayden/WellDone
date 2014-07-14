@@ -112,7 +112,7 @@ public class CreateReportActivity extends Activity {
 
         // If no new image was taken, submit report without one.
         if (newImageBitmap == null) {
-            ReportPersister.persistReport(reportToBePersisted);
+            persistReport(reportToBePersisted);
             return;
         }
 
@@ -125,10 +125,8 @@ public class CreateReportActivity extends Activity {
             public void done(ParseException e) {
                 if (e == null) {
                     reportToBePersisted.setPhoto(imageForParse);
-                    ReportPersister.persistReport(reportToBePersisted);
-                    Toast.makeText(getApplicationContext(),
-                            "Report submitted successfully.",
-                            Toast.LENGTH_SHORT).show();
+                    persistReport(reportToBePersisted);
+                    //startActivity(new Intent(getApplicationContext(), PumpBrowser.class));
                 } else {
                     Toast.makeText(getApplicationContext(),
                             "Error submitting report!",
@@ -210,5 +208,45 @@ public class CreateReportActivity extends Activity {
         fixedPumpPhotoFileName = image.getAbsolutePath();
         Log.d("debug", "fixedPumpPhotoFileName: " + fixedPumpPhotoFileName);
         return image;
+    }
+
+    private void persistReport(Report report) {
+
+        Log.d("debug", "Saving report with title: " + report.getTitle());
+        final Pump updatedPump =
+                PumpPersister.getPumpByObjectIdSyncly(report.getPump().getObjectId());
+        updatedPump.setCurrentStatus(report.getReportedStatus());
+        Log.d("debug", "Updated current status of pump: " + updatedPump.getName() + " " + pumpToBeReported.getCurrentStatus());
+
+        // Pin this report and pin the updated pump
+        // saveEventually only pins until object is saved to remote store. So, pin first.
+        report.pinInBackground(ReportPersister.ALL_REPORTS, new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+
+                updatedPump.pinInBackground(PumpPersister.ALL_PUMPS, new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+
+                        if (e == null) {
+                            Log.d("debug", "Pump pinned successfully: " + updatedPump.getObjectId()
+                                    + " " + updatedPump.getName());
+                            Toast.makeText(getApplicationContext(),
+                                    "Report submitted successfully.",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.d("debug", "Could not pin pump: " + updatedPump.getObjectId()
+                                    + " " + updatedPump.getName() + e.toString());
+                            Toast.makeText(getApplicationContext(),
+                                    "Error submitting report!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        startActivity(new Intent(getApplicationContext(), PumpBrowser.class));
+                    }
+                });
+                updatedPump.saveEventually();
+            }
+        });
+        report.saveEventually();
     }
 }

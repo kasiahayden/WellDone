@@ -4,10 +4,8 @@ import com.codepath.welldone.model.Pump;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
-import java.util.List;
-
 /**
- * All DB operations pertaining to Pump
+ * DB operations pertaining to Pump
  */
 public class PumpPersister {
 

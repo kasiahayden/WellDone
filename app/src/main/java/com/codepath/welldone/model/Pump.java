@@ -22,6 +22,8 @@ public class Pump extends ParseObject {
         return getString("currentStatus");
     }
 
+    public void setCurrentStatus(String currentStatus) { put("currentStatus", currentStatus); }
+
     public String getName() {
         return getString("name");
     }
