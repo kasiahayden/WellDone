@@ -1,9 +1,11 @@
 package com.codepath.welldone;
 
 import android.app.Application;
+import android.content.Intent;
 import android.util.Log;
 
 import com.codepath.welldone.activity.DemoPushActivity;
+import com.codepath.welldone.activity.PumpBrowser;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.Report;
 import com.parse.Parse;
@@ -15,6 +17,7 @@ public class ParseApplication extends Application {
 
 	@Override
 	public void onCreate() {
+
 		super.onCreate();
 
         Parse.enableLocalDatastore(this);
@@ -25,9 +28,6 @@ public class ParseApplication extends Application {
 
         PushService.setDefaultPushCallback(this, DemoPushActivity.class); //TODO change to activity where saveInBackground is called
                                                                           // on current installation of Parse (then import)
-
-		ParseUser.enableAutomaticUser();
-        Log.d("DBG", ParseUser.getCurrentUser().toString());
 	}
 
 }

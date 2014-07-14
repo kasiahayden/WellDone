@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/pbLoading"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+    <ImageView
+        android:id="@+id/ivAppLogoBig"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="75dp"
+        android:src="@android:drawable/screen_background_light"
+        android:contentDescription="@android:color/transparent" />
+
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="left|bottom"
+        android:hint="@string/username_hint"
+        android:inputType="textAutoComplete"
+        android:singleLine="true"/>
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etUsername"
+        android:layout_marginTop="20dp"
+        android:layout_alignLeft="@+id/etUsername"
+        android:layout_alignRight="@+id/etUsername"
+        android:gravity="left|bottom"
+        android:hint="@string/password_hint"
+        android:singleLine="true"
+        android:inputType="textPassword"/>
+
+    <Button
+        android:id="@+id/btnSignIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etPassword"
+        android:layout_marginTop="20dp"
+        android:layout_alignLeft="@+id/etUsername"
+        android:layout_alignRight="@+id/etUsername"
+        android:text="@string/signin_text"
+        android:onClick="onSignIn" />
+
+    <!-- Hide the create account option for now -->
+    <!-- TextView
+        android:id="@+id/etCreateAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnSignIn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/create_account_text" -->
+
+</RelativeLayout>
