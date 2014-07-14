@@ -1,11 +1,12 @@
 package com.codepath.welldone.activity;
 
 import android.content.BroadcastReceiver;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.telephony.SmsMessage;
-        import android.widget.Toast;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.telephony.SmsMessage;
+import android.util.Log;
+import android.widget.Toast;
 
 public class DemoSMSReceiver extends BroadcastReceiver
 {
@@ -29,7 +30,8 @@ public class DemoSMSReceiver extends BroadcastReceiver
                 str += "\n";
             }
             //---display the new SMS message---
-            Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "DemoSMSReceiver:" + str, Toast.LENGTH_SHORT).show();
+            Log.d("DemoSMSReceiver", str);
         }
     }
 }
