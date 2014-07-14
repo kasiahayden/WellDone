@@ -186,6 +186,7 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
                     if (pumpList.size() == 0) {
                         fetchPumpsFromRemote(ParseQuery.getQuery("Pump"));
                     } else {
+                        pbLoading.setVisibility(ProgressBar.INVISIBLE);
                         Log.d("debug", "Using pumps fetched from local DB.");
                         addPumpsToAdapter(pumpList);
                     }
@@ -227,10 +228,10 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
 
             public void done(final List<ParseObject> pumpList, ParseException e) {
 
+                pbLoading.setVisibility(ProgressBar.INVISIBLE);
                 if (e == null) {
                     Log.d("info", "Fetching pumps from remote DB. Found " + pumpList.size());
                     addPumpsToAdapter(pumpList);
-                    pbLoading.setVisibility(ProgressBar.INVISIBLE);
 
                     // Unpin previously cached data and re-pin the newly fetched.
                     if (pumpList != null && !pumpList.isEmpty()) {
