@@ -2,30 +2,28 @@ package com.codepath.welldone.activity;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.R;
 import com.codepath.welldone.fragment.PumpListFragment;
 import com.codepath.welldone.fragment.PumpMapFragment;
+import com.codepath.welldone.model.Pump;
 import com.parse.ParseAnalytics;
 
 
 /**
  * Fragment container: either displays a list of pumps or the map.
  */
-public class PumpBrowser extends Activity implements PumpListFragment.OnFragmentInteractionListener {
+public class PumpBrowser extends Activity implements PumpListAdapter.PumpListListener {
 
     PumpMapFragment mMapFragment;
     PumpListFragment mListFragment;
     private MenuItem mMapToggleMenuItem;
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +73,16 @@ public class PumpBrowser extends Activity implements PumpListFragment.OnFragment
         ft.commit();
 
         swapMenuItemText();
+    }
+
+    public void onNewReportClicked(Pump pump) {
+        Intent intent = new Intent(this, CreateReportActivity.class);
+        intent.putExtra("pumpObjectId", pump.getObjectId());
+        startActivity(intent);
+    }
+
+    public void onNewReportClicked(View view) {
+        onNewReportClicked(mListFragment.getCurrentPump());
     }
 
 

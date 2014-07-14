@@ -2,8 +2,6 @@ package com.codepath.welldone.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +15,6 @@ import android.widget.ProgressBar;
 
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.R;
-import com.codepath.welldone.activity.PumpDetails;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.persister.PumpPersister;
 import com.parse.DeleteCallback;
@@ -28,12 +25,12 @@ import com.parse.ParseQuery;
 
 import java.util.List;
 
-public class PumpListFragment extends Fragment implements PumpListAdapter.PumpListListener {
+public class PumpListFragment extends Fragment {
 
     private PumpListAdapter mPumpArrayAdapter;
     private ListView mPumpList;
     private ProgressBar pbLoading;
-    public OnFragmentInteractionListener mListener;
+    public PumpListAdapter.PumpListListener mListener;
 
     private int mCurrentPumpIndex;
 
@@ -65,7 +62,7 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
         View v = inflater.inflate(R.layout.fragment_pump_list, container, false);
 
         setupViews(v);
-        mPumpArrayAdapter.rowListener = this;
+        mPumpArrayAdapter.rowListener =  (PumpListAdapter.PumpListListener)getActivity();
         setupListeners();
 
         pbLoading.setVisibility(ProgressBar.VISIBLE);
@@ -79,7 +76,7 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (PumpListAdapter.PumpListListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -89,17 +86,6 @@ public class PumpListFragment extends Fragment implements PumpListAdapter.PumpLi
     @Override
     public void onDetach() {
         super.onDetach();
-    }
-
-    @Override
-    public void onNewReportClicked(Pump pump) {
-        Intent intent = new Intent((Activity)mListener, PumpDetails.class);
-        intent.putExtra("pumpObjectId", pump.getObjectId());
-        startActivity(intent);
-    }
-
-    public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(Uri uri);
     }
 
     public class DropDownAnim extends Animation {

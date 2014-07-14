@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.R;
 import com.codepath.welldone.model.Pump;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -90,6 +91,10 @@ public class PumpMapFragment extends Fragment {
 
     GoogleMap getMap() {
         return ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
+    }
+
+    void onNewReportClicked(View view) {
+        ((PumpListAdapter.PumpListListener)getActivity()).onNewReportClicked(mPump);
     }
 
     /**

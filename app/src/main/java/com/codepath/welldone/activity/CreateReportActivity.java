@@ -58,7 +58,7 @@ public class CreateReportActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_report);
 
-        final String pumpObjectId = (String) getIntent().getStringExtra("pumpObjectId");
+        final String pumpObjectId = getIntent().getStringExtra("pumpObjectId");
         pumpToBeReported = PumpPersister.getPumpByObjectIdSyncly(pumpObjectId);
         Log.d("debug", "Working with pump: " + pumpToBeReported.getObjectId() + " " + pumpToBeReported.getName());
         setupViews();
