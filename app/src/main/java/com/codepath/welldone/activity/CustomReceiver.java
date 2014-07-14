@@ -1,5 +1,6 @@
 package com.codepath.welldone.activity;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -45,8 +46,7 @@ public class CustomReceiver extends BroadcastReceiver {
             {
                 String action = intent.getAction();
                 Log.d(TAG, "got action " + action );
-                if (action.equals(intentAction))
-                {
+                if (action.equals(intentAction)) {
                     String channel = intent.getExtras().getString("com.parse.Channel");
                     JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
 
@@ -58,6 +58,14 @@ public class CustomReceiver extends BroadcastReceiver {
                         Log.d(TAG, "..." + key + " => " + json.getString(key));
                     }
 
+                    String objectId = json.getString("objectId");
+                    Intent i = new Intent(context, PumpDetails.class);
+                    i.putExtra("pumpObjectId", objectId);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.getApplicationContext().startActivity(i);
+
+                    /*PumpListFragment pumpListFragment = PumpListFragment.newInstance(new Pump());
+                    pumpListFragment.triggerFetchAndRedraw();*/
 
                     /*Log.d(TAG, "got action " + action + " on channel " + channel + " with:");
                     Iterator<String> itr = json.keys();
