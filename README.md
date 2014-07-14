@@ -1,5 +1,7 @@
 #### WellDone
 
+![Walkthrough](anim_walkthrough.gif)
+
 ![SMS Handling](anim_sms_handling.gif)
 
 ![Push Handling](anim_push_handling.gif)
