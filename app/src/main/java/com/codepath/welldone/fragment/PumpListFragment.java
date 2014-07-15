@@ -67,7 +67,7 @@ public class PumpListFragment extends Fragment {
 
         pbLoading.setVisibility(ProgressBar.VISIBLE);
         mPumpArrayAdapter.clear();
-        fetchPumpsInBackground(ParseQuery.getQuery("Pump"));
+        fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByAscending("priority"));
 
         return v;
     }
@@ -170,7 +170,8 @@ public class PumpListFragment extends Fragment {
                     Log.d("info", "Fetching pumps from local DB. Found " + pumpList.size());
 
                     if (pumpList.size() == 0) {
-                        fetchPumpsFromRemote(ParseQuery.getQuery("Pump"));
+                        fetchPumpsFromRemote(ParseQuery.getQuery("Pump")
+                                .orderByAscending("priority"));
                     } else {
                         pbLoading.setVisibility(ProgressBar.INVISIBLE);
                         Log.d("debug", "Using pumps fetched from local DB.");

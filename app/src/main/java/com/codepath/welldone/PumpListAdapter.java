@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.codepath.welldone.helper.DateTimeUtil;
+import com.codepath.welldone.helper.DateTimeUtil    ;
 import com.codepath.welldone.model.Pump;
 
 /**
@@ -65,7 +65,8 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         // The last updated date is wrt the local time zone.
         viewHolder.tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
         viewHolder.tvPumpName.setText(pump.getName());
-        setPumpColorBasedOnStatus(pump.getCurrentStatus());
+        // XXX: This will be replaced by an image of the pump itself. But color-coded for now.
+        setPumpColorBasedOnPriority(pump.getPriority());
         setupLocationLabel(pump);
 
         Button newReport = (Button)convertView.findViewById(R.id.btnNewReport);
@@ -85,19 +86,17 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
                 pump.getLocation().getLatitude(), pump.getLocation().getLongitude()));
     }
 
-    // Set the color of a pump number based on its work state
-    private void setPumpColorBasedOnStatus(String pumpStatus) {
+    // Set the color of a pump number based on its priority
+    private void setPumpColorBasedOnPriority(int pumpPriority) {
 
-        // XXX Status should probably be an enum, in which case this would
-        // reduce to a switch case.
-        if (pumpStatus == null || pumpStatus.equalsIgnoreCase("broken_permanent")) {
-            viewHolder.ivPump.setBackgroundColor(Color.RED);
-        } else if (pumpStatus.equalsIgnoreCase("fix_in_progress")) {
-            viewHolder.ivPump.setBackgroundColor(Color.YELLOW);
-        } else if (pumpStatus.equalsIgnoreCase("good")) {
-            viewHolder.ivPump.setBackgroundColor(Color.GREEN);
-        } else {
-            viewHolder.ivPump.setBackgroundColor(Color.DKGRAY);
+        switch (pumpPriority) {
+            case 0: viewHolder.ivPump.setBackgroundColor(Color.RED); break;
+            case 1: viewHolder.ivPump.setBackgroundColor(Color.MAGENTA); break;
+            case 2:
+            case 3: viewHolder.ivPump.setBackgroundColor(Color.BLACK); break;
+            case 4: viewHolder.ivPump.setBackgroundColor(Color.YELLOW); break;
+            case 5: viewHolder.ivPump.setBackgroundColor(Color.GREEN); break;
+            default: viewHolder.ivPump.setBackgroundColor(Color.DKGRAY);
         }
     }
 }

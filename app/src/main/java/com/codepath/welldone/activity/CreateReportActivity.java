@@ -126,7 +126,6 @@ public class CreateReportActivity extends Activity {
                 if (e == null) {
                     reportToBePersisted.setPhoto(imageForParse);
                     persistReport(reportToBePersisted);
-                    //startActivity(new Intent(getApplicationContext(), PumpBrowser.class));
                 } else {
                     Toast.makeText(getApplicationContext(),
                             "Error submitting report!",
@@ -238,7 +237,7 @@ public class CreateReportActivity extends Activity {
                             Log.d("debug", "Could not pin pump: " + updatedPump.getObjectId()
                                     + " " + updatedPump.getName() + e.toString());
                             Toast.makeText(getApplicationContext(),
-                                    "Error submitting report!",
+                                    "Error submitting report! Please try again later.",
                                     Toast.LENGTH_SHORT).show();
                         }
                         startActivity(new Intent(getApplicationContext(), PumpBrowser.class));
