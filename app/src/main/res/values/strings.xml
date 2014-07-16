@@ -9,7 +9,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pump_name_label">Pump: </string>
     <string name="pump_location_label">Pump Location</string>
-    <string name="pump_last_updated_label">Last Updated: </string>
     <string name="pump_last_updated_date_label">Last Updated Date</string>
     <string name="title_activity_demo_camera">DemoCameraActivity</string>
     <string name="title_activity_demo_push">DemoPushActivity</string>

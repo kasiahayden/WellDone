@@ -9,7 +9,7 @@ import java.util.TimeZone;
  */
 public class DateTimeUtil {
 
-    public static final String friendlyDateFormat = "yyyy-MM-dd HH:mm:ss";
+    public static final String friendlyDateFormat = "hh:mm a";
 
     /**
      * Return timestamp in human-readable form wrt local timezone
