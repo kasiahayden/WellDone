@@ -32,10 +32,10 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/ivPump"
                 android:layout_alignTop="@+id/ivPump"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="4dp"
                 android:includeFontPadding="false"
                 android:textColor="@color/textBlack"
-                android:textSize="16dp"
+                android:textSize="15dp"
                 android:text="@string/pump_name_label"/>
 
             <TextView

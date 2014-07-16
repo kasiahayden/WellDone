@@ -66,10 +66,6 @@
             android:label="@string/title_activity_create_report" >
         </activity>
         <activity
-            android:name=".activity.DemoCameraActivity"
-            android:label="@string/title_activity_demo_camera" >
-        </activity>
-        <activity
             android:name=".activity.DemoPushActivity"
             android:label="@string/title_activity_demo_push" >
         </activity>
