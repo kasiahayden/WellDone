@@ -3,7 +3,6 @@ package com.codepath.welldone;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.codepath.welldone.helper.DateTimeUtil;
 import com.codepath.welldone.model.Pump;
 
 import java.io.IOException;
@@ -70,7 +70,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         }
 
         // The last updated date is wrt the local time zone.
-        viewHolder.tvLastUpdated.setText(DateUtils.formatDateTime(getContext(), pump.getUpdatedAt().getTime(), DateUtils.FORMAT_SHOW_DATE));
+        viewHolder.tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
         viewHolder.tvStatus.setText(Pump.humanReadableStringForStatus(pump.getCurrentStatus()));
         viewHolder.tvPriority.setText(String.format("Priority Level %d", pump.getPriority()));
         setPumpToRandomImage();
