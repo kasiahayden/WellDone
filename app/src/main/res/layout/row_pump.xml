@@ -84,11 +84,13 @@
                    android:text="Flavor text for this pump."/>
                 <Button
                     android:id="@+id/btnNewReport"
-                    android:focusable="false"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="180dp"
+                    android:layout_height="40dp"
                     android:layout_below="@id/tvFlavor"
-                    android:text="New Report Bro"/>
+                    android:background="@drawable/new_report"
+                    android:textColor="@color/offwhite"
+                    android:focusable="false"
+                    android:text="CREATE REPORT"/>
             </RelativeLayout>
         </RelativeLayout>
 
