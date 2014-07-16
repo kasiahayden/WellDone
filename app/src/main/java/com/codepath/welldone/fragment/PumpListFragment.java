@@ -8,11 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.Transformation;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.codepath.welldone.DropDownAnim;
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.R;
 import com.codepath.welldone.helper.PumpUtil;
@@ -31,6 +31,7 @@ import java.util.List;
 
 public class PumpListFragment extends Fragment {
 
+    public static final int TARGET_DETAILS_HEIGHT = 130;
     private PumpListAdapter mPumpArrayAdapter;
     private ListView mPumpList;
     private ProgressBar pbLoading;
@@ -96,41 +97,6 @@ public class PumpListFragment extends Fragment {
         super.onDetach();
     }
 
-    public class DropDownAnim extends Animation {
-        private final int targetHeight;
-        private final View view;
-        private final boolean down;
-
-        public DropDownAnim(View view, int targetHeight, boolean down) {
-            this.view = view;
-            this.targetHeight = targetHeight;
-            this.down = down;
-        }
-
-        @Override
-        protected void applyTransformation(float interpolatedTime, Transformation t) {
-            int newHeight;
-            if (down) {
-                newHeight = (int) (targetHeight * interpolatedTime);
-            } else {
-                newHeight = (int) (targetHeight * (1 - interpolatedTime));
-            }
-            view.getLayoutParams().height = newHeight;
-            view.requestLayout();
-        }
-
-        @Override
-        public void initialize(int width, int height, int parentWidth,
-                               int parentHeight) {
-            super.initialize(width, height, parentWidth, parentHeight);
-        }
-
-        @Override
-        public boolean willChangeBounds() {
-            return true;
-        }
-    }
-
 
     /* Private methods */
     private void setupViews(View v) {
@@ -147,19 +113,34 @@ public class PumpListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Pump pump = (Pump)parent.getItemAtPosition(position);
                 Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
-                ViewGroup.LayoutParams params = view.getLayoutParams();
 
-                View v = view.findViewById(R.id.vgDetailsContainer);
+                final View v = view.findViewById(R.id.vgDetailsContainer);
                 boolean expanded = v.getVisibility() == View.VISIBLE;
                 if (expanded) {
-                    v.setVisibility(View.GONE);
-                    DropDownAnim anim = new DropDownAnim(v, 0, false);
-                    anim.setDuration(350);
+                    DropDownAnim anim = new DropDownAnim(v, TARGET_DETAILS_HEIGHT, false);
+                    anim.setDuration(500);
+                    anim.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            int x = 0; x++;
+                            v.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
                     v.startAnimation(anim);
                 }
                 else {
                     v.setVisibility(View.VISIBLE);
-                    DropDownAnim anim = new DropDownAnim(v, 200, true);
+                    DropDownAnim anim = new DropDownAnim(v, TARGET_DETAILS_HEIGHT, true);
                     anim.setDuration(500);
                     v.startAnimation(anim);
                 }
