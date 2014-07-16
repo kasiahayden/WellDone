@@ -15,14 +15,18 @@ import android.widget.ProgressBar;
 
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.R;
+import com.codepath.welldone.helper.PumpUtil;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.persister.PumpPersister;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PumpListFragment extends Fragment {
@@ -30,6 +34,8 @@ public class PumpListFragment extends Fragment {
     private PumpListAdapter mPumpArrayAdapter;
     private ListView mPumpList;
     private ProgressBar pbLoading;
+    private ParseUser currentUser;
+
     public PumpListAdapter.PumpListListener mListener;
 
     private int mCurrentPumpIndex;
@@ -53,6 +59,8 @@ public class PumpListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mCurrentPumpIndex = 0;
 
+        currentUser = ParseUser.getCurrentUser();
+        Log.d("debug", "Current user: " + currentUser.getUsername() + " " + currentUser.get("location"));
         mPumpArrayAdapter = new PumpListAdapter((Activity)mListener);
     }
 
@@ -67,7 +75,7 @@ public class PumpListFragment extends Fragment {
 
         pbLoading.setVisibility(ProgressBar.VISIBLE);
         mPumpArrayAdapter.clear();
-        fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByAscending("priority"));
+        fetchPumpsInBackground(ParseQuery.getQuery("Pump"));
 
         return v;
     }
@@ -170,15 +178,41 @@ public class PumpListFragment extends Fragment {
                     Log.d("info", "Fetching pumps from local DB. Found " + pumpList.size());
 
                     if (pumpList.size() == 0) {
-                        fetchPumpsFromRemote(ParseQuery.getQuery("Pump")
-                                .orderByAscending("priority"));
+                        fetchPumpsFromRemote(ParseQuery.getQuery("Pump"));
                     } else {
                         pbLoading.setVisibility(ProgressBar.INVISIBLE);
                         Log.d("debug", "Using pumps fetched from local DB.");
-                        addPumpsToAdapter(pumpList);
+                        sortAndAddPumpsToAdapter(pumpList);
                     }
                 } else {
                     Log.d("error", "Exception while fetching pumps: " + e);
+                }
+            }
+        });
+    }
+
+    /**
+     * Fetch pumps from remote source.
+     * @param query
+     */
+    private void fetchPumpsFromRemote(ParseQuery<ParseObject> query) {
+
+        query.findInBackground(new FindCallback<ParseObject>() {
+
+            public void done(final List<ParseObject> pumpList, ParseException e) {
+
+                pbLoading.setVisibility(ProgressBar.INVISIBLE);
+                if (e == null) {
+                    Log.d("info", "Fetching pumps from remote DB. Found " + pumpList.size());
+                    sortAndAddPumpsToAdapter(pumpList);
+
+                    // Unpin previously cached data and re-pin the newly fetched.
+                    if (pumpList != null && !pumpList.isEmpty()) {
+                        unpinAndRepin(pumpList);
+                    }
+
+                } else {
+                    Log.d("error", "Exception while fetching remote pumps: " + e);
                 }
             }
         });
@@ -209,34 +243,17 @@ public class PumpListFragment extends Fragment {
         ParseObject.pinAllInBackground(PumpPersister.ALL_PUMPS, pumpList);
     }
 
-    private void fetchPumpsFromRemote(ParseQuery<ParseObject> query) {
+    private void sortAndAddPumpsToAdapter(List<ParseObject> pumpList) {
 
-        query.findInBackground(new FindCallback<ParseObject>() {
-
-            public void done(final List<ParseObject> pumpList, ParseException e) {
-
-                pbLoading.setVisibility(ProgressBar.INVISIBLE);
-                if (e == null) {
-                    Log.d("info", "Fetching pumps from remote DB. Found " + pumpList.size());
-                    addPumpsToAdapter(pumpList);
-
-                    // Unpin previously cached data and re-pin the newly fetched.
-                    if (pumpList != null && !pumpList.isEmpty()) {
-                        unpinAndRepin(pumpList);
-                    }
-
-                } else {
-                    Log.d("error", "Exception while fetching remote pumps: " + e);
-                }
-            }
-        });
-    }
-
-    private void addPumpsToAdapter(List<ParseObject> pumpList) {
-
+        final List<Pump> pumps = new ArrayList<Pump>(pumpList.size());
         for (ParseObject object : pumpList) {
             final Pump pump = (Pump) object;
-            Log.d("debug", "Added pump: " + pump.getName() + " " + pump.getObjectId());
+            pumps.add(pump);
+        }
+        pumpList = null;
+        final List<Pump> sortedPumps =
+                PumpUtil.sortPumps(pumps, ((ParseGeoPoint) currentUser.get("location")));
+        for (Pump pump : sortedPumps) {
             mPumpArrayAdapter.add(pump);
         }
     }
