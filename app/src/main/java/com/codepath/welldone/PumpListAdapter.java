@@ -2,6 +2,7 @@ package com.codepath.welldone;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.codepath.welldone.helper.DateTimeUtil    ;
+import com.codepath.welldone.helper.DateTimeUtil;
 import com.codepath.welldone.model.Pump;
+
+import java.io.IOException;
+import java.util.Random;
 
 /**
  * Adapter to hold a list of pumps with their numbers, color-coded state, and
@@ -66,6 +70,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         viewHolder.tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
         viewHolder.tvPumpName.setText(pump.getName());
         // XXX: This will be replaced by an image of the pump itself. But color-coded for now.
+        setPumpToRandomImage();
         setPumpColorBasedOnPriority(pump.getPriority());
         setupLocationLabel(pump);
 
@@ -80,10 +85,19 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         return convertView;
     }
 
+    private void setPumpToRandomImage() {
+        String filename = String.format("pump%d.png", 1 + Math.abs(new Random().nextInt()) % 4);
+        try {
+            viewHolder.ivPump.setImageDrawable(Drawable.createFromStream(getContext().getAssets().open(filename), null));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void setupLocationLabel(Pump pump) {
-        // XXX These should be reverse geo-coded to be human-readable
-        viewHolder.tvLocation.setText(String.format("(%f, %f)",
-                pump.getLocation().getLatitude(), pump.getLocation().getLongitude()));
+        viewHolder.tvLocation.setText(String.format("%s", pump.getAddress()));
     }
 
     // Set the color of a pump number based on its priority

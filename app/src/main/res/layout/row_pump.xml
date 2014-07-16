@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/vgPumpDetailsView"
-    style="@style/Card"
+    android:padding="8dp"
+    android:background="@color/offwhite"
+    android:layout_margin="10dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <RelativeLayout
@@ -12,14 +14,13 @@
 
         <ImageView
             android:id="@+id/ivPump"
+            android:scaleType="centerCrop"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="5dp"
-            android:layout_marginBottom="5dp"
-            android:src="@android:drawable/screen_background_light_transparent"
-            android:contentDescription="@android:color/transparent" />
+            android:layout_marginBottom="5dp"/>
 
         <TextView
             android:id="@+id/tvPumpName"
