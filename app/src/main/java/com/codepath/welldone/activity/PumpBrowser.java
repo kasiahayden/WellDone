@@ -96,9 +96,11 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
     private void swapMenuItemText() {
         if (mMapToggleMenuItem.getTitle().equals("Map")) {
             mMapToggleMenuItem.setTitle("List");
+            mMapToggleMenuItem.setIcon(R.drawable.ic_list);
         }
         else {
             mMapToggleMenuItem.setTitle("Map");
+            mMapToggleMenuItem.setIcon(R.drawable.ic_map);
         }
     }
 
