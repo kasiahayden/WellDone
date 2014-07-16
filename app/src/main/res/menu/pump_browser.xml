@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".PumpList" >
     <item android:id="@+id/action_map_me_bro"
-        android:title="Map"
         android:icon="@drawable/ic_map"
         android:orderInCategory="100"
-        android:showAsAction="" />
+        android:title="Map"
+        android:showAsAction="always" />
 </menu>

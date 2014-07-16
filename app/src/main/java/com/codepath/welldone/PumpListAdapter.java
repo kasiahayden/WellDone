@@ -35,7 +35,6 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         ImageView ivPump;
         TextView tvLastUpdated;
         TextView tvLocation;
-        TextView tvPumpName;
     }
     private ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -55,7 +54,6 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
             viewHolder.ivPump = (ImageView) convertView.findViewById(R.id.ivPump);
             viewHolder.tvLastUpdated = (TextView) convertView.findViewById(R.id.tvPumpLastUpdated);
             viewHolder.tvLocation = (TextView) convertView.findViewById(R.id.tvPumpLocation);
-            viewHolder.tvPumpName = (TextView) convertView.findViewById(R.id.tvPumpName);
             convertView.setTag(viewHolder);
         }
         else {
@@ -68,7 +66,6 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
 
         // The last updated date is wrt the local time zone.
         viewHolder.tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
-        viewHolder.tvPumpName.setText(pump.getName());
         // XXX: This will be replaced by an image of the pump itself. But color-coded for now.
         setPumpToRandomImage();
         setPumpColorBasedOnPriority(pump.getPriority());

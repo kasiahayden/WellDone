@@ -1,86 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.codepath.welldone.CardLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/vgPumpDetailsView"
-    android:padding="8dp"
-    android:background="@color/offwhite"
-    android:layout_margin="10dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/ivPump"
-            android:scaleType="centerCrop"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginBottom="5dp"/>
-
-        <TextView
-            android:id="@+id/tvPumpName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/ivPump"
-            android:layout_alignTop="@+id/ivPump"
-            android:layout_marginLeft="15dp"
-            android:gravity="left|center"
-            android:text="@string/pump_name_label"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvPumpLocation"
-            android:layout_width="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/tvPumpName"
-            android:layout_marginRight="5dp"
-            android:layout_height="wrap_content"
-            android:gravity="left|center"
-            android:text="@string/pump_location_label" />
-
-        <TextView
-            android:id="@+id/tvPumpLastUpdated"
-            android:layout_width="wrap_content"
-            android:layout_below="@+id/tvPumpLocation"
-            android:layout_alignRight="@+id/tvPumpLocation"
-            android:layout_height="wrap_content"
-            android:gravity="left|center"
-            android:text="@string/pump_last_updated_date_label" />
-
-        <TextView
-            android:id="@+id/tvPumpLastUpdatedLabel"
-            android:layout_width="wrap_content"
-            android:layout_below="@+id/tvPumpLocation"
-            android:layout_toLeftOf="@+id/tvPumpLastUpdated"
-            android:layout_alignTop="@+id/tvPumpLastUpdated"
-            android:layout_marginRight="5dp"
-            android:layout_height="wrap_content"
-            android:gravity="left|center"
-            android:text="@string/pump_last_updated_label" />
-
+    android:layout_height="match_parent"
+    android:background="@color/offwhite">
+    <!-- Note! Setting margin above has no effect on list rows -->
+    <com.codepath.welldone.CardLayout
+        android:id="@+id/vgPumpDetailsView"
+        android:padding="4dp"
+        android:layout_margin="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/offwhite">
         <RelativeLayout
-            android:id="@+id/vgDetailsContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            android:layout_below="@id/ivPump">
-           <TextView
-               android:id="@+id/tvFlavor"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="Flavor text for this pump."/>
-            <Button
-                android:id="@+id/btnNewReport"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivPump"
+                android:scaleType="centerCrop"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="5dp"/>
+
+            <TextView
+                android:id="@+id/tvPumpLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvFlavor"
-                android:text="New Report Bro"/>
-        </RelativeLayout>
-    </RelativeLayout>
+                android:layout_toRightOf="@+id/ivPump"
+                android:layout_alignTop="@+id/ivPump"
+                android:layout_marginLeft="15dp"
+                android:textSize="16dp"
+                android:text="@string/pump_name_label"/>
 
-</com.codepath.welldone.CardLayout>
+            <TextView
+                android:id="@+id/tvPumpLastUpdated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvPumpLocation"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@id/tvPumpLocation"
+                android:textColor="@color/textGray"
+                android:fontFamily="sans-serif-light"
+                android:text="Feb. 31" />
+
+            <TextView
+                android:id="@+id/tvPumpStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvPumpLocation"
+                android:textSize="14dp"
+                android:text="Broken temporarily"
+                android:layout_alignLeft="@id/tvPumpLocation"/>
+
+            <TextView
+                android:id="@+id/tvPriority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvPumpStatus"
+                android:layout_alignLeft="@id/tvPumpStatus"
+                android:textColor="@color/textGray"
+                android:text="Priority Level 1" />
+
+            <RelativeLayout
+                android:id="@+id/vgDetailsContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                android:layout_below="@id/ivPump">
+               <TextView
+                   android:id="@+id/tvFlavor"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Flavor text for this pump."/>
+                <Button
+                    android:id="@+id/btnNewReport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvFlavor"
+                    android:text="New Report Bro"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </com.codepath.welldone.CardLayout>
+
+</FrameLayout>
