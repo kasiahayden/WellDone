@@ -26,4 +26,5 @@
     <string name="title_activity_sign_in">SignInActivity</string>
     <string name="default_pump_flavor_text" >Pump 13 was installed in 2012 as part of the relief effort funded by the TKyS. Pump 13 uses MoMoOS 3.1.</string>
 
+    <string name="sort_by">Sort by</string>
 </resources>

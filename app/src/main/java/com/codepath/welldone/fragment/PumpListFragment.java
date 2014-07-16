@@ -5,6 +5,9 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -59,11 +62,21 @@ public class PumpListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        // There's an options menu for this fragment only
+        setHasOptionsMenu(true);
+
         mCurrentPumpIndex = 0;
 
         currentUser = ParseUser.getCurrentUser();
         Log.d("debug", "Current user: " + currentUser.getUsername() + " " + currentUser.get("location"));
         mPumpArrayAdapter = new PumpListAdapter((Activity)mListener);
+    }
+
+    // Add a special menu XML for this fragment only.
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        inflater.inflate(R.menu.pump_list, menu);
     }
 
     @Override
@@ -77,7 +90,7 @@ public class PumpListFragment extends Fragment {
 
         pbLoading.setVisibility(ProgressBar.VISIBLE);
         mPumpArrayAdapter.clear();
-        fetchPumpsInBackground(ParseQuery.getQuery("Pump"));
+        fetchPumpsInBackground(ParseQuery.getQuery("Pump"), true /* additional sorting by distance */);
 
         return v;
     }
@@ -94,10 +107,35 @@ public class PumpListFragment extends Fragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.sortDistance:
+                mPumpArrayAdapter.clear();
+                // XXX Adding the extra boolean param is BAD coding practice, but this is what time
+                // allows for. :(
+                fetchPumpsInBackground(ParseQuery.getQuery("Pump"), true
+                                                   /* apply additional sort, outside of DB query */);
+                return true;
+            case R.id.sortPriority:
+                mPumpArrayAdapter.clear();
+                fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByAscending("priority"),
+                                       false);
+                return true;
+            case R.id.sortLastUpdated:
+                mPumpArrayAdapter.clear();
+                fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
+                                       false);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
     }
-
 
     /* Private methods */
     private void setupViews(View v) {
@@ -156,7 +194,8 @@ public class PumpListFragment extends Fragment {
      * First start with querying the local pin. If nothing there, query the remote source.
      * @param query
      */
-    private void fetchPumpsInBackground(final ParseQuery<ParseObject> query) {
+    private void fetchPumpsInBackground(final ParseQuery<ParseObject> query,
+                                        final boolean additionalSort) {
 
         query.fromPin(PumpPersister.ALL_PUMPS);
 
@@ -169,11 +208,11 @@ public class PumpListFragment extends Fragment {
                     Log.d("info", "Fetching pumps from local DB. Found " + pumpList.size());
 
                     if (pumpList.size() == 0) {
-                        fetchPumpsFromRemote(ParseQuery.getQuery("Pump"));
+                        fetchPumpsFromRemote(ParseQuery.getQuery("Pump"), additionalSort);
                     } else {
                         pbLoading.setVisibility(ProgressBar.INVISIBLE);
                         Log.d("debug", "Using pumps fetched from local DB.");
-                        sortAndAddPumpsToAdapter(pumpList);
+                        addPumpsToAdapter(pumpList, additionalSort);
                     }
                 } else {
                     Log.d("error", "Exception while fetching pumps: " + e);
@@ -187,7 +226,8 @@ public class PumpListFragment extends Fragment {
      * Fetch pumps from remote source.
      * @param query
      */
-    private void fetchPumpsFromRemote(ParseQuery<ParseObject> query) {
+    private void fetchPumpsFromRemote(ParseQuery<ParseObject> query,
+                                      final boolean additionalSort) {
 
         query.findInBackground(new FindCallback<ParseObject>() {
 
@@ -196,7 +236,7 @@ public class PumpListFragment extends Fragment {
                 pbLoading.setVisibility(ProgressBar.INVISIBLE);
                 if (e == null) {
                     Log.d("info", "Fetching pumps from remote DB. Found " + pumpList.size());
-                    sortAndAddPumpsToAdapter(pumpList);
+                    addPumpsToAdapter(pumpList, additionalSort);
 
                     // Unpin previously cached data and re-pin the newly fetched.
                     if (pumpList != null && !pumpList.isEmpty()) {
@@ -241,12 +281,20 @@ public class PumpListFragment extends Fragment {
         //Toast.makeText(getActivity(), "PumpListFragment: onResume", Toast.LENGTH_LONG).show();
         Log.d(TAG, "onResume calls fetchPumpsInBackground");
         mPumpArrayAdapter.clear();
-        fetchPumpsFromRemote(ParseQuery.getQuery("Pump"));
+        fetchPumpsFromRemote(ParseQuery.getQuery("Pump"), false);
     }
 
+    private void addPumpsToAdapter(List<ParseObject> pumpList, boolean additionalSort) {
 
-    private void sortAndAddPumpsToAdapter(List<ParseObject> pumpList) {
-
+        // return the results as they are
+        if (!additionalSort) {
+            for (ParseObject object : pumpList) {
+                final Pump pump = (Pump) object;
+                mPumpArrayAdapter.add(pump);
+            }
+            return;
+        }
+        // Apply custom sorting (outside of DB query) to sort by distance from current user.
         final List<Pump> pumps = new ArrayList<Pump>(pumpList.size());
         for (ParseObject object : pumpList) {
             final Pump pump = (Pump) object;
