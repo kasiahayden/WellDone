@@ -14,6 +14,7 @@ import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.codepath.welldone.DropDownAnim;
 import com.codepath.welldone.PumpListAdapter;
@@ -51,7 +52,12 @@ public class PumpListFragment extends Fragment {
      * @return the currently highlighted (expanded) pump
      */
     public Pump getCurrentPump() {
-        return mPumpArrayAdapter.getItem(mCurrentPumpIndex);
+        try {
+            return mPumpArrayAdapter.getItem(mCurrentPumpIndex);
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static PumpListFragment newInstance() {

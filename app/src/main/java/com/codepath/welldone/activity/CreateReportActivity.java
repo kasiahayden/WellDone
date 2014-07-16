@@ -58,7 +58,11 @@ public class CreateReportActivity extends Activity {
 
         final String pumpObjectId = getIntent().getStringExtra("pumpObjectId");
         pumpToBeReported = PumpPersister.getPumpByObjectIdSyncly(pumpObjectId);
-        Log.d("debug", "Working with pump: " + pumpToBeReported.getObjectId() + " " + pumpToBeReported.getName());
+        try {
+            Log.d("debug", "Working with pump: " + pumpToBeReported.getObjectId() + " " + pumpToBeReported.getName());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         setupViews();
         setupListeners();
     }

@@ -3,6 +3,7 @@ package com.codepath.welldone.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,8 @@ public class PumpMapFragment extends Fragment {
     private TextView tvPumpName;
     private TextView tvLocation;
 
+    private static final String TAG = "PumpMapFragment";
+
     public PumpMapFragment() {
         // Required empty public constructor
     }
@@ -37,7 +40,13 @@ public class PumpMapFragment extends Fragment {
     public static PumpMapFragment newInstance(Pump pump) {
         PumpMapFragment fragment = new PumpMapFragment();
         Bundle args = new Bundle();
-        args.putString("pumpID", pump.getObjectId());
+        try {
+            args.putString("pumpID", pump.getObjectId());
+        } catch (NullPointerException e) {
+            args.putString("pumpID", null);
+            Log.d(TAG, "pump given is null, so new fragment instance argument for objectId set to null");
+            e.printStackTrace();
+        }
         fragment.setArguments(args);
         return fragment;
     }

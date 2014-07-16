@@ -61,8 +61,13 @@ public class PumpUtil {
 
         final List<WrappedPump> wrappedPumps = new ArrayList<WrappedPump>(pumpList.size());
         for (Pump pump : pumpList) {
-            final double distanceFromUser = origin.distanceInKilometersTo(pump.getLocation());
-            wrappedPumps.add(new WrappedPump(pump, distanceFromUser));
+            try {
+                final double distanceFromUser = origin.distanceInKilometersTo(pump.getLocation());
+                wrappedPumps.add(new WrappedPump(pump, distanceFromUser));
+            }
+            catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
         return wrappedPumps;
     }

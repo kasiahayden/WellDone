@@ -65,12 +65,14 @@
             android:name=".activity.CreateReportActivity"
             android:label="@string/title_activity_create_report" >
         </activity>
-        <activity
-            android:name=".activity.DemoPushActivity"
-            android:label="@string/title_activity_demo_push" >
-        </activity>
 
         <service android:name="com.parse.PushService" />
+
+        <!--activity
+            android:name=".activity.DemoPushActivity"
+            android:label="@string/title_activity_demo_push" >
+        </activity>-->
+
 
         <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>

@@ -2,6 +2,7 @@ package com.codepath.welldone;
 
 import android.app.Application;
 
+import com.codepath.welldone.activity.CreateReportActivity;
 import com.codepath.welldone.activity.DemoPushActivity;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.Report;
@@ -22,8 +23,8 @@ public class ParseApplication extends Application {
 
         Parse.initialize(this, "zs3GmrOhOzJCIyPE9Nu8k35FOfscjofe1NAa7HPP", "RBNwokWUIVKwv9dh8jtZmk90EKvYOiNRNlK2bXNP");
 
-        PushService.setDefaultPushCallback(this, DemoPushActivity.class); //TODO change to activity where saveInBackground is called
-                                                                          // on current installation of Parse (then import)
+        PushService.setDefaultPushCallback(this, CreateReportActivity.class);
 	}
 
 }
+

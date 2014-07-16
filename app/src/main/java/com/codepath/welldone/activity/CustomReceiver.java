@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.codepath.welldone.fragment.PumpListFragment;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,33 +42,15 @@ public class CustomReceiver extends BroadcastReceiver {
                         Log.d(TAG, "..." + key + " => " + json.getString(key));
                     }
 
-                    String objectId = json.getString("objectId");
-                    Intent i = new Intent(context, PumpDetails.class);
-                    i.putExtra("pumpObjectId", objectId);
+                    Intent i = new Intent(context, PumpBrowser.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.getApplicationContext().startActivity(i);
 
-                    /*PumpListFragment pumpListFragment = PumpListFragment.newInstance(new Pump());
-                    pumpListFragment.triggerFetchAndRedraw();*/
-
-                    /*Log.d(TAG, "got action " + action + " on channel " + channel + " with:");
-                    Iterator<String> itr = json.keys();
-                    while (itr.hasNext()) {
-                        String key = (String) itr.next();
-                        if (key.equals("customdata"))
-                        {
-                            // Handle push notif by invoking activity directly
-                            Intent pupInt = new Intent(context, ShowPopUp.class);
-                            pupInt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-                            pupInt.putExtra("customdata", json.getString(key));
-                            context.getApplicationContext().startActivity(pupInt);
-
-                            // Handle push notif by sending a local braoadcast to which the activity
-                            // subscirbes to
-                            LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(intentAction));
-                        }
-                        Log.d(TAG, "..." + key + " => " + json.getString(key));
-                    }*/
+                    /*String objectId = json.getString("objectId");
+                    Intent i = new Intent(context, PumpDetails.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.putExtra("pumpObjectId", objectId);
+                    context.getApplicationContext().startActivity(i);*/
                 }
             }
         } catch (JSONException e) {
