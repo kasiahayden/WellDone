@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".PumpList" >
+
+    <item android:id="@+id/edit_item"
+        android:showAsAction="ifRoom"
+        android:orderInCategory="10"
+        android:title="@string/sort_by">
+        <menu>
+            <item
+                android:id="@+id/sortDistance"
+                android:title="Distance" />
+            <item
+                android:id="@+id/sortPriority"
+                android:title="Priority" />
+            <item
+                android:id="@+id/sortLastUpdated"
+                android:title="Last Updated" />
+        </menu>
+    </item>
+
+</menu>
