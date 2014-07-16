@@ -38,6 +38,7 @@ public class PumpListFragment extends Fragment {
     private ParseUser currentUser;
 
     public PumpListAdapter.PumpListListener mListener;
+    private final String TAG = "PumpListFragment";
 
     private int mCurrentPumpIndex;
 
@@ -176,6 +177,7 @@ public class PumpListFragment extends Fragment {
                     }
                 } else {
                     Log.d("error", "Exception while fetching pumps: " + e);
+                    pbLoading.setVisibility(ProgressBar.INVISIBLE);
                 }
             }
         });
@@ -232,6 +234,16 @@ public class PumpListFragment extends Fragment {
         Log.d("debug", "Pinning newly retrieved objects");
         ParseObject.pinAllInBackground(PumpPersister.ALL_PUMPS, pumpList);
     }
+
+    @Override
+    public void onResume() { //KMH: we can make this less frequent irl, but good for demo purposes
+        super.onResume();
+        //Toast.makeText(getActivity(), "PumpListFragment: onResume", Toast.LENGTH_LONG).show();
+        Log.d(TAG, "onResume calls fetchPumpsInBackground");
+        mPumpArrayAdapter.clear();
+        fetchPumpsFromRemote(ParseQuery.getQuery("Pump"));
+    }
+
 
     private void sortAndAddPumpsToAdapter(List<ParseObject> pumpList) {
 

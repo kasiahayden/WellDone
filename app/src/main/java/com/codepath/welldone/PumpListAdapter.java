@@ -106,9 +106,13 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
 
 
     private void setupLocationLabel(Pump pump) {
-        String fullyQualifiedName = String.format("%s", pump.getAddress());
-
-        viewHolder.tvLocation.setText(fullyQualifiedName.split(",")[0]);
+        try {
+            String fullyQualifiedName = String.format("%s", pump.getAddress());
+            viewHolder.tvLocation.setText(fullyQualifiedName.split(",")[0]);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Set the color of a pump number based on its priority
