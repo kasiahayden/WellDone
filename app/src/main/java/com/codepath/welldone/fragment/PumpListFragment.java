@@ -150,10 +150,19 @@ public class PumpListFragment extends Fragment {
                 ViewGroup.LayoutParams params = view.getLayoutParams();
 
                 View v = view.findViewById(R.id.vgDetailsContainer);
-                v.setVisibility(View.VISIBLE);
-                DropDownAnim anim = new DropDownAnim(v, 200, true);
-                anim.setDuration(500);
-                v.startAnimation(anim);
+                boolean expanded = v.getVisibility() == View.VISIBLE;
+                if (expanded) {
+                    v.setVisibility(View.GONE);
+                    DropDownAnim anim = new DropDownAnim(v, 0, false);
+                    anim.setDuration(350);
+                    v.startAnimation(anim);
+                }
+                else {
+                    v.setVisibility(View.VISIBLE);
+                    DropDownAnim anim = new DropDownAnim(v, 200, true);
+                    anim.setDuration(500);
+                    v.startAnimation(anim);
+                }
                 mCurrentPumpIndex = position;
 
             }

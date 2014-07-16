@@ -4,7 +4,8 @@
     <color name="darkBlue">#0092fc</color>
     <color name="actionBarTopColor">#00aadc</color>
     <color name="actionBarBottomColor">#00a7e1</color>
-    <color name="textGray">#999999</color>
+    <color name="textGray">#999999</color>232020
+    <color name="textBlack">#232020</color>
 
     <color name="cardOuterStroke">#e2e7f1</color>
     <color name="cardInnerStroke">#dde3ee</color>

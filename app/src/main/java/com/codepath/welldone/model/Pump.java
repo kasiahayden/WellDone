@@ -4,11 +4,29 @@ import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
+import java.util.HashMap;
+
 /**
  * Class to represent a pump.
  */
 @ParseClassName("Pump")
 public class Pump extends ParseObject {
+
+    private static HashMap<String, String> pumpStatuses;
+
+    public static String GOOD = "GOOD";
+    public static String BROKEN = "BROKEN";
+    public static String FIX_IN_PROGRESS = "FIX_IN_PROGRESS";
+
+    public static String humanReadableStringForStatus(String status) {
+        if (pumpStatuses == null) {
+            pumpStatuses = new HashMap<String, String>();
+            pumpStatuses.put(GOOD, "Good");
+            pumpStatuses.put(BROKEN, "Broken");
+            pumpStatuses.put(FIX_IN_PROGRESS, "Fix in progress");
+        }
+        return pumpStatuses.get(status);
+    }
 
     public Pump() {
 

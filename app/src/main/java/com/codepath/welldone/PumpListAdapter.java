@@ -3,6 +3,7 @@ package com.codepath.welldone;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.codepath.welldone.helper.DateTimeUtil;
 import com.codepath.welldone.model.Pump;
 
 import java.io.IOException;
@@ -35,6 +35,8 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         ImageView ivPump;
         TextView tvLastUpdated;
         TextView tvLocation;
+        TextView tvStatus;
+        TextView tvPriority;
     }
     private ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -53,7 +55,10 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_pump, parent, false);
             viewHolder.ivPump = (ImageView) convertView.findViewById(R.id.ivPump);
             viewHolder.tvLastUpdated = (TextView) convertView.findViewById(R.id.tvPumpLastUpdated);
+            viewHolder.tvPriority = (TextView)convertView.findViewById(R.id.tvPriority);
+            viewHolder.tvStatus = (TextView)convertView.findViewById(R.id.tvPumpStatus);
             viewHolder.tvLocation = (TextView) convertView.findViewById(R.id.tvPumpLocation);
+            clearTextViews();
             convertView.setTag(viewHolder);
         }
         else {
@@ -65,10 +70,10 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         }
 
         // The last updated date is wrt the local time zone.
-        viewHolder.tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
-        // XXX: This will be replaced by an image of the pump itself. But color-coded for now.
+        viewHolder.tvLastUpdated.setText(DateUtils.formatDateTime(getContext(), pump.getUpdatedAt().getTime(), DateUtils.FORMAT_SHOW_DATE));
+        viewHolder.tvStatus.setText(Pump.humanReadableStringForStatus(pump.getCurrentStatus()));
+        viewHolder.tvPriority.setText(String.format("Priority Level %d", pump.getPriority()));
         setPumpToRandomImage();
-        setPumpColorBasedOnPriority(pump.getPriority());
         setupLocationLabel(pump);
 
         Button newReport = (Button)convertView.findViewById(R.id.btnNewReport);
@@ -80,6 +85,13 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         });
 
         return convertView;
+    }
+
+    private void clearTextViews() {
+        viewHolder.tvLocation.setText("");
+        viewHolder.tvStatus.setText("");
+        viewHolder.tvPriority.setText("");
+        viewHolder.tvLastUpdated.setText("");
     }
 
     private void setPumpToRandomImage() {
@@ -94,7 +106,9 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
 
 
     private void setupLocationLabel(Pump pump) {
-        viewHolder.tvLocation.setText(String.format("%s", pump.getAddress()));
+        String fullyQualifiedName = String.format("%s", pump.getAddress());
+
+        viewHolder.tvLocation.setText(fullyQualifiedName.split(",")[0]);
     }
 
     // Set the color of a pump number based on its priority
