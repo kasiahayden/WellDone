@@ -5,4 +5,8 @@
     <color name="actionBarTopColor">#00aadc</color>
     <color name="actionBarBottomColor">#00a7e1</color>
 
+    <color name="cardOuterStroke">#e2e7f1</color>
+    <color name="cardInnerStroke">#dde3ee</color>
+    <color name="cardFill">#FFFFFF</color>
+
 </resources>

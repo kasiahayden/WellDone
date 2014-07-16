@@ -1,0 +1,34 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/cardOuterStroke" />
+            <corners
+                android:bottomLeftRadius="4dp"
+                android:bottomRightRadius="4dp" />
+        </shape>
+    </item>
+    <item
+        android:left="1dp"
+        android:top="1dp"
+        android:right="1dp"
+        android:bottom="1dp">
+        <shape>
+            <solid android:color="@color/cardInnerStroke" />
+            <corners
+                android:bottomLeftRadius="3dp"
+                android:bottomRightRadius="3dp" />
+        </shape>
+    </item>
+    <item
+        android:left="1dp"
+        android:top="0dp"
+        android:right="1dp"
+        android:bottom="2dp">
+        <shape>
+            <solid android:color="@color/cardFill" />
+            <corners
+                android:bottomLeftRadius="2dp"
+                android:bottomRightRadius="2dp" />
+        </shape>
+    </item>
+</layer-list>
