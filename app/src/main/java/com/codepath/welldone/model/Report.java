@@ -1,5 +1,7 @@
 package com.codepath.welldone.model;
 
+import android.util.Log;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -47,9 +49,7 @@ public class Report extends ParseObject {
         return (Pump) getParseObject("pump");
     }
 
-    public void setPump(Pump pump) {
-        put("pump", pump);
-    }
+    public void setPump(Pump pump) { put("pump", pump); }
 
     public String getReportedStatus() {
         return getString("reportedStatus");

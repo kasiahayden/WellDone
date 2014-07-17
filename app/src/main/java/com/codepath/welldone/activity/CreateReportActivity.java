@@ -213,22 +213,38 @@ public class CreateReportActivity extends Activity {
                         if (e == null) {
                             Log.d("debug", "Pump pinned successfully: " + updatedPump.getObjectId()
                                     + " " + updatedPump.getName());
-                            Toast.makeText(getApplicationContext(),
-                                    "Report submitted successfully.",
-                                    Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "Report submitted successfully.",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Report saved and queued for upload.",Toast.LENGTH_SHORT).show();
                         } else {
                             Log.d("debug", "Could not pin pump: " + updatedPump.getObjectId()
                                     + " " + updatedPump.getName() + e.toString());
-                            Toast.makeText(getApplicationContext(),
-                                    "Error submitting report! Please try again later.",
-                                    Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "Error submitting report! Please try again later.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Error saving report! Please try again later.", Toast.LENGTH_SHORT).show();
                         }
                         startActivity(new Intent(getApplicationContext(), PumpBrowser.class));
                     }
                 });
-                updatedPump.saveEventually();
+                //updatedPump.saveEventually();
+                updatedPump.saveInBackground(new SaveCallback() {
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Toast.makeText(getApplicationContext(), "Pump successfully uploaded to server.",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.e("CreateReportActivity", "updatedPump.saveInBackground failed: " + e.toString());
+                        }
+                    }
+                });
             }
         });
-        report.saveEventually();
+        //report.saveEventually();
+        report.saveInBackground(new SaveCallback() {
+            public void done(ParseException e) {
+                if (e == null) {
+                    Toast.makeText(getApplicationContext(), "Report successfully uploaded to server.",Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.e("CreateReportActivity", "report.saveInBackground failed: " + e.toString());
+                }
+            }
+        });
     }
 }
