@@ -85,14 +85,24 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
         return super.onOptionsItemSelected(item);
     }
 
+    private void swapInListFragment() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+        ft.hide(mMapFragment);
+        ft.show(mListFragment);
+        ft.commit();
+        isDisplayingMap = false;
+        setupMapToggleMenuItem();
+    }
+
     private void swapInMapFragment() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         ft.show(mMapFragment);
         ft.hide(mListFragment);
         ft.commit();
         isDisplayingMap = true;
         setupMapToggleMenuItem();
-        Log.d("DBG", String.format("after swap in map: map hidden? %b list hidden? %b", mMapFragment.isHidden(), mListFragment.isHidden()));
     }
 
     public void onNewReportClicked(Pump pump) {
@@ -104,18 +114,6 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
     public void onNewReportClicked(View view) {
         onNewReportClicked(mListFragment.getCurrentPump());
     }
-
-
-    private void swapInListFragment() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.hide(mMapFragment);
-        ft.show(mListFragment);
-        ft.commit();
-        isDisplayingMap = false;
-        setupMapToggleMenuItem();
-        Log.d("DBG", String.format("after swap in list: map hidden? %b list hidden? %b", mMapFragment.isHidden(), mListFragment.isHidden()));
-    }
-
     void printMenuItemTitle() {
         Log.d("DBG", String.format("before %s", mMapToggleMenuItem.getTitle().toString()));
     }
