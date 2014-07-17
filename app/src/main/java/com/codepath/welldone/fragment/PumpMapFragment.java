@@ -2,12 +2,11 @@ package com.codepath.welldone.fragment;
 
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.R;
@@ -28,8 +27,7 @@ public class PumpMapFragment extends Fragment {
     private Pump mPump;
     private String mPumpID;
 
-    private TextView tvPumpName;
-    private TextView tvLocation;
+    private MapFragment mapFragment;
 
     private static final String TAG = "PumpMapFragment";
 
@@ -37,17 +35,8 @@ public class PumpMapFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static PumpMapFragment newInstance(Pump pump) {
+    public static PumpMapFragment newInstance() {
         PumpMapFragment fragment = new PumpMapFragment();
-        Bundle args = new Bundle();
-        try {
-            args.putString("pumpID", pump.getObjectId());
-        } catch (NullPointerException e) {
-            args.putString("pumpID", null);
-            Log.d(TAG, "pump given is null, so new fragment instance argument for objectId set to null");
-            e.printStackTrace();
-        }
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -67,6 +56,7 @@ public class PumpMapFragment extends Fragment {
                 }
             });
         }
+        mapFragment = new MapFragment();
     }
 
     @Override
@@ -92,40 +82,23 @@ public class PumpMapFragment extends Fragment {
 
     private void redrawUI() {
         addPipsToMap();
-        if (mPump.getLocation() != null) {
-            tvLocation.setText(String.format("%f, %f", mPump.getLocation().getLatitude(), mPump.getLocation().getLongitude()));
-        }
-        tvPumpName.setText(mPump.getName());
     }
 
     GoogleMap getMap() {
-        return ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
+        return mapFragment.getMap();
     }
 
     void onNewReportClicked(View view) {
         ((PumpListAdapter.PumpListListener)getActivity()).onNewReportClicked(mPump);
     }
 
-    /**
-     * Hack to not crash when re-entering the map fragment
-     * http://stackoverflow.com/a/14484640/143913
-     */
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        MapFragment f = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
-        if (f != null)
-            getFragmentManager().beginTransaction().remove(f).commit();
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pump_map_view, container, false);
-        tvPumpName = (TextView)v.findViewById(R.id.tvPumpName);
-        tvPumpName.setText("");
-        tvLocation = (TextView)v.findViewById(R.id.tvPumpLocation);
-        tvLocation.setText("");
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.add(R.id.vgMapContainer, mapFragment);
+        ft.commit();
         return v;
     }
 

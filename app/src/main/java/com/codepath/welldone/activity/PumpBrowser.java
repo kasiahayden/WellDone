@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +26,8 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
     PumpListFragment mListFragment;
     private MenuItem mMapToggleMenuItem;
 
+    private boolean isDisplayingMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,12 +37,17 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
         mListFragment = PumpListFragment.newInstance();
 
         addInitialListFragment();
+
+        isDisplayingMap = false;
     }
 
     void addInitialListFragment() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         mListFragment = PumpListFragment.newInstance();
+        mMapFragment = PumpMapFragment.newInstance();
         ft.add(R.id.vgFragmentContainer, mListFragment);
+        ft.add(R.id.vgFragmentContainer, mMapFragment);
+        ft.hide(mMapFragment);
         ft.commit();
     }
 
@@ -47,7 +55,19 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.pump_browser, menu);
         mMapToggleMenuItem = menu.findItem(R.id.action_map_me_bro);
+        setupMapToggleMenuItem();
         return true;
+    }
+
+    private void setupMapToggleMenuItem() {
+        if (isDisplayingMap) {
+            mMapToggleMenuItem.setTitle("List");
+            mMapToggleMenuItem.setIcon(R.drawable.ic_list);
+        }
+        else {
+            mMapToggleMenuItem.setTitle("Map");
+            mMapToggleMenuItem.setIcon(R.drawable.ic_map);
+        }
     }
 
     @Override
@@ -66,13 +86,13 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
     }
 
     private void swapInMapFragment() {
-
-        createMapFragmentIfNecessary();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.vgFragmentContainer, mMapFragment);
+        ft.show(mMapFragment);
+        ft.hide(mListFragment);
         ft.commit();
-
-        swapMenuItemText();
+        isDisplayingMap = true;
+        setupMapToggleMenuItem();
+        Log.d("DBG", String.format("after swap in map: map hidden? %b list hidden? %b", mMapFragment.isHidden(), mListFragment.isHidden()));
     }
 
     public void onNewReportClicked(Pump pump) {
@@ -88,23 +108,16 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
 
     private void swapInListFragment() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.vgFragmentContainer, mListFragment);
+        ft.hide(mMapFragment);
+        ft.show(mListFragment);
         ft.commit();
-        swapMenuItemText();
+        isDisplayingMap = false;
+        setupMapToggleMenuItem();
+        Log.d("DBG", String.format("after swap in list: map hidden? %b list hidden? %b", mMapFragment.isHidden(), mListFragment.isHidden()));
     }
 
-    private void swapMenuItemText() {
-        if (mMapToggleMenuItem.getTitle().equals("Map")) {
-            mMapToggleMenuItem.setTitle("List");
-            mMapToggleMenuItem.setIcon(R.drawable.ic_list);
-        }
-        else {
-            mMapToggleMenuItem.setTitle("Map");
-            mMapToggleMenuItem.setIcon(R.drawable.ic_map);
-        }
+    void printMenuItemTitle() {
+        Log.d("DBG", String.format("before %s", mMapToggleMenuItem.getTitle().toString()));
     }
 
-    private void createMapFragmentIfNecessary() {
-        mMapFragment = PumpMapFragment.newInstance(mListFragment.getCurrentPump());
-    }
 }
