@@ -57,6 +57,7 @@ public class CreateReportActivity extends Activity {
         setContentView(R.layout.activity_create_report);
 
         final String pumpObjectId = getIntent().getStringExtra("pumpObjectId");
+        Log.d("CreateReportActivity", "pumpObjectId passed in intents: " + pumpObjectId);
         pumpToBeReported = PumpPersister.getPumpByObjectIdSyncly(pumpObjectId);
         try {
             Log.d("debug", "Working with pump: " + pumpToBeReported.getObjectId() + " " + pumpToBeReported.getName());
@@ -225,7 +226,7 @@ public class CreateReportActivity extends Activity {
                     }
                 });
                 //updatedPump.saveEventually();
-                updatedPump.saveInBackground(new SaveCallback() {
+                updatedPump.saveEventually(new SaveCallback() {
                     public void done(ParseException e) {
                         if (e == null) {
                             Toast.makeText(getApplicationContext(), "Pump successfully uploaded to server.",Toast.LENGTH_SHORT).show();
@@ -237,7 +238,7 @@ public class CreateReportActivity extends Activity {
             }
         });
         //report.saveEventually();
-        report.saveInBackground(new SaveCallback() {
+        report.saveEventually(new SaveCallback() {
             public void done(ParseException e) {
                 if (e == null) {
                     Toast.makeText(getApplicationContext(), "Report successfully uploaded to server.",Toast.LENGTH_SHORT).show();

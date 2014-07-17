@@ -1,5 +1,7 @@
 package com.codepath.welldone.persister;
 
+import android.util.Log;
+
 import com.codepath.welldone.model.Pump;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -29,7 +31,8 @@ public class PumpPersister {
         try {
             return ((Pump) query.getFirst());
         } catch (ParseException e) {
-
+            e.printStackTrace();
+            Log.d("PumpPersister", "getPumpByObjectIdSyncly failed to return pump with objectId: " + pumpObjectId);
         }
         return null;
     }
