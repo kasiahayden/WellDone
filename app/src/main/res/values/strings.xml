@@ -4,12 +4,13 @@
     <string name="app_name">WellDone</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_pump_details">PumpDetails</string>
-    <string name="title_activity_create_report">CreateReportActivity</string>
+    <string name="title_activity_pump_details">Pump Details</string>
+    <string name="title_activity_create_report">New Report</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pump_name_label">Pump: </string>
     <string name="pump_location_label">Pump Location</string>
     <string name="pump_last_updated_date_label">Last Updated Date</string>
+    <string name="create_report">CREATE REPORT</string>
     <string name="title_activity_demo_camera">DemoCameraActivity</string>
     <string name="title_activity_demo_push">DemoPushActivity</string>
     <string name="title_activity_demo_sms">DemoSMSActivity</string>
@@ -17,8 +18,8 @@
     <string name="report_title_hint">Badly Broken Pump</string>
     <string name="pump_status_label">Status</string>
     <string name="report_notes_label">Add Notes</string>
-    <string name="report_notes_note">Add any other notes here.</string>
-    <string name="submit_report">Submit Report</string>
+    <string name="report_notes_hint">Notes for this report.</string>
+    <string name="submit_report">SUBMIT NEW REPORT</string>
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
     <string name="signin_text">SIGN IN</string>

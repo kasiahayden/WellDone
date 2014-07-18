@@ -2,97 +2,120 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.codepath.welldone.activity.CreateReportActivity">
 
     <ImageView
         android:id="@+id/ivFixedPump"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="180dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:src="@android:drawable/screen_background_light_transparent"
-        android:contentDescription="@android:color/transparent" />
+        android:contentDescription="@android:color/transparent"
+        android:background="@drawable/pump3" />
 
-   <TextView
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/ivFixedPump"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:layout_centerHorizontal="true">
+
+        <EditText
+            android:id="@+id/etReportTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="5dp"
+            android:hint="@string/report_title_hint" />
+
+        <!--android:layout_width="match_parent"-->
+
+        <!--<TextView
+            android:id="@+id/tvPumpStatusLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etReportTitle"
+            android:layout_marginTop="10dp"
+            android:layout_alignLeft="@+id/ivFixedPump"
+            android:layout_alignBottom="@+id/spPumpStatus"
+            android:hint="@string/pump_status_label"/>-->
+
+        <!-- XXX fix the font of the spinner to match the page -->
+        <Spinner
+            android:id="@+id/spPumpStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/pump_status_options"
+            android:layout_alignTop="@+id/etReportTitle"
+            android:layout_alignRight="@+id/etReportNotes"
+            android:layout_alignEnd="@+id/etReportNotes"
+            android:layout_toRightOf="@+id/etReportTitle">
+        </Spinner>
+
+        <!--<TextView
+            android:id="@+id/tvReportNotesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spPumpStatus"
+            android:layout_marginTop="10dp"
+            android:layout_alignLeft="@+id/ivFixedPump"
+            android:hint="@string/report_notes_label" /> -->
+
+        <EditText
+            android:id="@+id/etReportNotes"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:scrollbars="vertical"
+            android:layout_below="@+id/etReportTitle"
+            android:layout_marginTop="5dp"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:gravity="left|top"
+            android:hint="@string/report_notes_hint"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/btnSubmitReport"
+            android:layout_width="170dp"
+            android:layout_height="35dp"
+            android:background="@drawable/new_report"
+            android:textColor="@color/offwhite"
+            android:focusable="false"
+            android:textSize="14dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="25dp"
+            android:text="@string/submit_report"
+            android:onClick="onReportSubmit"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
+
+
+
+    <!--
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" -->
+
+   <!--<TextView
        android:id="@+id/tvReportTitleLabel"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:layout_below="@+id/ivFixedPump"
        android:layout_marginTop="10dp"
        android:layout_alignLeft="@+id/ivFixedPump"
-       android:hint="@string/report_title_label" />
+       android:hint="@string/report_title_label" />-->
 
-    <EditText
-        android:id="@+id/etReportTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:layout_below="@+id/tvReportTitleLabel"
-        android:layout_marginTop="5dp"
-        android:layout_alignLeft="@+id/ivFixedPump"
-        android:hint="@string/report_title_hint" />
 
-    <TextView
-        android:id="@+id/tvPumpStatusLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etReportTitle"
-        android:layout_marginTop="10dp"
-        android:layout_alignLeft="@+id/ivFixedPump"
-        android:layout_alignBottom="@+id/spPumpStatus"
-        android:hint="@string/pump_status_label"/>
 
-    <!-- XXX fix the font of the spinner to match the page -->
-    <Spinner
-        android:id="@+id/spPumpStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etReportTitle"
-        android:layout_alignRight="@+id/ivFixedPump"
-        android:layout_toRightOf="@+id/tvPumpStatusLabel"
-        android:layout_marginLeft="100dp"
-        android:entries="@array/pump_status_options">
-    </Spinner>
 
-    <TextView
-        android:id="@+id/tvReportNotesLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spPumpStatus"
-        android:layout_marginTop="10dp"
-        android:layout_alignLeft="@+id/ivFixedPump"
-        android:hint="@string/report_notes_label" />
 
-    <EditText
-        android:id="@+id/etReportNotes"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:scrollbars="vertical"
-        android:layout_alignLeft="@+id/ivFixedPump"
-        android:layout_alignRight="@+id/ivFixedPump"
-        android:layout_below="@+id/tvReportNotesLabel"
-        android:layout_marginTop="5dp"
-        android:ems="10"
-        android:inputType="textMultiLine"
-        android:gravity="left|top"
-        android:hint="@string/report_notes_note"
-        android:textSize="15sp" />
 
-    <Button
-        android:id="@+id/btnSubmitReport"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etReportNotes"
-        android:layout_marginTop="5dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        android:text="@string/submit_report"
-        android:onClick="onReportSubmit"/>
-
-</RelativeLayout>
