@@ -14,13 +14,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.codepath.welldone.DropDownAnim;
 import com.codepath.welldone.PumpListAdapter;
+import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
 import com.codepath.welldone.helper.PumpUtil;
 import com.codepath.welldone.model.Pump;
@@ -229,36 +228,9 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
                 Pump pump = (Pump) parent.getItemAtPosition(position);
                 Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
 
-                final View v = view.findViewById(R.id.vgDetailsContainer);
-                boolean expanded = v.getVisibility() == View.VISIBLE;
-                if (expanded) {
-                    DropDownAnim anim = new DropDownAnim(v, TARGET_DETAILS_HEIGHT, false);
-                    anim.setDuration(500);
-                    anim.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
+                PumpRowView v = (PumpRowView)view;
+                v.toggleExpandedState();
 
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            int x = 0; x++;
-                            v.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                    v.startAnimation(anim);
-                }
-                else {
-                    v.setVisibility(View.VISIBLE);
-                    DropDownAnim anim = new DropDownAnim(v, TARGET_DETAILS_HEIGHT, true);
-                    anim.setDuration(500);
-                    v.startAnimation(anim);
-                }
                 mCurrentPumpIndex = position;
 
             }

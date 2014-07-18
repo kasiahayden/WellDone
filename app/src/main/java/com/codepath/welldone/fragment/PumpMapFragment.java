@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.welldone.PumpListAdapter;
+import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
 import com.codepath.welldone.model.Pump;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,6 +29,8 @@ public class PumpMapFragment extends Fragment {
     private String mPumpID;
 
     private MapFragment mapFragment;
+
+    PumpRowView pumpRowView;
 
     private static final String TAG = "PumpMapFragment";
 
@@ -99,6 +102,13 @@ public class PumpMapFragment extends Fragment {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.add(R.id.vgMapContainer, mapFragment);
         ft.commit();
+        pumpRowView = (PumpRowView)v.findViewById(R.id.pumpDetailsView);
+        pumpRowView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pumpRowView.toggleExpandedState();
+            }
+        });
         return v;
     }
 

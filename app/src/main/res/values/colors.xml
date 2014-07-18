@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="offwhite">#FCFCFC</color> <!-- 252, 252, 252-->
-    <!--<color name="darkBlue">#0092fc</color>-->
-    <color name="darkBlue">#1b76b9</color>
-    <color name="actionBarTopColor">#31aadd</color>
-    <!--<color name="actionBarBottomColor">#00a7e1</color>-->
-    <color name="actionBarBottomColor">#2da6d9</color>
-    <color name="textGray">#999999</color>232020
-    <color name="textBlack">#232020</color>
+    <color name="darkBlue">#0092fc</color>    <!-- 3366cc -->
+    <color name="actionBarTopColor">#00aadc</color>
+    <color name="actionBarBottomColor">#00a7e1</color>
+    <color name="textGray">#999999</color>
+    <color name="textBlack">#666666</color>
     <color name="cardOuterStroke">#e2e7f1</color>
     <color name="cardInnerStroke">#dde3ee</color>
     <color name="cardFill">@color/offwhite</color>

@@ -41,7 +41,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
     private ViewHolder viewHolder; // view lookup cache stored in tag
 
     public PumpListAdapter(Context context) {
-        super(context, R.layout.row_pump);
+        super(context, R.layout.row_pump_list_item);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_pump, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_pump_list_item, parent, false);
             viewHolder.ivPump = (ImageView) convertView.findViewById(R.id.ivPump);
             viewHolder.tvLastUpdated = (TextView) convertView.findViewById(R.id.tvPumpLastUpdated);
             viewHolder.tvPriority = (TextView)convertView.findViewById(R.id.tvPriority);
