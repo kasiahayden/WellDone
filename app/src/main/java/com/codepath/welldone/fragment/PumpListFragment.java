@@ -45,6 +45,8 @@ public class PumpListFragment extends Fragment {
     private final String TAG = "PumpListFragment";
 
     private int mCurrentPumpIndex;
+    // The default view of pump list is sorted by distance from currently logged-in user.
+    private int sortMenuItemSelected = R.id.sortDistance;
 
     public PumpListFragment() {}
 
@@ -117,27 +119,52 @@ public class PumpListFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.sortDistance:
+                sortMenuItemSelected = R.id.sortDistance;
                 pbLoading.setVisibility(ProgressBar.VISIBLE);
                 mPumpArrayAdapter.clear();
                 // XXX Adding the extra boolean param is BAD coding practice, but this is what time
                 // allows for. :(
                 fetchPumpsInBackground(ParseQuery.getQuery("Pump"), true
                                                    /* apply additional sort, outside of DB query */);
+                getActivity().invalidateOptionsMenu();
                 return true;
             case R.id.sortPriority:
+                sortMenuItemSelected = R.id.sortPriority;
                 pbLoading.setVisibility(ProgressBar.VISIBLE);
                 mPumpArrayAdapter.clear();
                 fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByAscending("priority"),
                                        false);
+                getActivity().invalidateOptionsMenu();
                 return true;
             case R.id.sortLastUpdated:
+                sortMenuItemSelected = R.id.sortLastUpdated;
                 pbLoading.setVisibility(ProgressBar.VISIBLE);
                 mPumpArrayAdapter.clear();
                 fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
                                        false);
+                getActivity().invalidateOptionsMenu();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        switch (sortMenuItemSelected) {
+
+            case R.id.sortDistance:
+                menu.findItem(R.id.sortDistance).setEnabled(false);
+                break;
+            case R.id.sortPriority:
+                menu.findItem(R.id.sortPriority).setEnabled(false);
+                break;
+            case R.id.sortLastUpdated:
+                menu.findItem(R.id.sortLastUpdated).setEnabled(false);
+                break;
+            default:
+                super.onPrepareOptionsMenu(menu);
         }
     }
 
