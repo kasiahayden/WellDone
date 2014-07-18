@@ -16,6 +16,7 @@ public class Pump extends ParseObject {
 
     public static String GOOD = "GOOD";
     public static String BROKEN = "BROKEN";
+    public static String BROKEN_PERMANENT = "BROKEN_PERMANENT";
     public static String FIX_IN_PROGRESS = "FIX_IN_PROGRESS";
 
     public static String humanReadableStringForStatus(String status) {
@@ -23,6 +24,7 @@ public class Pump extends ParseObject {
             pumpStatuses = new HashMap<String, String>();
             pumpStatuses.put(GOOD, "Good");
             pumpStatuses.put(BROKEN, "Broken");
+            pumpStatuses.put(BROKEN_PERMANENT, "Broken permanent");
             pumpStatuses.put(FIX_IN_PROGRESS, "Fix in progress");
         }
         return pumpStatuses.get(status);

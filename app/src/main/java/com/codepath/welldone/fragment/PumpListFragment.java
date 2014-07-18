@@ -117,6 +117,7 @@ public class PumpListFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.sortDistance:
+                pbLoading.setVisibility(ProgressBar.VISIBLE);
                 mPumpArrayAdapter.clear();
                 // XXX Adding the extra boolean param is BAD coding practice, but this is what time
                 // allows for. :(
@@ -124,11 +125,13 @@ public class PumpListFragment extends Fragment {
                                                    /* apply additional sort, outside of DB query */);
                 return true;
             case R.id.sortPriority:
+                pbLoading.setVisibility(ProgressBar.VISIBLE);
                 mPumpArrayAdapter.clear();
                 fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByAscending("priority"),
                                        false);
                 return true;
             case R.id.sortLastUpdated:
+                pbLoading.setVisibility(ProgressBar.VISIBLE);
                 mPumpArrayAdapter.clear();
                 fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
                                        false);
@@ -279,15 +282,6 @@ public class PumpListFragment extends Fragment {
         // Add the latest results for this query to the cache.
         Log.d("debug", "Pinning newly retrieved objects");
         ParseObject.pinAllInBackground(PumpPersister.ALL_PUMPS, pumpList);
-    }
-
-    @Override
-    public void onResume() { //KMH: we can make this less frequent irl, but good for demo purposes
-        super.onResume();
-        //Toast.makeText(getActivity(), "PumpListFragment: onResume", Toast.LENGTH_LONG).show();
-        Log.d(TAG, "onResume calls fetchPumpsInBackground");
-        mPumpArrayAdapter.clear();
-        fetchPumpsFromRemote(ParseQuery.getQuery("Pump"), false);
     }
 
     private void addPumpsToAdapter(List<ParseObject> pumpList, boolean additionalSort) {
