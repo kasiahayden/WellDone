@@ -1,5 +1,9 @@
 package com.codepath.welldone.fragment;
 
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -14,7 +18,6 @@ import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.codepath.welldone.DropDownAnim;
 import com.codepath.welldone.PumpListAdapter;
@@ -33,12 +36,14 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PumpListFragment extends Fragment {
+public class PumpListFragment extends Fragment implements OnRefreshListener {
 
     public static final int TARGET_DETAILS_HEIGHT = 130;
     private PumpListAdapter mPumpArrayAdapter;
-    private ListView mPumpList;
+    private ListView lvPumps;
     private ProgressBar pbLoading;
+    private PullToRefreshLayout ptrlPumps;
+
     private ParseUser currentUser;
 
     public PumpListAdapter.PumpListListener mListener;
@@ -90,10 +95,18 @@ public class PumpListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_pump_list, container, false);
+
+        final View v = inflater.inflate(R.layout.fragment_pump_list, container, false);
 
         setupViews(v);
-        mPumpArrayAdapter.rowListener =  (PumpListAdapter.PumpListListener)getActivity();
+        mPumpArrayAdapter.rowListener = (PumpListAdapter.PumpListListener) getActivity();
+
+        ActionBarPullToRefresh.from(getActivity())
+                // Here we mark just the ListView and it's Empty View as pullable
+                .theseChildrenArePullable(R.id.lvPumps, android.R.id.empty)
+                .listener(this)
+                .setup(ptrlPumps);
+
         setupListeners();
 
         pbLoading.setVisibility(ProgressBar.VISIBLE);
@@ -168,25 +181,52 @@ public class PumpListFragment extends Fragment {
         }
     }
 
+    // Pull to refresh fetches data from the remote server.
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onRefreshStarted(View view) {
+
+        pbLoading.setVisibility(ProgressBar.VISIBLE);
+        mPumpArrayAdapter.clear();
+
+        switch (sortMenuItemSelected) {
+
+            case R.id.sortDistance:
+                fetchPumpsFromRemote(ParseQuery.getQuery("Pump"), true
+                                     /* apply additional sort, outside of DB query */);
+                getActivity().invalidateOptionsMenu();
+                break;
+            case R.id.sortPriority:
+                fetchPumpsFromRemote(ParseQuery.getQuery("Pump").orderByAscending("priority"),
+                                     false);
+                getActivity().invalidateOptionsMenu();
+                break;
+            case R.id.sortLastUpdated:
+                fetchPumpsFromRemote(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
+                                     false);
+                getActivity().invalidateOptionsMenu();
+                break;
+            default:
+                // no action.
+        }
+        ptrlPumps.setRefreshComplete();
     }
 
     /* Private methods */
     private void setupViews(View v) {
 
-        mPumpList = (ListView) v.findViewById(R.id.lvPumps);
-        mPumpList.setAdapter(mPumpArrayAdapter);
+        ptrlPumps = (PullToRefreshLayout) v.findViewById(R.id.ptrlPumps);
+
+        lvPumps = (ListView) v.findViewById(R.id.lvPumps);
+        lvPumps.setAdapter(mPumpArrayAdapter);
         pbLoading = (ProgressBar) v.findViewById(R.id.pbLoading);
     }
 
     private void setupListeners() {
 
-        mPumpList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvPumps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Pump pump = (Pump)parent.getItemAtPosition(position);
+                Pump pump = (Pump) parent.getItemAtPosition(position);
                 Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
 
                 final View v = view.findViewById(R.id.vgDetailsContainer);
