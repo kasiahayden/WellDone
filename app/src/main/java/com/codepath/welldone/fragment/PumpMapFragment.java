@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.PumpRowView;
@@ -26,6 +27,7 @@ public class PumpMapFragment extends Fragment {
     public Pump mPump;
     private MapFragment mapFragment;
     PumpRowView pumpRowView;
+    Button mCreateReportButton;
 
     public PumpListAdapter mPumpListAdapter;
 
@@ -62,6 +64,7 @@ public class PumpMapFragment extends Fragment {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        getMap().clear();
                         addPipsToMap();
                         pumpRowView.updateSubviews(mPump);
                         centerMapOnPump(mPump);
@@ -109,7 +112,7 @@ public class PumpMapFragment extends Fragment {
         return mapFragment.getMap();
     }
 
-    void onNewReportClicked(View view) {
+    void onNewReportClicked() {
         ((PumpListAdapter.PumpListListener)getActivity()).onNewReportClicked(mPump);
     }
 
@@ -125,6 +128,13 @@ public class PumpMapFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 pumpRowView.toggleExpandedState();
+            }
+        });
+        mCreateReportButton = (Button)v.findViewById(R.id.btnNewReport);
+        mCreateReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onNewReportClicked();
             }
         });
         return v;
