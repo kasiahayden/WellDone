@@ -97,6 +97,7 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
 
     private void swapInMapFragment() {
         mMapFragment.mPump = mListFragment.getCurrentPump();
+        mMapFragment.mPumpListAdapter = mListFragment.mPumpArrayAdapter;
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         ft.show(mMapFragment);

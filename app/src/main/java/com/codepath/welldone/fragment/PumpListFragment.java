@@ -1,9 +1,5 @@
 package com.codepath.welldone.fragment;
 
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -35,10 +31,14 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
 public class PumpListFragment extends Fragment implements OnRefreshListener {
 
     public static final int TARGET_DETAILS_HEIGHT = 130;
-    private PumpListAdapter mPumpArrayAdapter;
+    public PumpListAdapter mPumpArrayAdapter;
     private ListView lvPumps;
     private ProgressBar pbLoading;
     private PullToRefreshLayout ptrlPumps;

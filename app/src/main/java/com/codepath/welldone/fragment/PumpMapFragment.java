@@ -4,6 +4,7 @@ package com.codepath.welldone.fragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,21 +19,14 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 public class PumpMapFragment extends Fragment {
-
+    public static final double MAP_DISPLAY_DELTA = 0.03;
     public Pump mPump;
-    private String mPumpID;
-
     private MapFragment mapFragment;
-
     PumpRowView pumpRowView;
 
-    private static final String TAG = "PumpMapFragment";
+    public PumpListAdapter mPumpListAdapter;
 
     public PumpMapFragment() {
         // Required empty public constructor
@@ -46,55 +40,62 @@ public class PumpMapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mPumpID = getArguments().getString("pumpID");
-
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("Pump");
-            query.getInBackground(mPumpID, new GetCallback<ParseObject>() {
-                public void done(ParseObject object, ParseException e) {
-                    if (e == null) {
-                        mPump = (Pump)object;
-                        redrawUI();
-                    }
-                }
-            });
-        }
         mapFragment = new MapFragment();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (mPump != null && getMap() != null) {
+            pumpRowView.updateSubviews(mPump);
+            centerMapOnPump(mPump);
+        }
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            if (mPump != null) {
-                pumpRowView.updateSubviews(mPump);
+            if (mPump != null && getMap() != null) {
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        addPipsToMap();
+                        pumpRowView.updateSubviews(mPump);
+                        centerMapOnPump(mPump);
+                    }
+                }, 500);
             }
-
         }
     }
 
     private void addPipsToMap() {
         GoogleMap map = getMap();
-        MarkerOptions options = new MarkerOptions();
-        double lat = mPump.getLocation().getLatitude();
-        double longitude = mPump.getLocation().getLongitude();
-        LatLng position = new LatLng(lat, longitude);
-        options.position(position);
-        map.addMarker(options);
-
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        builder.include(position);
-        LatLngBounds bounds = builder.build();
-        map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
+        for (int i = 0; i < mPumpListAdapter.getCount(); i++) {
+            Pump pump = mPumpListAdapter.getItem(i);
+            MarkerOptions options = new MarkerOptions();
+            double lat = pump.getLocation().getLatitude();
+            double longitude = pump.getLocation().getLongitude();
+            LatLng position = new LatLng(lat, longitude);
+            options.position(position);
+            map.addMarker(options);
+        }
+        centerMapOnPump(mPump);
     }
 
-    private void redrawUI() {
-        addPipsToMap();
+    void centerMapOnPump(Pump pump) {
+        double lat = pump.getLocation().getLatitude();
+        double longitude = pump.getLocation().getLongitude();
+        LatLng positionTopLeft = new LatLng(lat - MAP_DISPLAY_DELTA, longitude - MAP_DISPLAY_DELTA);
+        LatLng fartherAwayPosition = new LatLng(lat + MAP_DISPLAY_DELTA, longitude + MAP_DISPLAY_DELTA);
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(positionTopLeft);
+        builder.include(fartherAwayPosition);
+        LatLngBounds bounds = builder.build();
+        if (getMap() != null) {
+            getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+        }
     }
 
     GoogleMap getMap() {
