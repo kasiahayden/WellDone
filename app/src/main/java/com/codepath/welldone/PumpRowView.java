@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 
 public class PumpRowView extends RelativeLayout {
 
-    public static final int TARGET_DETAILS_HEIGHT = 160;
+    public static final int TARGET_DETAILS_HEIGHT = 250;
 
     private Button newReportButton;
     private ViewGroup detailsContainer;

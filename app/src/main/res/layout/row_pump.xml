@@ -25,7 +25,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_margin="5dp"/>
 
-            <!-- Roboto regular 16, 0x666666  -->
             <TextView
                 android:id="@+id/tvPumpLocation"
                 android:layout_width="wrap_content"
@@ -51,25 +50,23 @@
                 android:textSize="14dp"
                 android:text="Feb. 31" />
 
-            <!-- Roboto regular 14, 0x  -->
             <TextView
                 android:id="@+id/tvPumpStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvPumpLocation"
                 android:textColor="@color/textBlack"
-                android:textSize="12dp"
+                android:textSize="14dp"
                 android:text="Broken temporarily"
                 android:layout_alignLeft="@id/tvPumpLocation"/>
 
-            <!-- Priority + datestamp: Roboto regular 14, 0x999999  -->
             <TextView
                 android:id="@+id/tvPriority"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvPumpStatus"
                 android:layout_alignLeft="@id/tvPumpStatus"
-                android:textSize="12dp"
+                android:textSize="14dp"
                 android:textColor="@color/textGray"
                 android:text="Priority Level 1" />
 
@@ -85,7 +82,9 @@
                    android:id="@+id/tvFlavor"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:textSize="12dp"
+                   android:layout_margin="5dp"
+                   android:textColor="@color/textBlack"
+                   android:textSize="14dp"
                    android:text="@string/default_pump_flavor_text"/>
                 <Button
                     android:id="@+id/btnNewReport"
