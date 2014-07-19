@@ -29,6 +29,8 @@ import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * Class to handle creation and persistence of a report.
@@ -90,7 +92,8 @@ public class CreateReportActivity extends Activity {
 
         final String pumpStatusToBeReported = spPumpStatus.getSelectedItem().toString();
         final String reportNotes = etReportNotes.getText().toString();
-        final String reportTitle = etReportTitle.getText().toString();
+        final String reportTitle = "Pump_" + pumpStatusToBeReported.toString() + "_" + DateFormat.getDateTimeInstance().format(new Date()); //TODO is this the report title format we want?
+        //etReportTitle.getText().toString();
         final Report reportToBePersisted = new Report(pumpToBeReported, pumpStatusToBeReported,
                 reportTitle, reportNotes);
 
@@ -125,7 +128,7 @@ public class CreateReportActivity extends Activity {
         ivFixedPump = (ImageView) findViewById(R.id.ivFixedPump);
         //ivFixedPump.setImageResource(android.R.color.transparent);
         etReportNotes = (EditText) findViewById(R.id.etReportNotes);
-        etReportTitle = (EditText) findViewById(R.id.etReportTitle);
+        //etReportTitle = (EditText) findViewById(R.id.etReportTitle);
         spPumpStatus = (Spinner) findViewById(R.id.spPumpStatus);
     }
 

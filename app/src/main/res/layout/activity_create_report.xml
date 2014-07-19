@@ -10,53 +10,76 @@
         android:layout_height="180dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:src="@android:drawable/screen_background_light_transparent"
+        android:background="@drawable/pump3"
         android:contentDescription="@android:color/transparent"
-        android:background="@drawable/pump3" />
+        android:src="@android:drawable/screen_background_light_transparent" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/ivFixedPump"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:layout_centerHorizontal="true">
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <EditText
-            android:id="@+id/etReportTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="5dp"
-            android:hint="@string/report_title_hint" />
-
-        <!--android:layout_width="match_parent"-->
-
-        <!--<TextView
+        <TextView
             android:id="@+id/tvPumpStatusLabel"
+            style="?android:listSeparatorTextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/etReportTitle"
-            android:layout_marginTop="10dp"
-            android:layout_alignLeft="@+id/ivFixedPump"
-            android:layout_alignBottom="@+id/spPumpStatus"
-            android:hint="@string/pump_status_label"/>-->
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/spPumpStatus"
+            android:text="@string/pump_status_label" />
+        <Spinner
+            android:id="@+id/spPumpStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/tvPumpStatusLabel"
+            android:entries="@array/pump_status_options" />
 
-        <!-- XXX fix the font of the spinner to match the page -->
+        <!--<LinearLayout
+            android:id="@+id/llPumpStatus"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvPumpStatusLabel0"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvPumpStatusLabel"
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:hint="@string/pump_status_label"
+                />
+
+            <Spinner
+                android:id="@+id/spPumpStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/pump_status_options" >
+            </Spinner>
+        </LinearLayout>-->
+
+        <!--
         <Spinner
             android:id="@+id/spPumpStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:entries="@array/pump_status_options"
             android:layout_alignTop="@+id/etReportTitle"
+            android:layout_toRightOf="@+id/etReportTitle"
             android:layout_alignRight="@+id/etReportNotes"
-            android:layout_alignEnd="@+id/etReportNotes"
-            android:layout_toRightOf="@+id/etReportTitle">
+            android:layout_alignEnd="@+id/etReportNotes">
         </Spinner>
+        -->
 
         <!--<TextView
             android:id="@+id/tvReportNotesLabel"
@@ -71,32 +94,30 @@
             android:id="@+id/etReportNotes"
             android:layout_width="match_parent"
             android:layout_height="75dp"
-            android:scrollbars="vertical"
-            android:layout_below="@+id/etReportTitle"
+            android:layout_below="@+id/tvPumpStatusLabel"
             android:layout_marginTop="5dp"
             android:ems="10"
-            android:inputType="textMultiLine"
             android:gravity="left|top"
             android:hint="@string/report_notes_hint"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"
             android:textSize="15sp" />
 
         <Button
             android:id="@+id/btnSubmitReport"
             android:layout_width="170dp"
             android:layout_height="35dp"
-            android:background="@drawable/new_report"
-            android:textColor="@color/offwhite"
-            android:focusable="false"
-            android:textSize="14dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="25dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/new_report"
+            android:focusable="false"
+            android:onClick="onReportSubmit"
             android:text="@string/submit_report"
-            android:onClick="onReportSubmit"/>
-
+            android:textColor="@color/offwhite"
+            android:textSize="14sp" />
     </RelativeLayout>
-
 </RelativeLayout>
 
 
