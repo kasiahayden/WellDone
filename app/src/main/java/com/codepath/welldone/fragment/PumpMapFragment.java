@@ -16,6 +16,7 @@ import com.codepath.welldone.model.Pump;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -75,6 +76,12 @@ public class PumpMapFragment extends Fragment {
         for (int i = 0; i < mPumpListAdapter.getCount(); i++) {
             Pump pump = mPumpListAdapter.getItem(i);
             MarkerOptions options = new MarkerOptions();
+            if (pump == mPump) {
+                options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mappin_enormous));
+            }
+            else {
+                options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mappin));
+            }
             double lat = pump.getLocation().getLatitude();
             double longitude = pump.getLocation().getLongitude();
             LatLng position = new LatLng(lat, longitude);
