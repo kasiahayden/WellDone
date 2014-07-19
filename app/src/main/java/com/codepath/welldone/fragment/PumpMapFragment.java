@@ -25,7 +25,7 @@ import com.parse.ParseQuery;
 
 public class PumpMapFragment extends Fragment {
 
-    private Pump mPump;
+    public Pump mPump;
     private String mPumpID;
 
     private MapFragment mapFragment;
@@ -65,7 +65,17 @@ public class PumpMapFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+    }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            if (mPump != null) {
+                pumpRowView.updateSubviews(mPump);
+            }
+
+        }
     }
 
     private void addPipsToMap() {
