@@ -6,13 +6,13 @@
 
     <ImageView
         android:id="@+id/ivFixedPump"
-        android:layout_width="match_parent"
+        android:scaleType="center"
+        android:layout_width="fill_parent"
         android:layout_height="180dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/pump3"
-        android:contentDescription="@android:color/transparent"
-        android:src="@android:drawable/screen_background_light_transparent" />
+        android:background="@drawable/welldone_splash_cropped"
+        android:contentDescription="@android:color/transparent" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
