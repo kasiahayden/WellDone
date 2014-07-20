@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pump_status_options">
-        <item>Work in progress</item>
-        <item>Fixed</item>
-        <item>Broken permanently</item>
+        <item>Fix in progress</item>
+        <item>Operational</item>
+        <item>Broken</item>
     </string-array>
 </resources>
