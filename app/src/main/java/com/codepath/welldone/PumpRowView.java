@@ -24,6 +24,8 @@ public class PumpRowView extends RelativeLayout {
     private Button newReportButton;
     private ViewGroup detailsContainer;
 
+    TextView tvObjectId;
+
     public ViewHolder viewHolder;
 
     public PumpRowView(Context context, AttributeSet attrs){
@@ -35,6 +37,7 @@ public class PumpRowView extends RelativeLayout {
 
         viewHolder = new ViewHolder();
         populateViewHolder();
+        tvObjectId = (TextView)findViewById(R.id.tvObjectID);
     }
 
     public void toggleExpandedState() {
@@ -79,10 +82,11 @@ public class PumpRowView extends RelativeLayout {
     public void updateSubviews(Pump pump) {
         // The last updated date is wrt the local time zone.
         viewHolder.tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
-        viewHolder.tvStatus.setText(Pump.humanReadableStringForStatus(pump.getCurrentStatus()));
+        viewHolder.tvStatus.setText(pump.getCurrentStatus());
         viewHolder.tvPriority.setText(String.format("Priority Level %d", pump.getPriority()));
         setPumpToRandomImage();
         setupLocationLabel(pump);
+        tvObjectId.setText(pump.getObjectId());
     }
 
     private void setPumpToRandomImage() {
