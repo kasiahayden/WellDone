@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,7 +29,9 @@ import com.parse.ParseFile;
 import com.parse.SaveCallback;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -63,6 +66,7 @@ public class CreateReportActivity extends Activity {
         pumpToBeReported = PumpPersister.getPumpByObjectIdSyncly(pumpObjectId);
         try {
             Log.d("debug", "Working with pump: " + pumpToBeReported.getObjectId() + " " + pumpToBeReported.getName());
+            this.getActionBar().setTitle("New Report: " + pumpToBeReported.getName());
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -79,9 +83,15 @@ public class CreateReportActivity extends Activity {
             final Uri fixedPumpPhotoUri = Uri.fromFile(new File(fixedPumpPhotoFileName));
             // by this point we have the camera photo on disk
             final Bitmap takenImage = BitmapFactory.decodeFile(fixedPumpPhotoUri.getPath());
-            // Load the taken image into a preview
-            ivFixedPump.setImageBitmap(takenImage);
-            newImageBitmap = takenImage;
+            newImageBitmap = BitmapFactory.decodeFile(fixedPumpPhotoUri.getPath());
+            Drawable newImageDrawable;
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(fixedPumpPhotoUri);
+                newImageDrawable = Drawable.createFromStream(inputStream, fixedPumpPhotoUri.toString());
+                ivFixedPump.setBackground(newImageDrawable); //TODO possible resize here before setting so doesn't stretch
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         } else { // Result was a failure
             newImageBitmap = null;
             Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
