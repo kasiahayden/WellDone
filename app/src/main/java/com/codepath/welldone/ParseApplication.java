@@ -32,7 +32,6 @@ public class ParseApplication extends Application {
             pump.save();
         }
         catch (Exception e) {
-            e.printStackTrace();
         }
         int x = 0; x++;
 	}

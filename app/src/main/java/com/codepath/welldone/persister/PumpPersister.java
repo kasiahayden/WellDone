@@ -30,7 +30,6 @@ public class PumpPersister {
             remotePump = remoteQuery.get(pumpObjectId);
             remotePump.refresh();
         } catch (ParseException e) {
-            e.printStackTrace();
         }
         String status = remotePump.getCurrentStatus();
 
