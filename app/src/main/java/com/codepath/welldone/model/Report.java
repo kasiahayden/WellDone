@@ -16,17 +16,11 @@ public class Report extends ParseObject {
 
     }
 
-    public Report(Pump pump, String reportedStatus, String title, String notes) {
+    public void setReportDetails(Pump pump, String reportedStatus, String title, String notes) {
         setPump(pump);
         setReportedStatus(reportedStatus);
         setTitle(title);
         setNotes(notes);
-    }
-
-    public Report(Pump pump, String reportedStatus, String title, String notes, ParseFile photo) {
-
-        this(pump, reportedStatus, title, notes);
-        setPhoto(photo);
     }
 
     public String getTitle() {
