@@ -24,12 +24,23 @@ public class PumpPersister {
      * @return
      */
     public static Pump getPumpByObjectIdSyncly(String pumpObjectId) {
+        final ParseQuery<Pump> remoteQuery = ParseQuery.getQuery(Pump.class);
+        Pump remotePump = null;
+        try {
+            remotePump = remoteQuery.get(pumpObjectId);
+            remotePump.refresh();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String status = remotePump.getCurrentStatus();
+
 
         final ParseQuery<Pump> query = ParseQuery.getQuery(Pump.class);
-        query.fromPin(ALL_PUMPS);
+        query.fromLocalDatastore();
         query.whereEqualTo("objectId", pumpObjectId);
         try {
-            return ((Pump) query.getFirst());
+            Pump localPump = query.getFirst();
+            return localPump;
         } catch (ParseException e) {
             e.printStackTrace();
             Log.d("PumpPersister", "getPumpByObjectIdSyncly failed to return pump with objectId: " + pumpObjectId);

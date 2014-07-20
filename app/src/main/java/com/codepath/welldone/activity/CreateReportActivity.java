@@ -22,7 +22,6 @@ import com.codepath.welldone.helper.StringUtil;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.Report;
 import com.codepath.welldone.persister.PumpPersister;
-import com.codepath.welldone.persister.ReportPersister;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.SaveCallback;
@@ -93,7 +92,6 @@ public class CreateReportActivity extends Activity {
         final String pumpStatusToBeReported = spPumpStatus.getSelectedItem().toString();
         final String reportNotes = etReportNotes.getText().toString();
         final String reportTitle = "Pump_" + pumpStatusToBeReported.toString() + "_" + DateFormat.getDateTimeInstance().format(new Date()); //TODO is this the report title format we want?
-        //etReportTitle.getText().toString();
         final Report reportToBePersisted = new Report(pumpToBeReported, pumpStatusToBeReported,
                 reportTitle, reportNotes);
 
@@ -126,9 +124,7 @@ public class CreateReportActivity extends Activity {
     private void setupViews() {
 
         ivFixedPump = (ImageView) findViewById(R.id.ivFixedPump);
-        //ivFixedPump.setImageResource(android.R.color.transparent);
         etReportNotes = (EditText) findViewById(R.id.etReportNotes);
-        //etReportTitle = (EditText) findViewById(R.id.etReportTitle);
         spPumpStatus = (Spinner) findViewById(R.id.spPumpStatus);
     }
 
@@ -196,7 +192,7 @@ public class CreateReportActivity extends Activity {
         return image;
     }
 
-    private void persistReport(Report report) {
+    private void persistReport(final Report report) {
 
         Log.d("debug", "Saving report with title: " + report.getTitle());
         final Pump updatedPump =
@@ -204,47 +200,14 @@ public class CreateReportActivity extends Activity {
         updatedPump.setCurrentStatus(report.getReportedStatus());
         Log.d("debug", "Updated current status of pump: " + updatedPump.getName() + " " + pumpToBeReported.getCurrentStatus());
 
-        // Pin this report and pin the updated pump
-        // saveEventually only pins until object is saved to remote store. So, pin first.
-        report.pinInBackground(ReportPersister.ALL_REPORTS, new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
 
-                updatedPump.pinInBackground(PumpPersister.ALL_PUMPS, new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-
-                        if (e == null) {
-                            Log.d("debug", "Pump pinned successfully: " + updatedPump.getObjectId()
-                                    + " " + updatedPump.getName());
-                            //Toast.makeText(getApplicationContext(), "Report submitted successfully.",Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getApplicationContext(), "Report saved and queued for upload.",Toast.LENGTH_SHORT).show();
-                        } else {
-                            Log.d("debug", "Could not pin pump: " + updatedPump.getObjectId()
-                                    + " " + updatedPump.getName() + e.toString());
-                            //Toast.makeText(getApplicationContext(), "Error submitting report! Please try again later.", Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getApplicationContext(), "Error saving report! Please try again later.", Toast.LENGTH_SHORT).show();
-                        }
-                        startActivity(new Intent(getApplicationContext(), PumpBrowser.class));
-                    }
-                });
-                //updatedPump.saveEventually();
-                updatedPump.saveEventually(new SaveCallback() {
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            Toast.makeText(getApplicationContext(), "Pump successfully uploaded to server.",Toast.LENGTH_SHORT).show();
-                        } else {
-                            Log.e("CreateReportActivity", "updatedPump.saveInBackground failed: " + e.toString());
-                        }
-                    }
-                });
-            }
-        });
-        //report.saveEventually();
         report.saveEventually(new SaveCallback() {
             public void done(ParseException e) {
                 if (e == null) {
-                    Toast.makeText(getApplicationContext(), "Report successfully uploaded to server.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), String.format("Success: %s is now %s",
+                            report.getPump().getObjectId(),
+                            report.getPump().getCurrentStatus()),
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     Log.e("CreateReportActivity", "report.saveInBackground failed: " + e.toString());
                 }

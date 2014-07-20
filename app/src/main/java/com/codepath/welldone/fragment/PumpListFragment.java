@@ -13,20 +13,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
 import com.codepath.welldone.helper.PumpUtil;
 import com.codepath.welldone.model.Pump;
-import com.codepath.welldone.persister.PumpPersister;
-import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -244,17 +245,12 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
      */
     private void fetchPumpsInBackground(final ParseQuery<ParseObject> query,
                                         final boolean additionalSort) {
-
-        query.fromPin(PumpPersister.ALL_PUMPS);
-
+        query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
 
             public void done(final List<ParseObject> pumpList, ParseException e) {
-
                 if (e == null) {
-
                     Log.d("info", "Fetching pumps from local DB. Found " + pumpList.size());
-
                     if (pumpList.size() == 0) {
                         fetchPumpsFromRemote(ParseQuery.getQuery("Pump"), additionalSort);
                     } else {
@@ -285,12 +281,6 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
                 if (e == null) {
                     Log.d("info", "Fetching pumps from remote DB. Found " + pumpList.size());
                     addPumpsToAdapter(pumpList, additionalSort);
-
-                    // Unpin previously cached data and re-pin the newly fetched.
-                    if (pumpList != null && !pumpList.isEmpty()) {
-                        unpinAndRepin(pumpList);
-                    }
-
                 } else {
                     Log.d("error", "Exception while fetching remote pumps: " + e);
                 }
@@ -298,30 +288,6 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         });
     }
 
-    /**
-     * Unpin and repin a given list of pumps.
-     * This method is public as other classes might want to call it, potentially.
-     * @param pumpList
-     */
-    private void unpinAndRepin(final List<ParseObject> pumpList) {
-
-        Log.d("debug", "Unpinning previously saved objects");
-        ParseObject.unpinAllInBackground(PumpPersister.ALL_PUMPS, pumpList,
-                new DeleteCallback() {
-                    public void done(ParseException e) {
-                        if (e != null) {
-                            // There was some error.
-                            return;
-                        } else {
-                            Log.d("info", pumpList.size() + " previous cached pumps deleted.");
-                        }
-                    }
-                }
-        );
-        // Add the latest results for this query to the cache.
-        Log.d("debug", "Pinning newly retrieved objects");
-        ParseObject.pinAllInBackground(PumpPersister.ALL_PUMPS, pumpList);
-    }
 
     private void addPumpsToAdapter(List<ParseObject> pumpList, boolean additionalSort) {
 
@@ -330,6 +296,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
             for (ParseObject object : pumpList) {
                 final Pump pump = (Pump) object;
                 mPumpArrayAdapter.add(pump);
+                persistPump(pump);
             }
             return;
         }
@@ -338,6 +305,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         for (ParseObject object : pumpList) {
             final Pump pump = (Pump) object;
             pumps.add(pump);
+            persistPump(pump);
         }
         pumpList = null;
         final List<Pump> sortedPumps =
@@ -345,5 +313,23 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         for (Pump pump : sortedPumps) {
             mPumpArrayAdapter.add(pump);
         }
+    }
+
+    void persistPump(final Pump pump) {
+        ParseACL postACL = new ParseACL(ParseUser.getCurrentUser());
+        postACL.setPublicReadAccess(true);
+        postACL.setPublicWriteAccess(true);
+        pump.setACL(postACL);
+        pump.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Toast.makeText(getActivity(), "Failed to pin a pump.", Toast.LENGTH_SHORT);
+                }
+                else {
+                    Log.d("DBG", String.format( "Pump saved to disk. %s %s", pump.getAddress(), pump.getObjectId()));
+                }
+            }
+        });
     }
 }
