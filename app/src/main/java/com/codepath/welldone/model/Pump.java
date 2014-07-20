@@ -32,6 +32,8 @@ public class Pump extends ParseObject {
 
     public int getPriority() { return getInt("priority"); }
 
+    public void setPriority(int priority) { put("priority", priority); }
+
     public String getName() {
         return getString("name");
     }
