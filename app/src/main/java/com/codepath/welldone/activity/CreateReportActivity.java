@@ -76,7 +76,7 @@ public class CreateReportActivity extends Activity {
 
         Log.d("debug", "Working with pump: " + pumpToBeReported.getObjectId() + " "
                 + pumpToBeReported.getName());
-            this.getActionBar().setTitle("New Report: " + pumpToBeReported.getAddress());
+        getActionBar().setTitle("New Report for " + pumpToBeReported.getAddress());
         setupViews();
         setupListeners();
     }
