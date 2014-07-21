@@ -14,7 +14,7 @@
         android:background="@color/offwhite">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/ivPump"

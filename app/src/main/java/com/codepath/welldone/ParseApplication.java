@@ -3,7 +3,6 @@ package com.codepath.welldone;
 import android.app.Application;
 
 import com.codepath.welldone.activity.CreateReportActivity;
-import com.codepath.welldone.activity.DemoPushActivity;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.Report;
 import com.parse.Parse;
