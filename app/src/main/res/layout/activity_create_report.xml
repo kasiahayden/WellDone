@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:layout_below="@+id/tvPumpStatusLabel"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="20dp"
             android:ems="10"
             android:gravity="left|top"
             android:hint="@string/report_notes_hint"
