@@ -129,8 +129,8 @@ public class PumpMapFragment extends Fragment {
         return mapFragment.getMap();
     }
 
-    void onNewReportClicked() {
-        ((PumpListAdapter.PumpListListener)getActivity()).onNewReportClicked(mPump);
+    void onNewReportClicked(Pump pump) {
+        ((PumpListAdapter.PumpListListener)getActivity()).onNewReportClicked(pump);
     }
 
     PagerAdapter getViewPagerAdapter() {
@@ -158,8 +158,15 @@ public class PumpMapFragment extends Fragment {
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
                 final PumpRowView pumpRow = new PumpRowView(getActivity(), null);
-                pumpRow.updateSubviews(mPumpListAdapter.getItem(position));
+                final Pump thePump = mPumpListAdapter.getItem(position);
+                pumpRow.updateSubviews(thePump);
                 container.addView(pumpRow);
+                pumpRow.newReportButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onNewReportClicked(thePump);
+                    }
+                });
 
                 pumpRow.setOnClickListener(new View.OnClickListener() {
                     @Override

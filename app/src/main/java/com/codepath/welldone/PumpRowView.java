@@ -24,7 +24,7 @@ public class PumpRowView extends RelativeLayout {
     public static final int ANIMATE_IN_DURATION_MILLIS = 300;
     public static final int ANIMATE_OUT_DURATION_MILLIS = 500;
 
-    private Button newReportButton;
+    public Button newReportButton;
     private ViewGroup detailsContainer;
 
     public ViewHolder viewHolder;
