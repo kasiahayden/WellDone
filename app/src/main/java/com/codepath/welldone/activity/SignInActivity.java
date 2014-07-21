@@ -10,11 +10,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.codepath.welldone.R;
+import com.codepath.welldone.helper.NetworkUtil;
 import com.parse.LogInCallback;
-import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 public class SignInActivity extends Activity {
 
@@ -97,11 +96,19 @@ public class SignInActivity extends Activity {
         }
 
         pbLoading.setVisibility(ProgressBar.VISIBLE);
+        // If no network is available, Toast the user and do nothing.
+        if (!NetworkUtil.isNetworkAvailable(this)) {
+            Toast.makeText(this,
+                           "Not connected to network. This app needs Internet connection to start.",
+                           Toast.LENGTH_LONG).show();
+            pbLoading.setVisibility(ProgressBar.INVISIBLE);
+            return;
+        }
+
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 if (parseUser != null) {
-                    //Toast.makeText(getApplicationContext(), "Successful", Toast.LENGTH_SHORT).show();
                     Log.d("Info", "Current Parse User: " + ParseUser.getCurrentUser().toString());
                     startActivity(new Intent(getApplicationContext(), PumpBrowser.class));
                 } else {
