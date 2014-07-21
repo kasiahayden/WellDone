@@ -82,7 +82,9 @@ public class PumpRowView extends RelativeLayout {
 
     public void updateSubviews(Pump pump) {
         // The last updated date is wrt the local time zone.
-        viewHolder.tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
+        //viewHolder.tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
+        viewHolder.tvLastUpdated.setText(
+                DateTimeUtil.getRelativeTimeofTweet(pump.getUpdatedAt().toString()));
         viewHolder.tvStatus.setText(pump.getCurrentStatus());
         viewHolder.tvPriority.setText(String.format("Priority Level %d", pump.getPriority()));
         setPumpToRandomImage();
