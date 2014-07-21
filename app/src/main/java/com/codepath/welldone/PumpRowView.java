@@ -98,6 +98,11 @@ public class PumpRowView extends RelativeLayout {
         }
     }
 
+    public void setRootBackgroundColor(int colorResource) {
+        View v = findViewById(R.id.vgPumpRoot);
+        v.setBackgroundColor(colorResource);
+    }
+
 
     private void setupLocationLabel(Pump pump) {
         try {

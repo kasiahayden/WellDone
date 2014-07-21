@@ -50,6 +50,7 @@ public class PumpMapFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        getMap().getUiSettings().setZoomControlsEnabled(false);
         if (mPump != null && getMap() != null) {
             centerMapOnPump(mPump);
         }
@@ -158,6 +159,7 @@ public class PumpMapFragment extends Fragment {
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
                 final PumpRowView pumpRow = new PumpRowView(getActivity(), null);
+                pumpRow.setRootBackgroundColor(getResources().getColor(android.R.color.transparent));
                 final Pump thePump = mPumpListAdapter.getItem(position);
                 pumpRow.updateSubviews(thePump);
                 container.addView(pumpRow);

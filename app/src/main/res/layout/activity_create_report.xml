@@ -22,6 +22,12 @@
             android:background="@color/backgroundGray"
             android:layout_height="180dp">
             <ImageView
+                android:id="@+id/ivNewPumpPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:visibility="gone"/>
+            <ImageView
                 android:id="@+id/ivFixedPump"
                 android:scaleType="centerInside"
                 android:layout_width="90dp"
@@ -72,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="4dp"
                 android:entries="@array/pump_status_options" />
 
             <EditText
