@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ public class CreateReportActivity extends Activity {
 
     private EditText etReportNotes;
     private ImageView ivFixedPump;
+    private ProgressBar pbLoading;
     private Spinner spPumpStatus;
 
     private Pump pumpToBeReported;
@@ -126,6 +128,7 @@ public class CreateReportActivity extends Activity {
                                              reportTitle,
                                              reportNotes);
 
+        pbLoading.setVisibility(ProgressBar.VISIBLE);
         // Pin the report locally
         pinReportLocally(reportToBePersisted, newImageBitmap);
     }
@@ -133,8 +136,9 @@ public class CreateReportActivity extends Activity {
     /* Private methods */
     private void setupViews() {
 
-        ivFixedPump = (ImageView) findViewById(R.id.ivFixedPump);
         etReportNotes = (EditText) findViewById(R.id.etReportNotes);
+        ivFixedPump = (ImageView) findViewById(R.id.ivFixedPump);
+        pbLoading = (ProgressBar) findViewById(R.id.pbLoading);
         spPumpStatus = (Spinner) findViewById(R.id.spPumpStatus);
     }
 
@@ -233,6 +237,7 @@ public class CreateReportActivity extends Activity {
                     persistReportRemotely(report, newImageBitmap);
 
                     // Go back to pump list browser
+                    pbLoading.setVisibility(ProgressBar.INVISIBLE);
                     startActivity(new Intent(getApplicationContext(), PumpBrowser.class));
 
                 } else {
