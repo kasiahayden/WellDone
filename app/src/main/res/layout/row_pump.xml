@@ -70,16 +70,6 @@
                 android:textColor="@color/textGray"
                 android:text="Priority Level 1" />
 
-            <!--<TextView
-                android:id="@+id/tvObjectID"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvPriority"
-                android:layout_alignLeft="@id/tvPumpStatus"
-                android:textSize="14dp"
-                android:textColor="@color/textGray"
-                android:text="asdf5f" />-->
-
             <RelativeLayout
                 android:id="@+id/vgDetailsContainer"
                 android:layout_width="wrap_content"
@@ -96,12 +86,22 @@
                    android:textColor="@color/textBlack"
                    android:textSize="14dp"
                    android:text="@string/default_pump_flavor_text"/>
+                <ImageView
+                    android:id="@+id/ivDummyData"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_below="@id/tvFlavor"
+                    android:layout_alignParentLeft="true"
+                    android:scaleType="centerInside"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/dummydata"
+                    />
                 <Button
                     android:id="@+id/btnNewReport"
                     android:layout_width="120dp"
                     android:layout_height="35dp"
                     android:layout_alignRight="@id/tvFlavor"
-                    android:layout_below="@id/tvFlavor"
+                    android:layout_below="@id/ivDummyData"
                     android:background="@drawable/new_report"
                     android:textColor="@color/offwhite"
                     android:focusable="false"

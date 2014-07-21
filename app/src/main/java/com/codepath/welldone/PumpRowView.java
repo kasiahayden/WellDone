@@ -20,13 +20,12 @@ import java.util.Random;
 
 public class PumpRowView extends RelativeLayout {
 
-    public static final int TARGET_DETAILS_HEIGHT = 250;
+    public static final int TARGET_DETAILS_HEIGHT = 850;
     public static final int ANIMATE_IN_DURATION_MILLIS = 300;
+    public static final int ANIMATE_OUT_DURATION_MILLIS = 500;
 
     private Button newReportButton;
     private ViewGroup detailsContainer;
-
-    //TextView tvObjectId;
 
     public ViewHolder viewHolder;
 
@@ -39,14 +38,13 @@ public class PumpRowView extends RelativeLayout {
 
         viewHolder = new ViewHolder();
         populateViewHolder();
-        //tvObjectId = (TextView)findViewById(R.id.tvObjectID);
     }
 
     public void toggleExpandedState() {
         boolean expanded = detailsContainer.getVisibility() == View.VISIBLE;
         if (expanded) {
             DropDownAnim anim = new DropDownAnim(detailsContainer, TARGET_DETAILS_HEIGHT, false);
-            anim.setDuration(500);
+            anim.setDuration(ANIMATE_OUT_DURATION_MILLIS);
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -82,15 +80,12 @@ public class PumpRowView extends RelativeLayout {
     }
 
     public void updateSubviews(Pump pump) {
-        // The last updated date is wrt the local time zone.
-        //viewHolder.tvLastUpdated.setText(DateTimeUtil.getFriendlyLocalDateTime(pump.getUpdatedAt()));
         viewHolder.tvLastUpdated.setText(
                 DateTimeUtil.getRelativeTimeofTweet(pump.getUpdatedAt().toString()));
         viewHolder.tvStatus.setText(pump.getCurrentStatus());
         viewHolder.tvPriority.setText(String.format("Priority Level %d", pump.getPriority()));
         setPumpToRandomImage();
         setupLocationLabel(pump);
-        //tvObjectId.setText(pump.getObjectId());
     }
 
     private void setPumpToRandomImage() {
