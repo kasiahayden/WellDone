@@ -13,10 +13,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
+import com.codepath.welldone.helper.NetworkUtil;
 import com.codepath.welldone.helper.PumpUtil;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.persister.PumpPersister;
@@ -184,6 +186,15 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
     // Pull to refresh fetches data from the remote server.
     @Override
     public void onRefreshStarted(View view) {
+
+        // Cannot refresh if network is not available.
+        if (!NetworkUtil.isNetworkAvailable(getActivity())) {
+            Toast.makeText(getActivity().getBaseContext(),
+                    "Could not refresh. Network not available.",
+                    Toast.LENGTH_LONG).show();
+            ptrlPumps.setRefreshComplete();
+            return;
+        }
 
         pbLoading.setVisibility(ProgressBar.VISIBLE);
         mPumpArrayAdapter.clear();
