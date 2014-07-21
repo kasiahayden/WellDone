@@ -9,12 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.codepath.welldone.PumpRowView
-        android:id="@+id/pumpDetailsView"
+    <com.codepath.welldone.WrapContentHeightViewPager
+        android:id="@+id/vpPumpRows"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"/>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

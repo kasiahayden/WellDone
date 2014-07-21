@@ -24,7 +24,6 @@ public class PumpPersister {
      * @return
      */
     public static Pump getPumpByObjectIdSyncly(String pumpObjectId) {
-
         final ParseQuery<Pump> query = ParseQuery.getQuery(Pump.class);
         query.fromPin(ALL_PUMPS);
         query.whereEqualTo("objectId", pumpObjectId);

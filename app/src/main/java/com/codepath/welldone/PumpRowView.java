@@ -21,6 +21,7 @@ import java.util.Random;
 public class PumpRowView extends RelativeLayout {
 
     public static final int TARGET_DETAILS_HEIGHT = 250;
+    public static final int ANIMATE_IN_DURATION_MILLIS = 300;
 
     private Button newReportButton;
     private ViewGroup detailsContainer;
@@ -67,7 +68,7 @@ public class PumpRowView extends RelativeLayout {
         else {
             detailsContainer.setVisibility(View.VISIBLE);
             DropDownAnim anim = new DropDownAnim(detailsContainer, TARGET_DETAILS_HEIGHT, true);
-            anim.setDuration(500);
+            anim.setDuration(ANIMATE_IN_DURATION_MILLIS);
             detailsContainer.startAnimation(anim);
         }
     }

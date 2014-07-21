@@ -5,10 +5,11 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.PumpRowView;
@@ -26,8 +27,8 @@ public class PumpMapFragment extends Fragment {
     public static final double MAP_DISPLAY_DELTA = 0.03;
     public Pump mPump;
     private MapFragment mapFragment;
-    PumpRowView pumpRowView;
-    Button mCreateReportButton;
+
+    ViewPager mDetailsPager;
 
     public PumpListAdapter mPumpListAdapter;
 
@@ -50,7 +51,6 @@ public class PumpMapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (mPump != null && getMap() != null) {
-            pumpRowView.updateSubviews(mPump);
             centerMapOnPump(mPump);
         }
     }
@@ -66,8 +66,25 @@ public class PumpMapFragment extends Fragment {
                     public void run() {
                         getMap().clear();
                         addPipsToMap();
-                        pumpRowView.updateSubviews(mPump);
+                        mDetailsPager.setAdapter(getViewPagerAdapter());
                         centerMapOnPump(mPump);
+                        mDetailsPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                            @Override
+                            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                            }
+
+                            @Override
+                            public void onPageSelected(int position) {
+                                Pump pump = mPumpListAdapter.getItem(position);
+                                centerMapOnPump(pump);
+                            }
+
+                            @Override
+                            public void onPageScrollStateChanged(int state) {
+
+                            }
+                        });
                     }
                 }, 500);
             }
@@ -116,6 +133,53 @@ public class PumpMapFragment extends Fragment {
         ((PumpListAdapter.PumpListListener)getActivity()).onNewReportClicked(mPump);
     }
 
+    PagerAdapter getViewPagerAdapter() {
+        return new PagerAdapter() {
+            @Override
+            public int getCount() {
+                if (mPumpListAdapter == null) {
+                    return 0;
+                }
+                return mPumpListAdapter.getCount();
+            }
+
+            @Override
+            public boolean isViewFromObject(View view, Object object) {
+                return view == object;
+            }
+
+            /*
+            A very simple PagerAdapter may choose to use the page Views themselves as key objects,
+            returning them from instantiateItem(ViewGroup, int) after creation and adding them to
+            the parent ViewGroup. A matching destroyItem(ViewGroup, int, Object) implementation
+            would remove the View from the parent ViewGroup and isViewFromObject(View, Object)
+            could be implemented as return view == object;.
+             */
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                final PumpRowView pumpRow = new PumpRowView(getActivity(), null);
+                pumpRow.updateSubviews(mPumpListAdapter.getItem(position));
+                container.addView(pumpRow);
+
+                pumpRow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pumpRow.toggleExpandedState();
+                    }
+                });
+
+                return pumpRow;
+            }
+
+            @Override
+            public void destroyItem(ViewGroup container, int position, Object object) {
+                PumpRowView prv = (PumpRowView)object;
+                container.removeView(prv);
+            }
+
+        };
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -123,20 +187,8 @@ public class PumpMapFragment extends Fragment {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.add(R.id.vgMapContainer, mapFragment);
         ft.commit();
-        pumpRowView = (PumpRowView)v.findViewById(R.id.pumpDetailsView);
-        pumpRowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pumpRowView.toggleExpandedState();
-            }
-        });
-        mCreateReportButton = (Button)v.findViewById(R.id.btnNewReport);
-        mCreateReportButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onNewReportClicked();
-            }
-        });
+
+        mDetailsPager = (ViewPager)v.findViewById(R.id.vpPumpRows);
         return v;
     }
 
