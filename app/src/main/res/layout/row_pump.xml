@@ -70,7 +70,7 @@
                 android:textColor="@color/textGray"
                 android:text="Priority Level 1" />
 
-            <TextView
+            <!--<TextView
                 android:id="@+id/tvObjectID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
                 android:layout_alignLeft="@id/tvPumpStatus"
                 android:textSize="14dp"
                 android:textColor="@color/textGray"
-                android:text="asdf5f" />
+                android:text="asdf5f" />-->
 
             <RelativeLayout
                 android:id="@+id/vgDetailsContainer"
