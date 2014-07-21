@@ -1,80 +1,102 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.codepath.welldone.activity.CreateReportActivity">
-
-    <ProgressBar
-        android:id="@+id/pbLoading"
-        android:visibility="invisible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
-
-    <ImageView
-        android:id="@+id/ivFixedPump"
-        android:scaleType="center"
-        android:layout_width="fill_parent"
-        android:layout_height="180dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/welldone_splash_cropped"
-        android:contentDescription="@android:color/transparent" />
-
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/ivFixedPump"
-        android:layout_centerHorizontal="true"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
-
-        <TextView
-            android:id="@+id/tvPumpStatusLabel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:id="@+id/pbLoading"
+            android:visibility="invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/spPumpStatus"
-            android:text="@string/pump_status_label" />
-        <Spinner
-            android:id="@+id/spPumpStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/tvPumpStatusLabel"
-            android:entries="@array/pump_status_options" />
-
-        <EditText
-            android:id="@+id/etReportNotes"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_below="@+id/tvPumpStatusLabel"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:gravity="left|top"
-            android:hint="@string/report_notes_hint"
-            android:inputType="textMultiLine"
-            android:scrollbars="vertical"
-            android:textSize="15sp" />
-
-        <Button
-            android:id="@+id/btnSubmitReport"
-            android:layout_width="170dp"
-            android:layout_height="35dp"
-            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="25dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/new_report"
-            android:focusable="false"
-            android:onClick="onReportSubmit"
-            android:text="@string/submit_report"
-            android:textColor="@color/offwhite"
-            android:textSize="14sp" />
+            android:layout_centerVertical="true" />
+
+        <RelativeLayout
+            android:id="@+id/ivPlaceholderImageContainer"
+            android:layout_width="match_parent"
+            android:layout_margin="0dp"
+            android:background="@color/backgroundGray"
+            android:layout_height="180dp">
+            <ImageView
+                android:id="@+id/ivFixedPump"
+                android:scaleType="centerInside"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_camera"
+                android:contentDescription="@android:color/transparent" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Add a photo"
+                android:textColor="@color/textGray"
+                android:layout_below="@id/ivFixedPump"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/backgroundBorderGray"
+                android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/ivPlaceholderImageContainer"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
+
+            <TextView
+                android:id="@+id/tvPumpStatusLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="8dp"
+                android:textColor="@color/textGray"
+                android:textSize="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toLeftOf="@+id/spPumpStatus"
+                android:text="@string/pump_status_label" />
+
+            <Spinner
+                android:id="@+id/spPumpStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:entries="@array/pump_status_options" />
+
+            <EditText
+                android:id="@+id/etReportNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvPumpStatusLabel"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:hint="@string/report_notes_hint"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/btnSubmitReport"
+                android:layout_width="170dp"
+                android:layout_height="35dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/etReportNotes"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/new_report"
+                android:focusable="false"
+                android:onClick="onReportSubmit"
+                android:text="@string/submit_report"
+                android:textColor="@color/offwhite"
+                android:textSize="14sp" />
+        </RelativeLayout>
     </RelativeLayout>
-</RelativeLayout>
+</ScrollView>

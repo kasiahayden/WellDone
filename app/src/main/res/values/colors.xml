@@ -8,6 +8,8 @@
     <color name="textBlack">#666666</color>
     <color name="cardOuterStroke">#e2e7f1</color>
     <color name="cardInnerStroke">#dde3ee</color>
+    <color name="backgroundGray">#e7e6e7</color>
+    <color name="backgroundBorderGray">#d3d2d3</color>
+    <color name="addPhotoGrayText">@color/backgroundBorderGray</color>
     <color name="cardFill">@color/offwhite</color>
-
 </resources>
