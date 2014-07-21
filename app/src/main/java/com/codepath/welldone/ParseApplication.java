@@ -27,6 +27,9 @@ public class ParseApplication extends Application {
 
 		super.onCreate();
 
+        //{"*":{"read":true},"role:Engineer":{"write":true,"read":true}}
+        //{"ZJ3bkjPxxj":{"read":true,"write":true}}
+
         Parse.enableLocalDatastore(this);
         ParseObject.registerSubclass(Pump.class);
         ParseObject.registerSubclass(Report.class);
@@ -35,15 +38,13 @@ public class ParseApplication extends Application {
 
         PushService.setDefaultPushCallback(this, CreateReportActivity.class);
 
-
-
         //THIS IS ONE-TIME ONLY. SET A ROLE, ADD EXISTING USERS AND DATA TO IT
-        final ParseACL roleACL = new ParseACL();
+        /*final ParseACL roleACL = new ParseACL();
         roleACL.setPublicReadAccess(true);
         final ParseRole role = new ParseRole("Engineer", roleACL);
 
         final ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
-        /*userQuery.findInBackground(new FindCallback<ParseUser>() {
+        userQuery.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> parseUsers, ParseException e) {
                 if (e == null) {
@@ -69,16 +70,17 @@ public class ParseApplication extends Application {
         });*/
 
 
-        final ParseQuery<ParseObject> pumpQuery = ParseQuery.getQuery("Pump");
-        final ParseACL postACL = new ParseACL();
-        postACL.setRoleReadAccess("Engineer", true);
-        postACL.setRoleWriteAccess("Engineer", true);
-        /*pumpQuery.findInBackground(new FindCallback<ParseObject>() {
+        /*final ParseQuery<ParseObject> pumpQuery = ParseQuery.getQuery("Pump");
+        final ParseACL roleACL = new ParseACL();
+        roleACL.setPublicReadAccess(true);
+        roleACL.setRoleReadAccess("Engineer", true);
+        roleACL.setRoleWriteAccess("Engineer", true);
+        pumpQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 for (ParseObject obj : parseObjects) {
                     final Pump pump = (Pump) obj;
-                    pump.setACL(postACL);
+                    pump.setACL(roleACL);
                     pump.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
@@ -91,7 +93,7 @@ public class ParseApplication extends Application {
                     });
                 }
             }
-        }); */
+        });*/
 
         /*userQuery.findInBackground(new FindCallback<ParseUser>() {
             @Override

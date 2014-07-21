@@ -53,20 +53,6 @@ public class SignInActivity extends Activity {
         final ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             Log.d("debug", "Current user is " + currentUser.toString());
-            /*final ParseACL postACL = new ParseACL();
-            postACL.setReadAccess(currentUser, true);
-            postACL.setWriteAccess(currentUser, true);
-            currentUser.setACL(postACL);
-            currentUser.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        Log.d("debug", "Saved acl to user: " + currentUser.getUsername());
-                    } else {
-                        Log.d("debug", "Couldn't save acl to user: " + currentUser.getUsername() + " " + e.toString());
-                    }
-                }
-            });*/
             startActivity(new Intent(getApplicationContext(), PumpBrowser.class));
         } else {
             Log.d("debug", "No user logged in!");

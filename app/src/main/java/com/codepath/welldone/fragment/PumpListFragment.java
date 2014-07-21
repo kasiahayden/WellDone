@@ -27,6 +27,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -319,8 +320,17 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
                 }
         );
         // Add the latest results for this query to the cache.
-        Log.d("debug", "Pinning newly retrieved objects");
-        ParseObject.pinAllInBackground(PumpPersister.ALL_PUMPS, pumpList);
+        Log.d("debug", "Pinning newly fetched pumps " + pumpList.size());
+        ParseObject.pinAllInBackground(PumpPersister.ALL_PUMPS, pumpList, new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    Log.d("debug", "Pinned newly fetched pumps " + pumpList.size());
+                } else {
+                    Log.d("debug", "Couldn't pin pumps: " + e.toString());
+                }
+            }
+        });
     }
 
     private void addPumpsToAdapter(List<ParseObject> pumpList, boolean additionalSort) {
