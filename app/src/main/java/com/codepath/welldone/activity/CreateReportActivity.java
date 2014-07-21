@@ -26,6 +26,7 @@ import com.codepath.welldone.persister.PumpPersister;
 import com.codepath.welldone.persister.ReportPersister;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -205,6 +206,13 @@ public class CreateReportActivity extends Activity {
 
         final String pumpName = report.getPump().getName();
         Log.d("debug", "Pinning report for pump: " + pumpName);
+
+        // IMPORTANT: Set the ACL for the new report to that of the logged in user's role.
+        final ParseACL reportACL = new ParseACL();
+        reportACL.setRoleReadAccess("Engineer", true);
+        reportACL.setRoleWriteAccess("Engineer", true);
+        report.setACL(reportACL);
+
         report.pinInBackground(ReportPersister.ALL_REPORTS, new SaveCallback() {
             @Override
             public void done(ParseException e) {

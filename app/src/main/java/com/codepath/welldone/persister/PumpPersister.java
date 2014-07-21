@@ -26,13 +26,13 @@ public class PumpPersister {
     public static Pump getPumpByObjectIdSyncly(String pumpObjectId) {
 
         final ParseQuery<Pump> query = ParseQuery.getQuery(Pump.class);
-        query.fromPin(ALL_PUMPS);
+        //query.fromPin(ALL_PUMPS);
         query.whereEqualTo("objectId", pumpObjectId);
         try {
             return ((Pump) query.getFirst());
         } catch (ParseException e) {
-            e.printStackTrace();
-            Log.d("PumpPersister", "getPumpByObjectIdSyncly failed to return pump with objectId: " + pumpObjectId);
+            Log.d("debug", "getPumpByObjectIdSyncly failed to return pump with objectId: "
+                    + pumpObjectId + " " + e.toString());
         }
         return null;
     }

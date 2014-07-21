@@ -80,7 +80,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         mCurrentPumpIndex = 0;
 
         currentUser = ParseUser.getCurrentUser();
-        Log.d("debug", "Current user: " + currentUser.getUsername() + " " + currentUser.get("location"));
+        Log.d("debug", "Current user: " + currentUser.getUsername() + " " + currentUser.get("location") + " " + currentUser.getACL());
         mPumpArrayAdapter = new PumpListAdapter((Activity)mListener);
     }
 
