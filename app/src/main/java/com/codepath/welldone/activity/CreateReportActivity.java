@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.codepath.welldone.R;
+import com.codepath.welldone.helper.AddressUtil;
 import com.codepath.welldone.helper.DateTimeUtil;
 import com.codepath.welldone.helper.ImageUtil;
 import com.codepath.welldone.helper.StringUtil;
@@ -25,7 +26,6 @@ import com.codepath.welldone.model.Report;
 import com.codepath.welldone.persister.PumpPersister;
 import com.codepath.welldone.persister.ReportPersister;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -37,7 +37,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -77,7 +76,8 @@ public class CreateReportActivity extends Activity {
 
         Log.d("debug", "Working with pump: " + pumpToBeReported.getObjectId() + " "
                 + pumpToBeReported.getName());
-        getActionBar().setTitle("New Report for " + pumpToBeReported.getAddress());
+        getActionBar().setTitle(StringUtil.getConcatenatedString("New Report for ",
+                AddressUtil.stripCountryFromAddress(pumpToBeReported.getAddress())));
         setupViews();
         setupListeners();
     }
@@ -110,8 +110,9 @@ public class CreateReportActivity extends Activity {
 
         final String pumpStatusToBeReported = spPumpStatus.getSelectedItem().toString();
         final String reportNotes = etReportNotes.getText().toString();
-        final String reportTitle = "Pump_" + pumpStatusToBeReported.toString() + "_"
-                + DateFormat.getDateTimeInstance().format(new Date()); //TODO is this the report title format we want?
+        final String reportTitle = StringUtil.getConcatenatedString("Pump_",
+                AddressUtil.getConcatenatedCityFromAddress(pumpToBeReported.getAddress()), "_",
+                DateTimeUtil.getLocalDateTimeForFileName(new Date()), ".html");
 
         // Set the new status and priority on the pump
         pumpToBeReported.setCurrentStatus(pumpStatusToBeReported);
@@ -133,7 +134,6 @@ public class CreateReportActivity extends Activity {
 
         ivFixedPump = (ImageView) findViewById(R.id.ivFixedPump);
         etReportNotes = (EditText) findViewById(R.id.etReportNotes);
-        //etReportTitle = (EditText) findViewById(R.id.etReportTitle);
         spPumpStatus = (Spinner) findViewById(R.id.spPumpStatus);
     }
 
@@ -208,7 +208,10 @@ public class CreateReportActivity extends Activity {
         Log.d("debug", "Pinning report for pump: " + pumpName);
 
         // IMPORTANT: Set the ACL for the new report to that of the logged in user's role.
+        // XXX: Ideally, the role name shouldn't be hard-coded. But will do here, shamelessly.
+        // Also, turn on public readability for local datastore to wrk properly.
         final ParseACL reportACL = new ParseACL();
+        reportACL.setPublicReadAccess(true);
         reportACL.setRoleReadAccess("Engineer", true);
         reportACL.setRoleWriteAccess("Engineer", true);
         report.setACL(reportACL);
@@ -222,7 +225,7 @@ public class CreateReportActivity extends Activity {
                     //checkIfReportPersistedLocally(report);
                     Log.d("debug", "Report pinned successfully: " + pumpName);
                     Toast.makeText(getApplicationContext(),
-                            "Report cached successfully!",
+                            "Report cached successfully.",
                             Toast.LENGTH_SHORT).show();
 
                     // Try the persist the report remotely
@@ -251,11 +254,11 @@ public class CreateReportActivity extends Activity {
         Log.d("debug", "Persisting report for pump: " + pumpName);
 
         if (newImageBitmap == null) {
-            Log.d("debug", "Persisting report without image");
+            Log.d("debug", "Persisting report without image.");
             persistReport(report);
 
         } else {
-            Log.d("debug", "Persisting report with image");
+            Log.d("debug", "Persisting report with image.");
             final byte[] newImageByteArray =
                     ImageUtil.getByteArrayFromBitmap(newImageBitmap, COMPRESSION_FACTOR);
             final ParseFile imageForParse = new ParseFile("image.jpeg", newImageByteArray);
@@ -276,8 +279,7 @@ public class CreateReportActivity extends Activity {
         }
     }
 
-    // IMPORTANT: To save the underlying pump linked to the report, the pump has to be fetched
-    // first, then updated. It won't be updated automatically.
+    // IMPORTANT: The underlying pump will be saved automatically.
     private void persistReport(final Report report) {
 
         report.saveEventually(new SaveCallback() {
@@ -285,109 +287,15 @@ public class CreateReportActivity extends Activity {
             public void done(ParseException e) {
 
                 if (e == null) {
-                    final ParseQuery pumpQuery = ParseQuery.getQuery("Pump");
-                    Log.d("debug", "getting pump with ID: " + report.getPump().getObjectId());
-                    //pumpQuery.whereEqualTo("objectId", report.getPump().getObjectId());
-                    try {
-                        final Pump fetchedPump = (Pump) pumpQuery.get(report.getPump().getObjectId());
-                        Log.d("debug", "Fetched pump name: " + fetchedPump.getName());
-                        Log.d("debug", "Fetched pump status: " + fetchedPump.getCurrentStatus());
-                        Log.d("debug", "Fetched pump priority: " + fetchedPump.getPriority());
-
-                        Log.d("debug", "Pump priority in report: " + pumpToBeReported.getPriority());
-                        Log.d("debug", "Pump status in report: " + pumpToBeReported.getCurrentStatus());
-                        fetchedPump.setPriority(pumpToBeReported.getPriority());
-                        fetchedPump.setCurrentStatus(pumpToBeReported.getCurrentStatus());
-                        Log.d("debug", "Saving fetched pump: " + fetchedPump.getName());
-                        fetchedPump.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e == null) {
-                                    Toast.makeText(getApplicationContext(),
-                                            "Report successfully uploaded to server.",
-                                            Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Log.e("error", "Couldn't persist report for pump "
-                                            + report.getPump().getName() + ", exception: " + e);
-                                }
-                            }
-                        });
-
-                    } catch (ParseException pe) {
-                        Log.e("error", "Couldn't persist report for pump "
-                                + report.getPump().getName() + ", exception: " + pe);
-                    }
-
-                    // THIS WORKS! It creates new pump with the new status and priority.
-                    /*Pump pump = new Pump();
-                    pump.setPriority(report.getPump().getPriority());
-                    pump.setCurrentStatus(report.getPump().getCurrentStatus());
-                    pump.saveEventually(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                Toast.makeText(getApplicationContext(),
-                                        "Report successfully uploaded to server.",
-                                        Toast.LENGTH_SHORT).show();
-                            } else {
-                                Log.e("CreateReportActivity", "report.saveInBackground failed: " + e.toString());
-                            }
-                        }
-                    });*/
-
+                    Toast.makeText(getApplicationContext(),
+                            "Report successfully uploaded to server.",
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     Log.e("error", "Couldn't persist report for pump " + report.getPump().getName()
                             + ", exception: " + e);
                 }
             }
         });
-    }
-
-    // This is just a test method to save a report AFTER saving the corresponding pump first.
-    // This does not update the pump either.
-    private void persistReport2(final Report report) {
-
-        final ParseQuery pumpQuery = ParseQuery.getQuery("Pump");
-        pumpQuery.getInBackground(report.getPump().getObjectId(), new GetCallback() {
-            @Override
-            public void done(ParseObject parseObject, ParseException e) {
-
-                if (e == null) {
-                    final Pump fetchedPump = (Pump) parseObject;
-                    Log.d("debug", "Fetched pump name: " + fetchedPump.getName());
-                    Log.d("debug", "Fetched pump status: " + fetchedPump.getCurrentStatus());
-                    Log.d("debug", "Fetched pump priority: " + fetchedPump.getPriority());
-
-                    Log.d("debug", "Pump priority in report: " + pumpToBeReported.getPriority());
-                    Log.d("debug", "Pump status in report: " + pumpToBeReported.getCurrentStatus());
-                    fetchedPump.setPriority(report.getPump().getPriority());
-                    fetchedPump.setCurrentStatus(report.getPump().getCurrentStatus());
-                    Log.d("debug", "Saving fetched pump: " + fetchedPump.getName());
-                    fetchedPump.saveEventually(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            report.saveEventually(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if (e == null) {
-                                        Toast.makeText(getApplicationContext(),
-                                                "Report successfully uploaded to server.",
-                                                Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Log.e("error", "Couldn't persist report for pump "
-                                                + report.getPump().getName() + ", exception: " + e);
-                                    }
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    Log.e("error", "Couldn't persist pump "
-                            + report.getPump().getName() + ", exception: " + e);
-                }
-            }
-        });
-
     }
 
     // Check if a report was persisted locally

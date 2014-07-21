@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.codepath.welldone.helper.AddressUtil;
 import com.codepath.welldone.helper.DateTimeUtil;
 import com.codepath.welldone.model.Pump;
 
@@ -102,8 +103,7 @@ public class PumpRowView extends RelativeLayout {
 
     private void setupLocationLabel(Pump pump) {
         try {
-            String fullyQualifiedName = String.format("%s", pump.getAddress());
-            viewHolder.tvLocation.setText(fullyQualifiedName.split(",")[0]);
+            viewHolder.tvLocation.setText(AddressUtil.stripCountryFromAddress(pump.getAddress()));
         }
         catch (Exception e) {
             e.printStackTrace();

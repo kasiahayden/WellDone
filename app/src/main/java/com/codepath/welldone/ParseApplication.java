@@ -27,9 +27,6 @@ public class ParseApplication extends Application {
 
 		super.onCreate();
 
-        //{"*":{"read":true},"role:Engineer":{"write":true,"read":true}}
-        //{"ZJ3bkjPxxj":{"read":true,"write":true}}
-
         Parse.enableLocalDatastore(this);
         ParseObject.registerSubclass(Pump.class);
         ParseObject.registerSubclass(Report.class);

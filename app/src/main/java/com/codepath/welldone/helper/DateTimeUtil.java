@@ -24,6 +24,18 @@ public class DateTimeUtil {
         return sdf.format(date);
     }
 
+    /**
+     * Return current date time as a concatenated string, to be used as filename.
+     * @param date
+     * @return
+     */
+    public static String getLocalDateTimeForFileName(Date date) {
+
+        final SimpleDateFormat sdf = new SimpleDateFormat("MMddyyyy_HHmmss");
+        sdf.setTimeZone(TimeZone.getDefault());
+        return sdf.format(date);
+    }
+
     public static String getFriendlyTimeStamp() {
 
         return new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
