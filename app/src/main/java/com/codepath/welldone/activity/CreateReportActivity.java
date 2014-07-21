@@ -31,6 +31,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
@@ -52,7 +53,6 @@ public class CreateReportActivity extends Activity {
     public static final String PHOTO_FILE_EXTENSION = ".jpg";
 
     private EditText etReportNotes;
-    private EditText etReportTitle;
     private ImageView ivFixedPump;
     private Spinner spPumpStatus;
 
@@ -121,9 +121,10 @@ public class CreateReportActivity extends Activity {
         // Create a new report to be pinned locally and persisted remotely
         final Report reportToBePersisted = new Report();
         reportToBePersisted.setReportDetails(pumpToBeReported,
-                pumpStatusToBeReported,
-                reportTitle,
-                reportNotes);
+                                             ParseUser.getCurrentUser(),
+                                             pumpStatusToBeReported,
+                                             reportTitle,
+                                             reportNotes);
 
         // Pin the report locally
         pinReportLocally(reportToBePersisted, newImageBitmap);

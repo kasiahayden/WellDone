@@ -5,6 +5,7 @@ import android.util.Log;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 /**
  * Class to represent to a report when a pump has been fixed/looked at.
@@ -16,8 +17,13 @@ public class Report extends ParseObject {
 
     }
 
-    public void setReportDetails(Pump pump, String reportedStatus, String title, String notes) {
+    public void setReportDetails(Pump pump,
+                                 ParseUser user,
+                                 String reportedStatus,
+                                 String title,
+                                 String notes) {
         setPump(pump);
+        setUser(user);
         setReportedStatus(reportedStatus);
         setTitle(title);
         setNotes(notes);
@@ -44,6 +50,10 @@ public class Report extends ParseObject {
     }
 
     public void setPump(Pump pump) { put("pump", pump); }
+
+    public ParseUser getUser() { return (ParseUser) getParseObject("user"); }
+
+    public void setUser(ParseUser user) { put("user", user); }
 
     public String getReportedStatus() {
         return getString("reportedStatus");

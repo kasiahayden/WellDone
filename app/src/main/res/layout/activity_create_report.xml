@@ -41,54 +41,6 @@
             android:layout_alignTop="@+id/tvPumpStatusLabel"
             android:entries="@array/pump_status_options" />
 
-        <!--<LinearLayout
-            android:id="@+id/llPumpStatus"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvPumpStatusLabel0"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tvPumpStatusLabel"
-                style="?android:listSeparatorTextViewStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:hint="@string/pump_status_label"
-                />
-
-            <Spinner
-                android:id="@+id/spPumpStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/pump_status_options" >
-            </Spinner>
-        </LinearLayout>-->
-
-        <!--
-        <Spinner
-            android:id="@+id/spPumpStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/pump_status_options"
-            android:layout_alignTop="@+id/etReportTitle"
-            android:layout_toRightOf="@+id/etReportTitle"
-            android:layout_alignRight="@+id/etReportNotes"
-            android:layout_alignEnd="@+id/etReportNotes">
-        </Spinner>
-        -->
-
-        <!--<TextView
-            android:id="@+id/tvReportNotesLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/spPumpStatus"
-            android:layout_marginTop="10dp"
-            android:layout_alignLeft="@+id/ivFixedPump"
-            android:hint="@string/report_notes_label" /> -->
-
         <EditText
             android:id="@+id/etReportNotes"
             android:layout_width="match_parent"
@@ -118,24 +70,3 @@
             android:textSize="14sp" />
     </RelativeLayout>
 </RelativeLayout>
-
-
-
-    <!--
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp" -->
-
-   <!--<TextView
-       android:id="@+id/tvReportTitleLabel"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_below="@+id/ivFixedPump"
-       android:layout_marginTop="10dp"
-       android:layout_alignLeft="@+id/ivFixedPump"
-       android:hint="@string/report_title_label" />-->
-
-
-
-
-
-
