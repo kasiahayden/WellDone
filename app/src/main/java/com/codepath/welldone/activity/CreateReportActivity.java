@@ -101,6 +101,8 @@ public class CreateReportActivity extends Activity {
                 newImageDrawable = Drawable.createFromStream(inputStream, fixedPumpPhotoUri.toString());
                 ivPumpImageToBeReported.setImageDrawable(newImageDrawable); //TODO possible resize here before setting so doesn't stretch
                 ivPumpImageToBeReported.setVisibility(View.VISIBLE);
+
+                pbLoading.setVisibility(View.GONE);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -150,7 +152,7 @@ public class CreateReportActivity extends Activity {
         ivAddPictureToReportImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                pbLoading.setVisibility(View.VISIBLE);
                 startTakePictureIntent();
             }
         });

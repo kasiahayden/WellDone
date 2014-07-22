@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.R;
@@ -111,13 +109,6 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
         Intent intent = new Intent(this, CreateReportActivity.class);
         intent.putExtra("pumpObjectId", pump.getObjectId());
         startActivity(intent);
-    }
-
-    public void onNewReportClicked(View view) {
-        onNewReportClicked(mListFragment.getCurrentPump());
-    }
-    void printMenuItemTitle() {
-        Log.d("DBG", String.format("before %s", mMapToggleMenuItem.getTitle().toString()));
     }
 
 }
