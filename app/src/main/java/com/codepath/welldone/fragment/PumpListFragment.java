@@ -2,6 +2,7 @@ package com.codepath.welldone.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,7 +55,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
     private int mCurrentPumpIndex;
     // The default view of pump list is sorted by distance from currently logged-in user.
-    private int sortMenuItemSelected = R.id.sortDistance;
+    private int sortMenuItemSelected;
 
     public PumpListFragment() {}
 
@@ -82,11 +83,29 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         setHasOptionsMenu(true);
 
         mCurrentPumpIndex = 0;
+        mPumpArrayAdapter = new PumpListAdapter((Activity)mListener);
 
         currentUser = ParseUser.getCurrentUser();
         Log.d("debug", "Current user: " + currentUser.getUsername() + " "
                 + currentUser.get("location") + " " + currentUser.getACL());
-        mPumpArrayAdapter = new PumpListAdapter((Activity)mListener);
+
+        final SharedPreferences settings = getActivity().getPreferences(0);
+        sortMenuItemSelected = settings.getInt("lastSortMode", R.id.sortDistance);
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        final SharedPreferences settings = getActivity().getPreferences(0);
+        final SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("lastSortMode", sortMenuItemSelected);
+
+        // Commit the edits!
+        editor.commit();
     }
 
     // Add a special menu XML for this fragment only.
@@ -113,9 +132,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
         setupListeners();
 
-        pbLoading.setVisibility(ProgressBar.VISIBLE);
-        mPumpArrayAdapter.clear();
-        fetchPumpsInBackground(ParseQuery.getQuery("Pump"), true /* additional sorting by distance */);
+        fetchAndShowData();
 
         return v;
     }
@@ -160,8 +177,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
             case R.id.sortDistance:
                 sortMenuItemSelected = R.id.sortDistance;
                 if (!item.isChecked()) {
-                    pbLoading.setVisibility(ProgressBar.VISIBLE);
-                    mPumpArrayAdapter.clear();
+                    prepareForDataFetch();
                     // XXX Adding the extra boolean param is BAD coding practice, but this is what time
                     // allows for. :(
                     fetchPumpsInBackground(ParseQuery.getQuery("Pump"), true
@@ -172,8 +188,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
             case R.id.sortPriority:
                 sortMenuItemSelected = R.id.sortPriority;
                 if (!item.isChecked()) {
-                    pbLoading.setVisibility(ProgressBar.VISIBLE);
-                    mPumpArrayAdapter.clear();
+                    prepareForDataFetch();
                     fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByAscending("priority"),
                                            false);
                     item.setChecked(true);
@@ -182,8 +197,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
             case R.id.sortLastUpdated:
                 sortMenuItemSelected = R.id.sortLastUpdated;
                 if (!item.isChecked()) {
-                    pbLoading.setVisibility(ProgressBar.VISIBLE);
-                    mPumpArrayAdapter.clear();
+                    prepareForDataFetch();
                     fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
                                            false);
                     item.setChecked(true);
@@ -207,32 +221,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
             return;
         }
 
-        switch (sortMenuItemSelected) {
-
-            case R.id.sortDistance:
-                pbLoading.setVisibility(ProgressBar.VISIBLE);
-                mPumpArrayAdapter.clear();
-                fetchPumpsFromRemote(ParseQuery.getQuery("Pump"), true
-                                     /* apply additional sort, outside of DB query */);
-                getActivity().invalidateOptionsMenu();
-                break;
-            case R.id.sortPriority:
-                pbLoading.setVisibility(ProgressBar.VISIBLE);
-                mPumpArrayAdapter.clear();
-                fetchPumpsFromRemote(ParseQuery.getQuery("Pump").orderByAscending("priority"),
-                                     false);
-                getActivity().invalidateOptionsMenu();
-                break;
-            case R.id.sortLastUpdated:
-                pbLoading.setVisibility(ProgressBar.VISIBLE);
-                mPumpArrayAdapter.clear();
-                fetchPumpsFromRemote(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
-                                     false);
-                getActivity().invalidateOptionsMenu();
-                break;
-            default:
-                // no action.
-        }
+        fetchAndShowRemoteData();
         ptrlPumps.setRefreshComplete();
     }
 
@@ -261,6 +250,63 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
             }
         });
+    }
+
+    // This is done each time before we fetch data both locally or remotely
+    private void prepareForDataFetch() {
+
+        pbLoading.setVisibility(ProgressBar.VISIBLE);
+        mPumpArrayAdapter.clear();
+    }
+
+    // Fetch data (from local or remote source) based on the selected sort option
+    private void fetchAndShowData() {
+
+        switch (sortMenuItemSelected) {
+
+            case R.id.sortDistance:
+                prepareForDataFetch();
+                fetchPumpsInBackground(ParseQuery.getQuery("Pump"), true
+                                       /* apply additional sort, outside of DB query */);
+                break;
+            case R.id.sortPriority:
+                prepareForDataFetch();
+                fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByAscending("priority"),
+                                       false);
+                break;
+            case R.id.sortLastUpdated:
+                prepareForDataFetch();
+                fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
+                                       false);
+                break;
+            default:
+                // no action.
+        }
+    }
+
+    // Fetch data remotely based on the selected sort option
+    private void fetchAndShowRemoteData() {
+
+        switch (sortMenuItemSelected) {
+
+            case R.id.sortDistance:
+                prepareForDataFetch();
+                fetchPumpsFromRemote(ParseQuery.getQuery("Pump"), true
+                                     /* apply additional sort, outside of DB query */);
+                break;
+            case R.id.sortPriority:
+                prepareForDataFetch();
+                fetchPumpsFromRemote(ParseQuery.getQuery("Pump").orderByAscending("priority"),
+                                     false);
+                break;
+            case R.id.sortLastUpdated:
+                prepareForDataFetch();
+                fetchPumpsFromRemote(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
+                                     false);
+                break;
+            default:
+                // no action.
+        }
     }
 
     /**
