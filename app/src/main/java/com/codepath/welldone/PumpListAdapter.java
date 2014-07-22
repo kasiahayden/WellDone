@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import com.codepath.welldone.model.Pump;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseUser;
 
 /**
  * Adapter to hold a list of pumps with their numbers, color-coded state, and
@@ -21,8 +23,12 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
 
     public PumpListListener rowListener;
 
+    private ParseGeoPoint currentUserLocation;
+
     public PumpListAdapter(Context context) {
+
         super(context, R.layout.row_pump_list_item);
+        currentUserLocation = (ParseGeoPoint) ParseUser.getCurrentUser().get("location");
     }
 
     @Override
@@ -41,7 +47,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
             pumpRowView = (PumpRowView)convertView;
         }
 
-        pumpRowView.updateSubviews(pump);
+        pumpRowView.updateSubviews(pump, currentUserLocation);
 
         Button newReport = (Button)pumpRowView.findViewById(R.id.btnNewReport);
         newReport.setOnClickListener(new View.OnClickListener() {

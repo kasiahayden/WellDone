@@ -38,17 +38,16 @@
                 android:text="@string/pump_name_label"/>
 
             <TextView
-                android:id="@+id/tvPumpLastUpdated"
+                android:id="@+id/tvPumpDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tvPumpLocation"
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@id/tvPumpLocation"
                 android:textColor="@color/textGray"
                 android:layout_marginRight="4dp"
                 android:fontFamily="sans-serif"
                 android:textSize="14dp"
-                android:text="Feb. 31" />
+                android:text="10 km" />
 
             <TextView
                 android:id="@+id/tvPumpStatus"
@@ -59,6 +58,18 @@
                 android:textSize="14dp"
                 android:text="Broken temporarily"
                 android:layout_alignLeft="@id/tvPumpLocation"/>
+
+            <TextView
+                android:id="@+id/tvPumpLastUpdated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@id/tvPumpStatus"
+                android:textColor="@color/textGray"
+                android:layout_marginRight="4dp"
+                android:fontFamily="sans-serif"
+                android:textSize="14dp"
+                android:text="Feb. 31" />
 
             <TextView
                 android:id="@+id/tvPriority"

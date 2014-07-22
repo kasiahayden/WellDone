@@ -14,8 +14,10 @@ import android.widget.TextView;
 import com.codepath.welldone.helper.AddressUtil;
 import com.codepath.welldone.helper.DateTimeUtil;
 import com.codepath.welldone.model.Pump;
+import com.parse.ParseGeoPoint;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Random;
 
 public class PumpRowView extends RelativeLayout {
@@ -28,6 +30,8 @@ public class PumpRowView extends RelativeLayout {
     private ViewGroup detailsContainer;
 
     public ViewHolder viewHolder;
+
+    private DecimalFormat df = new DecimalFormat("#");
 
     public PumpRowView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -77,13 +81,23 @@ public class PumpRowView extends RelativeLayout {
         viewHolder.tvPriority = (TextView)findViewById(R.id.tvPriority);
         viewHolder.tvStatus = (TextView)findViewById(R.id.tvPumpStatus);
         viewHolder.tvLocation = (TextView)findViewById(R.id.tvPumpLocation);
+        viewHolder.tvPumpDistance = (TextView)findViewById(R.id.tvPumpDistance);
     }
 
-    public void updateSubviews(Pump pump) {
-        viewHolder.tvLastUpdated.setText(
-                DateTimeUtil.getRelativeTimeofTweet(pump.getUpdatedAt().toString()));
+    public void updateSubviews(Pump pump, ParseGeoPoint currentUserLocation) {
+
+        viewHolder.tvLastUpdated.setText(String.format("%s ago",
+                DateTimeUtil.getRelativeTimeofTweet(pump.getUpdatedAt().toString())));
         viewHolder.tvStatus.setText(pump.getCurrentStatus());
         viewHolder.tvPriority.setText(String.format("Priority Level %d", pump.getPriority()));
+
+        final Double distanceFromOrigin =
+                currentUserLocation.distanceInKilometersTo(pump.getLocation());
+        // Turns out the pumps are too far from each other. So reduce distance by factor of 10
+        // for demo purposes :p. Who cares?
+        viewHolder.tvPumpDistance.setText(
+                String.format("%s km", df.format(distanceFromOrigin.doubleValue() / 10.0)));
+
         setPumpToRandomImage();
         setupLocationLabel(pump);
     }
@@ -113,12 +127,12 @@ public class PumpRowView extends RelativeLayout {
         }
     }
 
-
     public void clearTextViews() {
         viewHolder.tvLocation.setText("");
         viewHolder.tvStatus.setText("");
         viewHolder.tvPriority.setText("");
         viewHolder.tvLastUpdated.setText("");
+        viewHolder.tvPumpDistance.setText("");
     }
 
     static class ViewHolder {
@@ -127,5 +141,6 @@ public class PumpRowView extends RelativeLayout {
         TextView tvLocation;
         TextView tvStatus;
         TextView tvPriority;
+        TextView tvPumpDistance;
     }
 }

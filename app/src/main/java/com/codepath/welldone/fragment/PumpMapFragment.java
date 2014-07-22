@@ -22,11 +22,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseUser;
 
 public class PumpMapFragment extends Fragment {
     public static final double MAP_DISPLAY_DELTA = 0.03;
     public Pump mPump;
     private MapFragment mapFragment;
+    private ParseGeoPoint currentUserLocation;
 
     ViewPager mDetailsPager;
 
@@ -45,6 +48,7 @@ public class PumpMapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mapFragment = new MapFragment();
+        currentUserLocation = (ParseGeoPoint) ParseUser.getCurrentUser().get("location");
     }
 
     @Override
@@ -161,7 +165,7 @@ public class PumpMapFragment extends Fragment {
                 final PumpRowView pumpRow = new PumpRowView(getActivity(), null);
                 pumpRow.setRootBackgroundColor(getResources().getColor(android.R.color.transparent));
                 final Pump thePump = mPumpListAdapter.getItem(position);
-                pumpRow.updateSubviews(thePump);
+                pumpRow.updateSubviews(thePump, currentUserLocation);
                 container.addView(pumpRow);
                 pumpRow.newReportButton.setOnClickListener(new View.OnClickListener() {
                     @Override
