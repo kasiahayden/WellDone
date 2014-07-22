@@ -47,6 +47,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
             pumpRowView = (PumpRowView)convertView;
         }
 
+        pumpRowView.mPump = pump;
         pumpRowView.updateSubviews(pump, currentUserLocation);
 
         Button newReport = (Button)pumpRowView.findViewById(R.id.btnNewReport);

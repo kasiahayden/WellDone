@@ -49,4 +49,11 @@ public class Pump extends ParseObject {
         return 0;
     }
 
+    public int getHash() {
+        if (getAddress() == null) {
+            return 0;
+        }
+        return getAddress().hashCode();
+    }
+
 }
