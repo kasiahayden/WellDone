@@ -115,7 +115,7 @@
                     android:layout_alignParentLeft="true"
                     android:scaleType="centerInside"
                     android:layout_margin="8dp"
-                    android:src="@drawable/dummydata"
+                    android:src="@drawable/fakegraph"
                     />
                 <Button
                     android:id="@+id/btnNewReport"
