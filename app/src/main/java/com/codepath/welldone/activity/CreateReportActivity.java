@@ -54,7 +54,8 @@ public class CreateReportActivity extends Activity {
     public static final String PHOTO_FILE_EXTENSION = ".jpg";
 
     private EditText etReportNotes;
-    private ImageView ivFixedPump;
+    private ImageView ivPumpImageToBeReported;
+    private ImageView ivAddPictureToReportImage;
     private ProgressBar pbLoading;
     private Spinner spPumpStatus;
 
@@ -98,7 +99,8 @@ public class CreateReportActivity extends Activity {
             try {
                 InputStream inputStream = getContentResolver().openInputStream(fixedPumpPhotoUri);
                 newImageDrawable = Drawable.createFromStream(inputStream, fixedPumpPhotoUri.toString());
-                ivFixedPump.setBackground(newImageDrawable); //TODO possible resize here before setting so doesn't stretch
+                ivPumpImageToBeReported.setImageDrawable(newImageDrawable); //TODO possible resize here before setting so doesn't stretch
+                ivPumpImageToBeReported.setVisibility(View.VISIBLE);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -137,14 +139,15 @@ public class CreateReportActivity extends Activity {
     private void setupViews() {
 
         etReportNotes = (EditText) findViewById(R.id.etReportNotes);
-        ivFixedPump = (ImageView) findViewById(R.id.ivFixedPump);
+        ivPumpImageToBeReported = (ImageView) findViewById(R.id.ivNewPumpPhoto);
+        ivAddPictureToReportImage = (ImageView) findViewById(R.id.ivCameraIcon);
         pbLoading = (ProgressBar) findViewById(R.id.pbLoading);
         spPumpStatus = (Spinner) findViewById(R.id.spPumpStatus);
     }
 
     private void setupListeners() {
 
-        ivFixedPump.setOnClickListener(new View.OnClickListener() {
+        ivAddPictureToReportImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
