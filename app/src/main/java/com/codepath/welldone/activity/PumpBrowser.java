@@ -3,7 +3,9 @@ package com.codepath.welldone.activity;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -11,6 +13,8 @@ import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.R;
 import com.codepath.welldone.fragment.PumpListFragment;
 import com.codepath.welldone.fragment.PumpMapFragment;
+import com.codepath.welldone.helper.NetworkUtil;
+import com.codepath.welldone.helper.StringUtil;
 import com.codepath.welldone.model.Pump;
 import com.parse.ParseAnalytics;
 
@@ -37,6 +41,23 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
         addInitialListFragment();
 
         isDisplayingMap = false;
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+
+        final Resources appResources = getApplicationContext().getResources();
+        final CharSequence appName = appResources.getText(appResources.getIdentifier("app_name",
+                "string", getApplicationContext().getPackageName()));
+        Log.d("PumpBrowser", "Application name from Context: " + appName);
+        if (!NetworkUtil.isNetworkAvailable(this)) {
+            getActionBar().setTitle(StringUtil.getConcatenatedString(appName.toString(),
+                                    " (Offline)"));
+        } else {
+            getActionBar().setTitle(appName.toString());
+        }
     }
 
     void addInitialListFragment() {

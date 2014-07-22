@@ -2,6 +2,7 @@ package com.codepath.welldone.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -78,6 +79,20 @@ public class CreateReportActivity extends Activity {
 
         getActionBar().setTitle(StringUtil.getConcatenatedString("New Report for ",
                 AddressUtil.stripCountryFromAddress(pumpToBeReported.getAddress())));
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+
+        final String baseTitle = StringUtil.getConcatenatedString("New Report for ",
+                AddressUtil.stripCountryFromAddress(pumpToBeReported.getAddress()));
+        if (!NetworkUtil.isNetworkAvailable(this)) {
+            getActionBar().setTitle(StringUtil.getConcatenatedString(baseTitle, " (Offline)"));
+        } else {
+            getActionBar().setTitle(baseTitle);
+        }
     }
 
     @Override
