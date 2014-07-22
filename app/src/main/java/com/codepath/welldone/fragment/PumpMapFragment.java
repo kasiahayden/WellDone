@@ -166,7 +166,7 @@ public class PumpMapFragment extends Fragment {
                 pumpRow.setRootBackgroundColor(getResources().getColor(android.R.color.transparent));
                 final Pump thePump = mPumpListAdapter.getItem(position);
                 pumpRow.mPump = thePump;
-                pumpRow.updateSubviews(thePump, currentUserLocation);
+                pumpRow.updateSubviews( currentUserLocation);
                 container.addView(pumpRow);
                 pumpRow.newReportButton.setOnClickListener(new View.OnClickListener() {
                     @Override

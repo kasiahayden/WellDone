@@ -2,6 +2,7 @@ package com.codepath.welldone;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import com.codepath.welldone.helper.AddressUtil;
 import com.codepath.welldone.helper.DateTimeUtil;
 import com.codepath.welldone.model.Pump;
+import com.codepath.welldone.model.Report;
+import com.codepath.welldone.persister.ReportPersister;
 import com.parse.ParseGeoPoint;
 
 import java.io.IOException;
@@ -84,25 +87,40 @@ public class PumpRowView extends RelativeLayout {
         viewHolder.tvLocation = (TextView)findViewById(R.id.tvPumpLocation);
         viewHolder.tvPumpDistance = (TextView)findViewById(R.id.tvPumpDistance);
         viewHolder.tvFlavor = (TextView)findViewById(R.id.tvFlavor);
+        viewHolder.tvMostRecentUpdate = (TextView)findViewById(R.id.tvMostRecentUpdate);
     }
 
-    public void updateSubviews(Pump pump, ParseGeoPoint currentUserLocation) {
+    public void updateSubviews(ParseGeoPoint currentUserLocation) {
 
         viewHolder.tvLastUpdated.setText(String.format("%s ago",
-                DateTimeUtil.getRelativeTimeofTweet(pump.getUpdatedAt().toString())));
-        viewHolder.tvStatus.setText(pump.getCurrentStatus());
-        viewHolder.tvPriority.setText(String.format("Priority Level %d", pump.getPriority()));
-        viewHolder.tvFlavor.setText(String.format(getResources().getString(R.string.default_pump_flavor_text, pump.getName(), pump.getName())));
+                DateTimeUtil.getRelativeTimeofTweet(mPump.getUpdatedAt().toString())));
+        viewHolder.tvStatus.setText(mPump.getCurrentStatus());
+        viewHolder.tvPriority.setText(String.format("Priority Level %d", mPump.getPriority()));
+        viewHolder.tvFlavor.setText(getResources().getString(R.string.default_pump_flavor_text, mPump.getName(), mPump.getName()));
+
+        new AsyncTask<Void, Void, Report>() {
+            @Override
+            protected Report doInBackground(Void... params) {
+                return ReportPersister.getLatestReportForPump(mPump);
+            }
+
+            @Override
+            protected void onPostExecute(Report report) {
+                if (report != null) {
+                    viewHolder.tvMostRecentUpdate.setText(report.getNotes());
+                }
+            }
+        }.execute();
 
         final Double distanceFromOrigin =
-                currentUserLocation.distanceInKilometersTo(pump.getLocation());
+                currentUserLocation.distanceInKilometersTo(mPump.getLocation());
         // Turns out the pumps are too far from each other. So reduce distance by factor of 10
         // for demo purposes :p. Who cares?
         viewHolder.tvPumpDistance.setText(
                 String.format("%s km", df.format(distanceFromOrigin.doubleValue() / 10.0)));
 
         setPumpToRandomImage();
-        setupLocationLabel(pump);
+        setupLocationLabel(mPump);
     }
 
     private void setPumpToRandomImage() {
@@ -147,5 +165,6 @@ public class PumpRowView extends RelativeLayout {
         TextView tvPriority;
         TextView tvPumpDistance;
         TextView tvFlavor;
+        TextView tvMostRecentUpdate;
     }
 }
