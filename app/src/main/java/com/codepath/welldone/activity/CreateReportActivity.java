@@ -22,6 +22,7 @@ import com.codepath.welldone.R;
 import com.codepath.welldone.helper.AddressUtil;
 import com.codepath.welldone.helper.DateTimeUtil;
 import com.codepath.welldone.helper.ImageUtil;
+import com.codepath.welldone.helper.NetworkUtil;
 import com.codepath.welldone.helper.StringUtil;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.Report;
@@ -122,7 +123,7 @@ public class CreateReportActivity extends Activity {
 
                 @Override
                 protected void onPostExecute(Void aVoid) {
-                    pbLoading.setVisibility(View.GONE);
+                    pbLoading.setVisibility(ProgressBar.INVISIBLE);
                 }
             };
             task.execute();
@@ -130,6 +131,7 @@ public class CreateReportActivity extends Activity {
         } else { // Result was a failure
             newImageBitmap = null;
             Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            pbLoading.setVisibility(ProgressBar.INVISIBLE);
         }
     }
 
@@ -262,9 +264,7 @@ public class CreateReportActivity extends Activity {
 
                     //checkIfReportPersistedLocally(report);
                     Log.d("debug", "Report pinned successfully: " + pumpName);
-                    Toast.makeText(getApplicationContext(),
-                            "Report cached successfully.",
-                            Toast.LENGTH_SHORT).show();
+                    showToastBasedOnNetworkAvailability();
 
                     // Try the persist the report remotely
                     persistReportRemotely(report, newImageBitmap);
@@ -335,6 +335,20 @@ public class CreateReportActivity extends Activity {
                 }
             }
         });
+    }
+
+    // This is primarily to distinguish between online and offline toast messages during demo.
+    private void showToastBasedOnNetworkAvailability() {
+
+        if (!NetworkUtil.isNetworkAvailable(this)) {
+            Toast.makeText(getApplicationContext(),
+                    "No network found. Report will be uploaded when Internet is available.",
+                    Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    "Report cached successfully.",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Check if a report was persisted locally
