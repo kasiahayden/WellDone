@@ -166,10 +166,12 @@ public class CreateReportActivity extends Activity {
         pbLoading.setVisibility(ProgressBar.VISIBLE);
         // Pin the report locally
         pinReportLocally(reportToBePersisted, newImageBitmap);
-
+// Pump #1: Tanzania, TZ
+// (Broken, priority 1)
         new AlertDialog.Builder(this)
-                .setTitle("Directions to next pump")
-                .setMessage(String.format("Begin navigation to %s (%s, priority %d)?",
+                .setTitle("Report submitted!")
+                .setMessage(String.format("Navigate to next pump? \n\n%s: %s\n(%s, priority %d)",
+                        pumpToNavigateToAfterReporting.getName(),
                         pumpToNavigateToAfterReporting.getAddress(),
                         pumpToNavigateToAfterReporting.getCurrentStatus(),
                         pumpToNavigateToAfterReporting.getPriority()))
@@ -188,7 +190,7 @@ public class CreateReportActivity extends Activity {
                         // do nothing
                     }
                 })
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_check)
                 .show();
     }
 
