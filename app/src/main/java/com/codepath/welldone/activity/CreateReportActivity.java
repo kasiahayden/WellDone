@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -93,19 +94,36 @@ public class CreateReportActivity extends Activity {
 
             final Uri fixedPumpPhotoUri = Uri.fromFile(new File(fixedPumpPhotoFileName));
             // by this point we have the camera photo on disk
-            final Bitmap takenImage = BitmapFactory.decodeFile(fixedPumpPhotoUri.getPath());
             newImageBitmap = BitmapFactory.decodeFile(fixedPumpPhotoUri.getPath());
-            Drawable newImageDrawable;
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(fixedPumpPhotoUri);
-                newImageDrawable = Drawable.createFromStream(inputStream, fixedPumpPhotoUri.toString());
-                ivPumpImageToBeReported.setImageDrawable(newImageDrawable); //TODO possible resize here before setting so doesn't stretch
-                ivPumpImageToBeReported.setVisibility(View.VISIBLE);
 
-                pbLoading.setVisibility(View.GONE);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        InputStream inputStream = getContentResolver().openInputStream(fixedPumpPhotoUri);
+                        final Drawable newImageDrawable = Drawable.createFromStream(inputStream, fixedPumpPhotoUri.toString());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ivPumpImageToBeReported.setImageDrawable(newImageDrawable);
+                                ivPumpImageToBeReported.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
+                    catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    pbLoading.setVisibility(View.GONE);
+                }
+            };
+            task.execute();
+
         } else { // Result was a failure
             newImageBitmap = null;
             Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
