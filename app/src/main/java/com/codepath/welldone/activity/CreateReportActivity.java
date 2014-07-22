@@ -72,22 +72,12 @@ public class CreateReportActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_report);
 
-        final String pumpObjectId = getIntent().getStringExtra("pumpObjectId");
-        final String nextPumpObjectId = getIntent().getStringExtra("nextPumpObjectId");
-        Log.d("CreateReportActivity", "pumpObjectId passed in intents: " + pumpObjectId);
-        pumpToBeReported = PumpPersister.getPumpByObjectIdSyncly(pumpObjectId);
-        pumpToNavigateToAfterReporting = PumpPersister.getPumpByObjectIdSyncly(nextPumpObjectId);
-        if (pumpToBeReported == null) {
-            Toast.makeText(this, "No pump selected for creating report!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Log.d("debug", "Working with pump: " + pumpToBeReported.getObjectId() + " "
-                + pumpToBeReported.getName());
-        getActionBar().setTitle(StringUtil.getConcatenatedString("New Report for ",
-                AddressUtil.stripCountryFromAddress(pumpToBeReported.getAddress())));
         setupViews();
         setupListeners();
+        getDataFromIntent();
+
+        getActionBar().setTitle(StringUtil.getConcatenatedString("New Report for ",
+                AddressUtil.stripCountryFromAddress(pumpToBeReported.getAddress())));
     }
 
     @Override
@@ -186,6 +176,22 @@ public class CreateReportActivity extends Activity {
                 startTakePictureIntent();
             }
         });
+    }
+
+    private void getDataFromIntent() {
+
+        final String pumpObjectId = getIntent().getStringExtra("pumpObjectId");
+        Log.d("CreateReportActivity", "pumpObjectId passed in intents: " + pumpObjectId);
+        pumpToBeReported = PumpPersister.getPumpByObjectIdSyncly(pumpObjectId);
+        if (pumpToBeReported == null) {
+            Toast.makeText(this, "No pump selected for creating report!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Log.d("debug", "Working with pump: " + pumpToBeReported.getObjectId() + " "
+                + pumpToBeReported.getName());
+
+        final String nextPumpObjectId = getIntent().getStringExtra("nextPumpObjectId");
+        pumpToNavigateToAfterReporting = PumpPersister.getPumpByObjectIdSyncly(nextPumpObjectId);
     }
 
     // Get the newly created file name and start the camera activity

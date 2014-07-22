@@ -80,7 +80,8 @@
                 android:layout_marginTop="20dp"
                 android:ems="10"
                 android:hint="@string/report_notes_hint"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:inputType="text" />
 
             <Button
                 android:id="@+id/btnSubmitReport"
