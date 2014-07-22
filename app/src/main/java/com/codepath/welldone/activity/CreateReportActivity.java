@@ -79,6 +79,8 @@ public class CreateReportActivity extends Activity {
 
         getActionBar().setTitle(StringUtil.getConcatenatedString("New Report for ",
                 AddressUtil.stripCountryFromAddress(pumpToBeReported.getAddress())));
+
+        ReportPersister.getLatestReportForPump(pumpToBeReported);
     }
 
     @Override
