@@ -157,11 +157,9 @@ public class CreateReportActivity extends Activity {
         // Pin the report locally
         pinReportLocally(reportToBePersisted, newImageBitmap);
 
-        String url = String.format("http://maps.google.com/maps?saddr=%f,%f&daddr=%f,%f",
-                pumpToBeReported.getLocation().getLatitude(),
-                pumpToBeReported.getLocation().getLongitude(),
-                pumpToNavigateToAfterReporting.getLocation().getLatitude(),
-                pumpToNavigateToAfterReporting.getLocation().getLongitude());
+        String url = String.format("http://maps.google.com/maps?saddr=%s&daddr=%s",
+                pumpToBeReported.getAddress(),
+                pumpToNavigateToAfterReporting.getAddress());
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                 Uri.parse(url));
         startActivity(intent);

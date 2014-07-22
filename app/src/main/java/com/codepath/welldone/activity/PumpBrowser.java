@@ -30,7 +30,7 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_pump_list);
+        setContentView(R.layout.activity_pump_browser);
         ParseAnalytics.trackAppOpened(getIntent());
         mListFragment = PumpListFragment.newInstance();
 
