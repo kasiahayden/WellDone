@@ -26,7 +26,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
 public class PumpMapFragment extends Fragment {
-    public static final double MAP_DISPLAY_DELTA = 0.03;
+    public static final double MAP_DISPLAY_DELTA = 0.96;
     public Pump mPump;
     private MapFragment mapFragment;
     private ParseGeoPoint currentUserLocation;
@@ -54,9 +54,9 @@ public class PumpMapFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getMap().getUiSettings().setZoomControlsEnabled(false);
         if (mPump != null && getMap() != null) {
             centerMapOnPump(mPump);
+            getMap().getUiSettings().setZoomControlsEnabled(false);
         }
     }
 
@@ -81,8 +81,8 @@ public class PumpMapFragment extends Fragment {
 
                             @Override
                             public void onPageSelected(int position) {
-                                Pump pump = mPumpListAdapter.getItem(position);
-                                centerMapOnPump(pump);
+                                mPump = mPumpListAdapter.getItem(position);
+                                centerMapOnPump(mPump);
                             }
 
                             @Override
@@ -101,11 +101,11 @@ public class PumpMapFragment extends Fragment {
         for (int i = 0; i < mPumpListAdapter.getCount(); i++) {
             Pump pump = mPumpListAdapter.getItem(i);
             MarkerOptions options = new MarkerOptions();
-            if (pump == mPump) {
-                options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mappin_enormous));
+            if (pump.getCurrentStatus().equalsIgnoreCase("broken")) {
+                options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_broken_unfocused));
             }
             else {
-                options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mappin));
+                options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_working_unfocused));
             }
             double lat = pump.getLocation().getLatitude();
             double longitude = pump.getLocation().getLongitude();
@@ -126,7 +126,7 @@ public class PumpMapFragment extends Fragment {
         builder.include(fartherAwayPosition);
         LatLngBounds bounds = builder.build();
         if (getMap() != null) {
-            getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+            getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
         }
     }
 

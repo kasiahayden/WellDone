@@ -1,8 +1,9 @@
 package com.codepath.welldone.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -166,12 +167,29 @@ public class CreateReportActivity extends Activity {
         // Pin the report locally
         pinReportLocally(reportToBePersisted, newImageBitmap);
 
-        String url = String.format("http://maps.google.com/maps?saddr=%s&daddr=%s",
-                pumpToBeReported.getAddress(),
-                pumpToNavigateToAfterReporting.getAddress());
-        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                Uri.parse(url));
-        startActivity(intent);
+        new AlertDialog.Builder(this)
+                .setTitle("Directions to next pump")
+                .setMessage(String.format("Begin navigation to %s (%s, priority %d)?",
+                        pumpToNavigateToAfterReporting.getAddress(),
+                        pumpToNavigateToAfterReporting.getCurrentStatus(),
+                        pumpToNavigateToAfterReporting.getPriority()))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String url = String.format("http://maps.google.com/maps?saddr=%s&daddr=%s",
+                                pumpToBeReported.getAddress(),
+                                pumpToNavigateToAfterReporting.getAddress());
+                        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                                Uri.parse(url));
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     /* Private methods */
@@ -294,7 +312,6 @@ public class CreateReportActivity extends Activity {
 
                     // Go back to pump list browser
                     pbLoading.setVisibility(ProgressBar.INVISIBLE);
-                    startActivity(new Intent(getApplicationContext(), PumpBrowser.class));
 
                 } else {
                     // We should never get here! But just in case we do, show a toast
