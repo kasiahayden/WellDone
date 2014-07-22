@@ -61,6 +61,7 @@ public class CreateReportActivity extends Activity {
     private Spinner spPumpStatus;
 
     private Pump pumpToBeReported;
+    private Pump pumpToNavigateToAfterReporting;
     private String fixedPumpPhotoFileName;
     private Bitmap newImageBitmap;
 
@@ -71,8 +72,10 @@ public class CreateReportActivity extends Activity {
         setContentView(R.layout.activity_create_report);
 
         final String pumpObjectId = getIntent().getStringExtra("pumpObjectId");
+        final String nextPumpObjectId = getIntent().getStringExtra("nextPumpObjectId");
         Log.d("CreateReportActivity", "pumpObjectId passed in intents: " + pumpObjectId);
         pumpToBeReported = PumpPersister.getPumpByObjectIdSyncly(pumpObjectId);
+        pumpToNavigateToAfterReporting = PumpPersister.getPumpByObjectIdSyncly(nextPumpObjectId);
         if (pumpToBeReported == null) {
             Toast.makeText(this, "No pump selected for creating report!", Toast.LENGTH_SHORT).show();
             return;
@@ -153,6 +156,15 @@ public class CreateReportActivity extends Activity {
         pbLoading.setVisibility(ProgressBar.VISIBLE);
         // Pin the report locally
         pinReportLocally(reportToBePersisted, newImageBitmap);
+
+        String url = String.format("http://maps.google.com/maps?saddr=%f,%f&daddr=%f,%f",
+                pumpToBeReported.getLocation().getLatitude(),
+                pumpToBeReported.getLocation().getLongitude(),
+                pumpToNavigateToAfterReporting.getLocation().getLatitude(),
+                pumpToNavigateToAfterReporting.getLocation().getLongitude());
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                Uri.parse(url));
+        startActivity(intent);
     }
 
     /* Private methods */

@@ -108,6 +108,8 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
     public void onNewReportClicked(Pump pump) {
         Intent intent = new Intent(this, CreateReportActivity.class);
         intent.putExtra("pumpObjectId", pump.getObjectId());
+        int index = mListFragment.mPumpArrayAdapter.getPosition(pump) + 1;
+        intent.putExtra("nextPumpObjectId", mListFragment.mPumpArrayAdapter.getItem(index).getObjectId());
         startActivity(intent);
     }
 
