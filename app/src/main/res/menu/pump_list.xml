@@ -2,21 +2,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".PumpList" >
 
-    <item android:id="@+id/edit_item"
+    <item android:id="@+id/sort_options"
         android:showAsAction="ifRoom"
         android:orderInCategory="10"
         android:title="@string/sort_by">
         <menu>
-            <item
-                android:id="@+id/sortDistance"
-                android:title="Distance" />
-            <item
-                android:id="@+id/sortPriority"
-                android:title="Priority" />
-            <item
-                android:id="@+id/sortLastUpdated"
-                android:title="Last Updated" />
+            <group android:id="@+id/sort_order"
+                   android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sortDistance"
+                    android:title="Distance" />
+                <item
+                    android:id="@+id/sortPriority"
+                    android:title="Priority" />
+                <item
+                    android:id="@+id/sortLastUpdated"
+                    android:title="Last Updated" />
+            </group>
         </menu>
     </item>
-
 </menu>

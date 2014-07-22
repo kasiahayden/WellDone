@@ -42,6 +42,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
     public static final int TARGET_DETAILS_HEIGHT = 130;
     public PumpListAdapter mPumpArrayAdapter;
+
     private ListView lvPumps;
     private ProgressBar pbLoading;
     private PullToRefreshLayout ptrlPumps;
@@ -83,7 +84,8 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         mCurrentPumpIndex = 0;
 
         currentUser = ParseUser.getCurrentUser();
-        Log.d("debug", "Current user: " + currentUser.getUsername() + " " + currentUser.get("location") + " " + currentUser.getACL());
+        Log.d("debug", "Current user: " + currentUser.getUsername() + " "
+                + currentUser.get("location") + " " + currentUser.getACL());
         mPumpArrayAdapter = new PumpListAdapter((Activity)mListener);
     }
 
@@ -129,57 +131,66 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.sortDistance:
-                sortMenuItemSelected = R.id.sortDistance;
-                pbLoading.setVisibility(ProgressBar.VISIBLE);
-                mPumpArrayAdapter.clear();
-                // XXX Adding the extra boolean param is BAD coding practice, but this is what time
-                // allows for. :(
-                fetchPumpsInBackground(ParseQuery.getQuery("Pump"), true
-                                                   /* apply additional sort, outside of DB query */);
-                getActivity().invalidateOptionsMenu();
-                return true;
-            case R.id.sortPriority:
-                sortMenuItemSelected = R.id.sortPriority;
-                pbLoading.setVisibility(ProgressBar.VISIBLE);
-                mPumpArrayAdapter.clear();
-                fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByAscending("priority"),
-                                       false);
-                getActivity().invalidateOptionsMenu();
-                return true;
-            case R.id.sortLastUpdated:
-                sortMenuItemSelected = R.id.sortLastUpdated;
-                pbLoading.setVisibility(ProgressBar.VISIBLE);
-                mPumpArrayAdapter.clear();
-                fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
-                                       false);
-                getActivity().invalidateOptionsMenu();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
+    /* This method is overridden so that the correct menu option is shown as checked after
+       pull-to-refresh is done.
+     */
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
 
         switch (sortMenuItemSelected) {
-
             case R.id.sortDistance:
-                menu.findItem(R.id.sortDistance).setEnabled(false);
+                menu.findItem(R.id.sortDistance).setChecked(true);
                 break;
             case R.id.sortPriority:
-                menu.findItem(R.id.sortPriority).setEnabled(false);
+                menu.findItem(R.id.sortPriority).setChecked(true);
                 break;
             case R.id.sortLastUpdated:
-                menu.findItem(R.id.sortLastUpdated).setEnabled(false);
+                menu.findItem(R.id.sortLastUpdated).setChecked(true);
                 break;
             default:
                 super.onPrepareOptionsMenu(menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Only one item in the group is selected; no need to explicitly un-check any item.
+        switch (item.getItemId()) {
+            case R.id.sortDistance:
+                sortMenuItemSelected = R.id.sortDistance;
+                if (!item.isChecked()) {
+                    pbLoading.setVisibility(ProgressBar.VISIBLE);
+                    mPumpArrayAdapter.clear();
+                    // XXX Adding the extra boolean param is BAD coding practice, but this is what time
+                    // allows for. :(
+                    fetchPumpsInBackground(ParseQuery.getQuery("Pump"), true
+                                           /* apply additional sort, outside of DB query */);
+                    item.setChecked(true);
+                }
+                return true;
+            case R.id.sortPriority:
+                sortMenuItemSelected = R.id.sortPriority;
+                if (!item.isChecked()) {
+                    pbLoading.setVisibility(ProgressBar.VISIBLE);
+                    mPumpArrayAdapter.clear();
+                    fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByAscending("priority"),
+                                           false);
+                    item.setChecked(true);
+                }
+                return true;
+            case R.id.sortLastUpdated:
+                sortMenuItemSelected = R.id.sortLastUpdated;
+                if (!item.isChecked()) {
+                    pbLoading.setVisibility(ProgressBar.VISIBLE);
+                    mPumpArrayAdapter.clear();
+                    fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
+                                           false);
+                    item.setChecked(true);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -196,22 +207,25 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
             return;
         }
 
-        pbLoading.setVisibility(ProgressBar.VISIBLE);
-        mPumpArrayAdapter.clear();
-
         switch (sortMenuItemSelected) {
 
             case R.id.sortDistance:
+                pbLoading.setVisibility(ProgressBar.VISIBLE);
+                mPumpArrayAdapter.clear();
                 fetchPumpsFromRemote(ParseQuery.getQuery("Pump"), true
                                      /* apply additional sort, outside of DB query */);
                 getActivity().invalidateOptionsMenu();
                 break;
             case R.id.sortPriority:
+                pbLoading.setVisibility(ProgressBar.VISIBLE);
+                mPumpArrayAdapter.clear();
                 fetchPumpsFromRemote(ParseQuery.getQuery("Pump").orderByAscending("priority"),
                                      false);
                 getActivity().invalidateOptionsMenu();
                 break;
             case R.id.sortLastUpdated:
+                pbLoading.setVisibility(ProgressBar.VISIBLE);
+                mPumpArrayAdapter.clear();
                 fetchPumpsFromRemote(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
                                      false);
                 getActivity().invalidateOptionsMenu();
@@ -289,6 +303,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
     private void fetchPumpsFromRemote(ParseQuery<ParseObject> query,
                                       final boolean additionalSort) {
 
+        Log.d("debug", "Fetching pumps from remote DB.");
         query.findInBackground(new FindCallback<ParseObject>() {
 
             public void done(final List<ParseObject> pumpList, ParseException e) {
