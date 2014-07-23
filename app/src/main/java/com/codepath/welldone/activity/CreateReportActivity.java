@@ -185,11 +185,16 @@ public class CreateReportActivity extends Activity {
                         Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                                 Uri.parse(url));
                         context.startActivity(intent);
+                        if (context instanceof Activity) {
+                            ((Activity) context).finish();
+                        }
                     }
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
+                        if (context instanceof Activity) {
+                            ((Activity) context).finish();
+                        }
                     }
                 })
                 .setIcon(R.drawable.ic_check)
