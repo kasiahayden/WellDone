@@ -430,6 +430,10 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
     private void addPumpsToAdapter(List<ParseObject> pumpList, boolean additionalSort) {
 
         List<Pump> sortedPumps;
+        // The data in being fetched on both onCreateView() and onResume(), causing the list to be
+        // populated twice. So clear the adapter just before adding items to it.
+        // XXX This is messed up, but hey, this is demo night.
+        mPumpArrayAdapter.clear();
 
         // return the results as they are
         if (!additionalSort) {
