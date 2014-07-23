@@ -81,7 +81,7 @@
                 android:ems="10"
                 android:hint="@string/report_notes_hint"
                 android:textSize="15sp"
-                android:inputType="text" />
+                android:inputType="textCapSentences|textMultiLine" />
 
             <Button
                 android:id="@+id/btnSubmitReport"
