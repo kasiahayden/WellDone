@@ -156,7 +156,7 @@ public class PumpRowView extends RelativeLayout {
     public void clearTextViews() {
         viewHolder.tvLocation.setText("");
         viewHolder.tvStatus.setText("");
-        viewHolder.tvStatus.setTextColor(getResources().getColor(R.color.textBlack));
+        viewHolder.tvStatus.setTextColor(getResources().getColor(R.color.darkGrayTextV2));
         viewHolder.tvPriority.setText("");
         viewHolder.tvLastUpdated.setText("");
         viewHolder.tvPumpDistance.setText("");
