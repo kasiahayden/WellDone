@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.codepath.welldone.fragment.PumpListFragment;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,15 +40,11 @@ public class CustomReceiver extends BroadcastReceiver {
                         Log.d(TAG, "..." + key + " => " + json.getString(key));
                     }
 
+                    String objectId = json.getString("objectId");
                     Intent i = new Intent(context, PumpBrowser.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.putExtra(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, objectId);
                     context.getApplicationContext().startActivity(i);
-
-                    /*String objectId = json.getString("objectId");
-                    Intent i = new Intent(context, PumpDetails.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.putExtra("pumpObjectId", objectId);
-                    context.getApplicationContext().startActivity(i);*/
                 }
             }
         } catch (JSONException e) {

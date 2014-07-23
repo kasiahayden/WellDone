@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
+import com.codepath.welldone.activity.PumpBrowser;
 import com.codepath.welldone.model.Pump;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,6 +34,8 @@ public class PumpMapFragment extends Fragment {
 
     ViewPager mDetailsPager;
 
+    public static final String EXTRA_PUMP_ID_TO_DISPLAY = "pumpIDToDisplay";
+
     public PumpListAdapter mPumpListAdapter;
 
     public PumpMapFragment() {
@@ -43,6 +46,16 @@ public class PumpMapFragment extends Fragment {
         PumpMapFragment fragment = new PumpMapFragment();
         return fragment;
     }
+
+    public static PumpMapFragment newInstance(String pumpToDisplay) {
+        PumpMapFragment frag = new PumpMapFragment ();
+        Bundle b = new Bundle();
+        b.putString(EXTRA_PUMP_ID_TO_DISPLAY, pumpToDisplay);
+        frag.setArguments(b);
+        return frag;
+    }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +103,7 @@ public class PumpMapFragment extends Fragment {
 
                             }
                         });
+                        mDetailsPager.setCurrentItem(((PumpBrowser)getActivity()).getCurrentPumpIndex());
                     }
                 }, 500);
             }

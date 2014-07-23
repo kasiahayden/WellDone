@@ -24,11 +24,14 @@ import com.parse.ParseAnalytics;
  */
 public class PumpBrowser extends Activity implements PumpListAdapter.PumpListListener {
 
+    public static final String EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID = "pumpObjectId";
     PumpMapFragment mMapFragment;
     PumpListFragment mListFragment;
     private MenuItem mMapToggleMenuItem;
 
     private boolean isDisplayingMap;
+
+    private boolean PRETEND_WE_ARE_COMING_FROM_A_PUSH_NOTIF = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +39,25 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
 
         setContentView(R.layout.activity_pump_browser);
         ParseAnalytics.trackAppOpened(getIntent());
-        mListFragment = PumpListFragment.newInstance();
 
-        addInitialListFragment();
+
+        if (PRETEND_WE_ARE_COMING_FROM_A_PUSH_NOTIF) {
+            getIntent().putExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, "mLZB4GWceT");
+        }
+
+        if (getIntent().hasExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID)) {
+            addInitialListFragment(getIntent().getStringExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID));
+        }
+        else {
+            // Standard initial launch: begin displaying list.
+            addInitialListFragment(null);
+        }
 
         isDisplayingMap = false;
+    }
+
+    private void initializeBothFragmentsAndDisplayMap() {
+
     }
 
     @Override
@@ -60,10 +77,17 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
         }
     }
 
-    void addInitialListFragment() {
+    void addInitialListFragment(String objectIDToDisplayInMap) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         mListFragment = PumpListFragment.newInstance();
-        mMapFragment = PumpMapFragment.newInstance();
+        if (objectIDToDisplayInMap == null) {
+            mMapFragment = PumpMapFragment.newInstance();
+            mListFragment = PumpListFragment.newInstance();
+        }
+        else {
+            mMapFragment = PumpMapFragment.newInstance(objectIDToDisplayInMap);
+            mListFragment = PumpListFragment.newInstance(objectIDToDisplayInMap);
+        }
         ft.add(R.id.vgFragmentContainer, mListFragment);
         ft.add(R.id.vgFragmentContainer, mMapFragment);
         ft.hide(mMapFragment);
@@ -114,6 +138,10 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
         setupMapToggleMenuItem();
     }
 
+    public int getCurrentPumpIndex() {
+        return mListFragment.mCurrentPumpIndex;
+    }
+
     private void swapInMapFragment() {
         mMapFragment.mPump = mListFragment.getCurrentPump();
         mMapFragment.mPumpListAdapter = mListFragment.mPumpArrayAdapter;
@@ -128,7 +156,7 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
 
     public void onNewReportClicked(Pump pump) {
         Intent intent = new Intent(this, CreateReportActivity.class);
-        intent.putExtra("pumpObjectId", pump.getObjectId());
+        intent.putExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, pump.getObjectId());
         int index = mListFragment.mPumpArrayAdapter.getPosition(pump) + 1;
         intent.putExtra("nextPumpObjectId", mListFragment.mPumpArrayAdapter.getItem(index).getObjectId());
         startActivity(intent);

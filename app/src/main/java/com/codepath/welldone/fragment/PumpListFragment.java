@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
+import com.codepath.welldone.activity.PumpBrowser;
 import com.codepath.welldone.helper.NetworkUtil;
 import com.codepath.welldone.helper.PumpUtil;
 import com.codepath.welldone.model.Pump;
@@ -53,9 +54,11 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
     public PumpListAdapter.PumpListListener mListener;
     private final String TAG = "PumpListFragment";
 
-    private int mCurrentPumpIndex;
+    public int mCurrentPumpIndex;
     // The default view of pump list is sorted by distance from currently logged-in user.
     private int sortMenuItemSelected;
+
+    private String mCurrentPumpID;
 
     public PumpListFragment() {}
 
@@ -75,6 +78,17 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         return new PumpListFragment();
     }
 
+    public static PumpListFragment newInstance(String pumpToDisplay) {
+        PumpListFragment frag = new PumpListFragment();
+        Bundle b = new Bundle();
+        b.putString(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, pumpToDisplay);
+        frag.setArguments(b);
+        return frag;
+    }
+
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -91,6 +105,10 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
         final SharedPreferences settings = getActivity().getPreferences(0);
         sortMenuItemSelected = settings.getInt("lastSortMode", R.id.sortDistance);
+
+        if (getArguments() != null) {
+            mCurrentPumpID = getArguments().getString(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID);
+        }
     }
 
     @Override
@@ -243,7 +261,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
                 Pump pump = (Pump) parent.getItemAtPosition(position);
                 Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
 
-                PumpRowView v = (PumpRowView)view;
+                PumpRowView v = (PumpRowView) view;
                 v.toggleExpandedState();
 
                 mCurrentPumpIndex = position;
@@ -272,12 +290,12 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
             case R.id.sortPriority:
                 prepareForDataFetch();
                 fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByAscending("priority"),
-                                       false);
+                        false);
                 break;
             case R.id.sortLastUpdated:
                 prepareForDataFetch();
                 fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
-                                       false);
+                        false);
                 break;
             default:
                 // no action.
@@ -407,25 +425,42 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
     private void addPumpsToAdapter(List<ParseObject> pumpList, boolean additionalSort) {
 
+        List<Pump> sortedPumps;
+
         // return the results as they are
         if (!additionalSort) {
+            sortedPumps = new ArrayList<Pump>();
+            for (int i = 0; i < pumpList.size(); i++) {
+                Pump pump = (Pump)pumpList.get(i);
+                if (pump.getObjectId().equals(mCurrentPumpID)) {
+                    mCurrentPumpIndex = i;
+                }
+                sortedPumps.add(pump);
+            }
+        }
+        else {
+            // Apply custom sorting (outside of DB query) to sort by distance from current user.
+            final List<Pump> pumps = new ArrayList<Pump>(pumpList.size());
             for (ParseObject object : pumpList) {
                 final Pump pump = (Pump) object;
-                mPumpArrayAdapter.add(pump);
+                pumps.add(pump);
             }
-            return;
+            sortedPumps = PumpUtil.sortPumps(pumps, ((ParseGeoPoint) currentUser.get("location")));
+            for (int i = 0; i < sortedPumps.size(); i++) {
+                Pump pump = sortedPumps.get(i);
+                if (pump.getObjectId().equals(mCurrentPumpID)) {
+                    mCurrentPumpIndex = i;
+                }
+            }
         }
-        // Apply custom sorting (outside of DB query) to sort by distance from current user.
-        final List<Pump> pumps = new ArrayList<Pump>(pumpList.size());
-        for (ParseObject object : pumpList) {
-            final Pump pump = (Pump) object;
-            pumps.add(pump);
-        }
-        pumpList = null;
-        final List<Pump> sortedPumps =
-                PumpUtil.sortPumps(pumps, ((ParseGeoPoint) currentUser.get("location")));
-        for (Pump pump : sortedPumps) {
-            mPumpArrayAdapter.add(pump);
+        mPumpArrayAdapter.addAll(sortedPumps);
+        lvPumps.setSelection(mCurrentPumpIndex);
+
+        int firstPosition = lvPumps.getFirstVisiblePosition();
+        int wantedChild = mCurrentPumpIndex - firstPosition;
+        PumpRowView thePumpView = (PumpRowView)lvPumps.getChildAt(wantedChild);
+        if (thePumpView != null) {
+            thePumpView.toggleExpandedState();
         }
     }
 }
