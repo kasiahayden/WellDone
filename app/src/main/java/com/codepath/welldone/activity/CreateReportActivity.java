@@ -2,6 +2,7 @@ package com.codepath.welldone.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -164,25 +165,26 @@ public class CreateReportActivity extends Activity {
                                              reportNotes);
 
         pbLoading.setVisibility(ProgressBar.VISIBLE);
-        // Pin the report locally
         pinReportLocally(reportToBePersisted, newImageBitmap);
-// Pump #1: Tanzania, TZ
-// (Broken, priority 1)
-        new AlertDialog.Builder(this)
-                .setTitle("Report submitted!")
+        askAboutPumpNavigation(this, pumpToBeReported.getAddress(), pumpToNavigateToAfterReporting, "Report submitted!");
+    }
+
+    public static void askAboutPumpNavigation(final Context context, final String currentAddress, final Pump newPump, String title) {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
                 .setMessage(String.format("Navigate to next pump? \n\n%s: %s\n(%s, priority %d)",
-                        pumpToNavigateToAfterReporting.getName(),
-                        pumpToNavigateToAfterReporting.getAddress(),
-                        pumpToNavigateToAfterReporting.getCurrentStatus(),
-                        pumpToNavigateToAfterReporting.getPriority()))
+                        newPump.getName(),
+                        newPump.getAddress(),
+                        newPump.getCurrentStatus(),
+                        newPump.getPriority()))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String url = String.format("http://maps.google.com/maps?saddr=%s&daddr=%s",
-                                pumpToBeReported.getAddress(),
-                                pumpToNavigateToAfterReporting.getAddress());
+                                currentAddress,
+                                newPump.getAddress());
                         Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                                 Uri.parse(url));
-                        startActivity(intent);
+                        context.startActivity(intent);
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

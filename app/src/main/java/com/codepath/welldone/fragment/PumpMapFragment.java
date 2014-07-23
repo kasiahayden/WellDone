@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
+import com.codepath.welldone.activity.CreateReportActivity;
 import com.codepath.welldone.activity.PumpBrowser;
 import com.codepath.welldone.model.Pump;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -69,7 +70,6 @@ public class PumpMapFragment extends Fragment {
         super.onResume();
         if (mPump != null && getMap() != null) {
             centerMapOnPump(mPump);
-            getMap().getUiSettings().setZoomControlsEnabled(false);
         }
     }
 
@@ -78,6 +78,7 @@ public class PumpMapFragment extends Fragment {
         super.onHiddenChanged(hidden);
         if (!hidden) {
             if (mPump != null && getMap() != null) {
+                getMap().getUiSettings().setZoomControlsEnabled(false);
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -186,6 +187,14 @@ public class PumpMapFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         onNewReportClicked(thePump);
+                    }
+                });
+                pumpRow.navigateButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ParseGeoPoint point = (ParseGeoPoint)ParseUser.getCurrentUser().get("location");
+                        String fromLocation = String.format("%s,%s", point.getLatitude(), point.getLongitude());
+                        CreateReportActivity.askAboutPumpNavigation(getActivity(), fromLocation, thePump, "Open in Maps?");
                     }
                 });
 

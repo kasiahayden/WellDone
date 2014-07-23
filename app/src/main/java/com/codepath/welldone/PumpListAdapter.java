@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
+import com.codepath.welldone.activity.CreateReportActivity;
 import com.codepath.welldone.model.Pump;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
@@ -57,6 +58,18 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
                 rowListener.onNewReportClicked(pump);
             }
         });
+
+        Button navigateButton = (Button)pumpRowView.findViewById(R.id.btnNavigate);
+        navigateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseGeoPoint point = (ParseGeoPoint)ParseUser.getCurrentUser().get("location");
+                String fromLocation = String.format("%s,%s", point.getLatitude(), point.getLongitude());
+                CreateReportActivity.askAboutPumpNavigation(getContext(), fromLocation, pump, "Open in Maps?");
+            }
+        });
+
+
 
         return pumpRowView;
     }

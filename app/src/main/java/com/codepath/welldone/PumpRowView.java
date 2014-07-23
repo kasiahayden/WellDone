@@ -24,11 +24,12 @@ import java.text.DecimalFormat;
 
 public class PumpRowView extends RelativeLayout {
 
-    public static final int TARGET_DETAILS_HEIGHT = 850;
+    public static final int TARGET_DETAILS_HEIGHT = 900;
     public static final int ANIMATE_IN_DURATION_MILLIS = 300;
     public static final int ANIMATE_OUT_DURATION_MILLIS = 500;
 
     public Button newReportButton;
+    public Button navigateButton;
     private ViewGroup detailsContainer;
 
     public ViewHolder viewHolder;
@@ -41,6 +42,7 @@ public class PumpRowView extends RelativeLayout {
         super(context, attrs);
         View.inflate(context, R.layout.row_pump, this);
         newReportButton = (Button)findViewById(R.id.btnNewReport);
+        navigateButton = (Button)findViewById(R.id.btnNavigate);
         detailsContainer = (ViewGroup)findViewById(R.id.vgDetailsContainer);
         detailsContainer.setVisibility(View.GONE);
 
