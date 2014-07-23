@@ -166,7 +166,8 @@ public class CreateReportActivity extends Activity {
 
         pbLoading.setVisibility(ProgressBar.VISIBLE);
         pinReportLocally(reportToBePersisted, newImageBitmap);
-        askAboutPumpNavigation(this, pumpToBeReported.getAddress(), pumpToNavigateToAfterReporting, "Report submitted!", true);
+        String singidaNearARoad = "-6.911844,33.591054";
+        askAboutPumpNavigation(this, singidaNearARoad, pumpToNavigateToAfterReporting, "Report submitted!", true);
     }
 
     public static void askAboutPumpNavigation(final Context context, final String currentAddress, final Pump newPump, String title, final boolean shouldPopActivityStackOnDecision) {

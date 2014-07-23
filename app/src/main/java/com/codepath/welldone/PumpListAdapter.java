@@ -64,7 +64,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
             @Override
             public void onClick(View v) {
                 ParseGeoPoint point = (ParseGeoPoint)ParseUser.getCurrentUser().get("location");
-                String fromLocation = String.format("%s,%s", point.getLatitude(), point.getLongitude());
+                String fromLocation = "-4.377073, 34.281780";//String.format("%s,%s", point.getLatitude(), point.getLongitude());
                 CreateReportActivity.askAboutPumpNavigation(getContext(), fromLocation, pump, "Open in Maps?", false);
             }
         });
