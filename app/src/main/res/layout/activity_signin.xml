@@ -28,9 +28,11 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:ems="10"
         android:gravity="left|bottom"
         android:hint="@string/username_hint"
         android:inputType="textAutoComplete"
+        android:textSize="14sp"
         android:singleLine="true"/>
 
     <EditText
@@ -41,21 +43,26 @@
         android:layout_marginTop="20dp"
         android:layout_alignLeft="@+id/etUsername"
         android:layout_alignRight="@+id/etUsername"
+        android:ems="10"
         android:gravity="left|bottom"
         android:hint="@string/password_hint"
         android:singleLine="true"
+        android:textSize="14sp"
         android:inputType="textPassword"/>
 
     <Button
         android:id="@+id/btnSignIn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etPassword"
-        android:layout_marginTop="20dp"
-        android:layout_alignLeft="@+id/etUsername"
-        android:layout_alignRight="@+id/etUsername"
+        android:layout_width="170dp"
+        android:layout_height="35dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/new_report"
+        android:focusable="false"
         android:text="@string/signin_text"
-        android:onClick="onSignIn" />
+        android:onClick="onSignIn"
+        android:textColor="@color/offwhite"
+        android:textSize="14sp"
+        android:layout_below="@+id/etPassword" />
 
     <!-- Hide the create account option for now -->
     <!-- TextView
