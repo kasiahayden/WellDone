@@ -194,7 +194,7 @@ public class PumpMapFragment extends Fragment {
                     public void onClick(View v) {
                         ParseGeoPoint point = (ParseGeoPoint)ParseUser.getCurrentUser().get("location");
                         String fromLocation = String.format("%s,%s", point.getLatitude(), point.getLongitude());
-                        CreateReportActivity.askAboutPumpNavigation(getActivity(), fromLocation, thePump, "Open in Maps?");
+                        CreateReportActivity.askAboutPumpNavigation(getActivity(), fromLocation, thePump, "Open in Maps?", false);
                     }
                 });
 

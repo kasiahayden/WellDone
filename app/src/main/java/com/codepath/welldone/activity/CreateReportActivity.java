@@ -166,10 +166,10 @@ public class CreateReportActivity extends Activity {
 
         pbLoading.setVisibility(ProgressBar.VISIBLE);
         pinReportLocally(reportToBePersisted, newImageBitmap);
-        askAboutPumpNavigation(this, pumpToBeReported.getAddress(), pumpToNavigateToAfterReporting, "Report submitted!");
+        askAboutPumpNavigation(this, pumpToBeReported.getAddress(), pumpToNavigateToAfterReporting, "Report submitted!", true);
     }
 
-    public static void askAboutPumpNavigation(final Context context, final String currentAddress, final Pump newPump, String title) {
+    public static void askAboutPumpNavigation(final Context context, final String currentAddress, final Pump newPump, String title, final boolean shouldPopActivityStackOnDecision) {
         new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(String.format("Navigate to next pump? \n\n%s: %s\n(%s, priority %d)",
@@ -185,14 +185,14 @@ public class CreateReportActivity extends Activity {
                         Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                                 Uri.parse(url));
                         context.startActivity(intent);
-                        if (context instanceof Activity) {
+                        if (shouldPopActivityStackOnDecision && context instanceof Activity) {
                             ((Activity) context).finish();
                         }
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if (context instanceof Activity) {
+                        if (shouldPopActivityStackOnDecision && context instanceof Activity) {
                             ((Activity) context).finish();
                         }
                     }

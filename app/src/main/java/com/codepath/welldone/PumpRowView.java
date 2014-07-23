@@ -97,6 +97,9 @@ public class PumpRowView extends RelativeLayout {
         viewHolder.tvLastUpdated.setText(String.format("%s ago",
                 DateTimeUtil.getRelativeTimeofTweet(mPump.getUpdatedAt().toString())));
         viewHolder.tvStatus.setText(mPump.getCurrentStatus());
+        if (mPump.isBroken()) {
+            viewHolder.tvStatus.setTextColor(getResources().getColor(R.color.textRed));
+        }
         viewHolder.tvPriority.setText(String.format("Priority Level %d", mPump.getPriority()));
         viewHolder.tvFlavor.setText(getResources().getString(R.string.default_pump_flavor_text, mPump.getName(), mPump.getName()));
 
@@ -153,6 +156,7 @@ public class PumpRowView extends RelativeLayout {
     public void clearTextViews() {
         viewHolder.tvLocation.setText("");
         viewHolder.tvStatus.setText("");
+        viewHolder.tvStatus.setTextColor(getResources().getColor(R.color.textBlack));
         viewHolder.tvPriority.setText("");
         viewHolder.tvLastUpdated.setText("");
         viewHolder.tvPumpDistance.setText("");

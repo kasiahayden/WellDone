@@ -38,6 +38,10 @@ public class Pump extends ParseObject {
         return getString("name");
     }
 
+    public boolean isBroken() {
+        return getCurrentStatus().equalsIgnoreCase("broken");
+    }
+
     public static int getPriorityFromStatus(String status) {
 
         if (status.equalsIgnoreCase("fix in progress")) {

@@ -87,7 +87,11 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
     }
 
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchAndShowData();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

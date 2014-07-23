@@ -42,11 +42,11 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             pumpRowView = (PumpRowView)LayoutInflater.from(getContext()).inflate(R.layout.row_pump_list_item, parent, false);
-            pumpRowView.clearTextViews();
         }
         else {
             pumpRowView = (PumpRowView)convertView;
         }
+        pumpRowView.clearTextViews();
 
         pumpRowView.mPump = pump;
         pumpRowView.updateSubviews(currentUserLocation);
@@ -65,7 +65,7 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
             public void onClick(View v) {
                 ParseGeoPoint point = (ParseGeoPoint)ParseUser.getCurrentUser().get("location");
                 String fromLocation = String.format("%s,%s", point.getLatitude(), point.getLongitude());
-                CreateReportActivity.askAboutPumpNavigation(getContext(), fromLocation, pump, "Open in Maps?");
+                CreateReportActivity.askAboutPumpNavigation(getContext(), fromLocation, pump, "Open in Maps?", false);
             }
         });
 

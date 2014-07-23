@@ -6,6 +6,7 @@
     <color name="actionBarBottomColor">#00a7e1</color>
     <color name="textGray">#999999</color>
     <color name="textBlack">#666666</color>
+    <color name="textRed">#B41D00</color>
     <color name="cardOuterStroke">#e2e7f1</color>
     <color name="cardInnerStroke">#dde3ee</color>
     <color name="backgroundGray">#e7e6e7</color>
