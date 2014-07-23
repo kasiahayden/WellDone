@@ -18,6 +18,9 @@ import com.codepath.welldone.helper.StringUtil;
 import com.codepath.welldone.model.Pump;
 import com.parse.ParseAnalytics;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 /**
  * Fragment container: either displays a list of pumps or the map.
@@ -39,7 +42,17 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
 
         setContentView(R.layout.activity_pump_browser);
         ParseAnalytics.trackAppOpened(getIntent());
+        try {
+            if (getIntent().hasExtra("com.parse.Data")) {
+                JSONObject json = new JSONObject(getIntent().getStringExtra("com.parse.Data"));
+                if (json.has("objectId")) {
+                    getIntent().putExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, json.getString("objectId"));
+                }
+            }
+        }
+        catch (JSONException e) {
 
+        }
 
         if (PRETEND_WE_ARE_COMING_FROM_A_PUSH_NOTIF) {
             getIntent().putExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, "mLZB4GWceT");

@@ -1,23 +1,13 @@
 package com.codepath.welldone;
 
 import android.app.Application;
-import android.util.Log;
 
-import com.codepath.welldone.activity.CreateReportActivity;
+import com.codepath.welldone.activity.PumpBrowser;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.Report;
-import com.parse.FindCallback;
 import com.parse.Parse;
-import com.parse.ParseACL;
-import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseRole;
-import com.parse.ParseUser;
 import com.parse.PushService;
-import com.parse.SaveCallback;
-
-import java.util.List;
 
 public class ParseApplication extends Application {
 
@@ -32,7 +22,7 @@ public class ParseApplication extends Application {
 
         Parse.initialize(this, "zs3GmrOhOzJCIyPE9Nu8k35FOfscjofe1NAa7HPP", "RBNwokWUIVKwv9dh8jtZmk90EKvYOiNRNlK2bXNP");
 
-        PushService.setDefaultPushCallback(this, CreateReportActivity.class);
+        PushService.setDefaultPushCallback(this, PumpBrowser.class);
 
         //THIS IS ONE-TIME ONLY. SET A ROLE, ADD EXISTING USERS AND DATA TO IT
         /*final ParseACL roleACL = new ParseACL();

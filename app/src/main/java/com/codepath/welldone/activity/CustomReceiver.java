@@ -10,6 +10,10 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
+/**
+ * Receiver which will be always called when the push notification is recevied -- regardless
+ * of whether or not the application is open.
+ */
 public class CustomReceiver extends BroadcastReceiver {
     private static final String TAG = "CustomReceiver";
     public static final String pumpAction = "PUMP_ALERT";
@@ -17,7 +21,6 @@ public class CustomReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        //Toast.makeText(context, "push intent received in Custom Receiver", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "push intent received in CustomReceiver");
         try {
             if (intent == null)
@@ -44,7 +47,7 @@ public class CustomReceiver extends BroadcastReceiver {
                     Intent i = new Intent(context, PumpBrowser.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.putExtra(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, objectId);
-                    context.getApplicationContext().startActivity(i);
+//                    context.getApplicationContext().startActivity(i);
                 }
             }
         } catch (JSONException e) {
