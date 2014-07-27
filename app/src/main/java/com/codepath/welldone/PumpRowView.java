@@ -34,7 +34,7 @@ public class PumpRowView extends RelativeLayout {
 
     public ViewHolder viewHolder;
 
-    private DecimalFormat df = new DecimalFormat("#");
+    private DecimalFormat df = new DecimalFormat("#.#");
 
     public Pump mPump;
 
@@ -119,10 +119,8 @@ public class PumpRowView extends RelativeLayout {
 
         final Double distanceFromOrigin =
                 currentUserLocation.distanceInKilometersTo(mPump.getLocation());
-        // Turns out the pumps are too far from each other. So reduce distance by factor of 10
-        // for demo purposes :p. Who cares?
         viewHolder.tvPumpDistance.setText(
-                String.format("%s km", df.format(distanceFromOrigin.doubleValue() / 10.0)));
+                String.format("%s km", df.format(distanceFromOrigin.doubleValue())));
 
         setPumpToRandomImage();
         setupLocationLabel(mPump);
