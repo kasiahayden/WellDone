@@ -17,7 +17,6 @@ import com.codepath.welldone.PumpListListener;
 import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
 import com.codepath.welldone.activity.CreateReportActivity;
-import com.codepath.welldone.activity.PumpBrowser;
 import com.codepath.welldone.model.Pump;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,16 +29,14 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
 public class PumpMapFragment extends Fragment {
+    public static final String EXTRA_PUMP_ID_TO_DISPLAY = "pumpIDToDisplay";
     public static final double MAP_DISPLAY_DELTA = 0.96;
     public Pump mPump;
+    public PumpListAdapter mPumpListAdapter;
     private SupportMapFragment mapFragment;
     private ParseGeoPoint currentUserLocation;
-
     ViewPager mDetailsPager;
 
-    public static final String EXTRA_PUMP_ID_TO_DISPLAY = "pumpIDToDisplay";
-
-    public PumpListAdapter mPumpListAdapter;
 
     public PumpMapFragment() {
         // Required empty public constructor
@@ -89,7 +86,7 @@ public class PumpMapFragment extends Fragment {
         addPipsToMap();
         mDetailsPager.setAdapter(getViewPagerAdapter());
         centerMapOnPump(mPump);
-        mDetailsPager.setCurrentItem(((PumpBrowser)getActivity()).getCurrentPumpIndex());
+//        mDetailsPager.setCurrentItem(((PumpBrowser)getActivity()).getCurrentPumpIndex());
     }
 
     private void addPipsToMap() {
@@ -97,8 +94,8 @@ public class PumpMapFragment extends Fragment {
         if (map == null || mPumpListAdapter == null) {
             return;
         }
-        for (int i = 0; i < mPumpListAdapter.getCount(); i++) {
-            Pump pump = mPumpListAdapter.getPumpAtIndex(i);
+        for (int i = 0; i < mPumpListAdapter.getTotalPumpCount(); i++) {
+            final Pump pump = mPumpListAdapter.getPumpAtIndex(i);
             MarkerOptions options = new MarkerOptions();
             if (pump.getCurrentStatus().equalsIgnoreCase("broken")) {
                 options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_broken_unfocused));

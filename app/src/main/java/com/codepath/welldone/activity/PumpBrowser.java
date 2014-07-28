@@ -97,8 +97,9 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
     }
 
     public void onListRefreshederested() {
+        Log.d("DBG", "onListRefreshederested");
         mListMapPagerAdapter.mMapFragment.mPumpListAdapter = mListMapPagerAdapter.mPumpListFragment.mPumpArrayAdapter;
-        mListMapPagerAdapter.mMapFragment.resetMapUIAndCardView();
+//        mListMapPagerAdapter.mMapFragment.resetMapUIAndCardView();
     }
 
     @Override

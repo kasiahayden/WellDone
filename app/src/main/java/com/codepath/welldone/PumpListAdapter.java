@@ -77,4 +77,15 @@ public class PumpListAdapter extends ArrayAdapter<AbstractListItem> {
         }
         return null;
     }
+
+    public int getTotalPumpCount() {
+        int totalNumberOfRealPumps = 0;
+        for (int i = 0; i < getCount(); i++) {
+            AbstractListItem item = getItem(i);
+            if (item instanceof PumpListItem) {
+                totalNumberOfRealPumps++;
+            }
+        }
+        return totalNumberOfRealPumps;
+    }
 }

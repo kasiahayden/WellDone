@@ -198,12 +198,12 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
                 shouldExpandSelectedRow = true;
                 Pump pump = mPumpArrayAdapter.getPumpAtIndex(position);
                 Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
+                if (view instanceof PumpRowView) {
+                    PumpRowView v = (PumpRowView) view;
+                    v.toggleExpandedState();
 
-                PumpRowView v = (PumpRowView) view;
-                v.toggleExpandedState();
-
-                mCurrentPumpIndex = position;
-
+                    mCurrentPumpIndex = position;
+                }
             }
         });
     }
