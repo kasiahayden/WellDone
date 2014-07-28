@@ -25,6 +25,7 @@ import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.PumpListItem;
 import com.codepath.welldone.persister.PumpPersister;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingRightInAnimationAdapter;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -184,9 +185,11 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         lvPumps = (ListView) v.findViewById(R.id.lvPumps);
 
         alphaAdapter = new AlphaInAnimationAdapter(mPumpArrayAdapter);
-        alphaAdapter.setAbsListView(lvPumps);
+        SwingRightInAnimationAdapter riaa = new SwingRightInAnimationAdapter(alphaAdapter);
+        riaa .setAbsListView(lvPumps);
 
-        lvPumps.setAdapter(alphaAdapter);
+
+        lvPumps.setAdapter(riaa);
         pbLoading = (ProgressBar) v.findViewById(R.id.pbLoading);
     }
 
