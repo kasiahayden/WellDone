@@ -81,8 +81,6 @@
         android:layout_height="0dp"
         android:visibility="gone"
         android:layout_below="@id/tvPumpStatusIndicator">
-        <!-- Past reports link: Roboto medium 14 0x3399cc -->
-        <!-- Roboto regular 14 0x333333 -->
         <TextView
             android:id="@+id/tvMostRecentUpdate"
             android:layout_width="wrap_content"

@@ -1,6 +1,8 @@
 package com.codepath.welldone.fragment;
 
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.graphics.Outline;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 
 import com.codepath.welldone.PumpListAdapter;
@@ -31,12 +34,15 @@ import com.parse.ParseUser;
 
 public class PumpMapFragment extends Fragment {
     public static final String EXTRA_PUMP_ID_TO_DISPLAY = "pumpIDToDisplay";
-    public static final double MAP_DISPLAY_DELTA = 0.96;
+    public static final double MAP_DISPLAY_DELTA = 0.48;
     public Pump mPump;
     public PumpListAdapter mPumpListAdapter;
     private SupportMapFragment mapFragment;
     private ParseGeoPoint currentUserLocation;
     ViewPager mDetailsPager;
+
+    View viewToBeRevealed;
+    View floatingActionButton;
 
 
     public PumpMapFragment() {
@@ -84,6 +90,41 @@ public class PumpMapFragment extends Fragment {
         Outline outline = new Outline();
         outline.setOval(0, 0, size, size);
         getView().findViewById(R.id.fab).setOutline(outline);
+
+        viewToBeRevealed = getView().findViewById(R.id.viewToBeRevealed);
+        floatingActionButton = getView().findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int xpos = floatingActionButton.getRight() / 2;
+                int ypos = viewToBeRevealed.getBottom() / 2;
+                ValueAnimator reveal = ViewAnimationUtils.createCircularReveal(viewToBeRevealed, xpos,
+                        ypos, 10, mDetailsPager.getWidth());
+                reveal.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+                        viewToBeRevealed.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+
+                    }
+                });
+                reveal.setDuration(1000);
+                reveal.start();
+            }
+        });
     }
 
     public void resetMapUIAndCardView() {
