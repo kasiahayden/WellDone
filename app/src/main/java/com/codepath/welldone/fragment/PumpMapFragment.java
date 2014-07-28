@@ -95,7 +95,7 @@ public class PumpMapFragment extends Fragment {
 
                             @Override
                             public void onPageSelected(int position) {
-                                mPump = mPumpListAdapter.getItem(position);
+                                mPump = mPumpListAdapter.getPumpAtIndex(position);
                                 centerMapOnPump(mPump);
                             }
 
@@ -114,7 +114,7 @@ public class PumpMapFragment extends Fragment {
     private void addPipsToMap() {
         GoogleMap map = getMap();
         for (int i = 0; i < mPumpListAdapter.getCount(); i++) {
-            Pump pump = mPumpListAdapter.getItem(i);
+            Pump pump = mPumpListAdapter.getPumpAtIndex(i);
             MarkerOptions options = new MarkerOptions();
             if (pump.getCurrentStatus().equalsIgnoreCase("broken")) {
                 options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_broken_unfocused));
@@ -179,7 +179,7 @@ public class PumpMapFragment extends Fragment {
             public Object instantiateItem(ViewGroup container, int position) {
                 final PumpRowView pumpRow = new PumpRowView(getActivity(), null);
                 pumpRow.setRootBackgroundColor(getResources().getColor(android.R.color.transparent));
-                final Pump thePump = mPumpListAdapter.getItem(position);
+                final Pump thePump = mPumpListAdapter.getPumpAtIndex(position);
                 pumpRow.mPump = thePump;
                 pumpRow.updateSubviews( currentUserLocation);
                 container.addView(pumpRow);

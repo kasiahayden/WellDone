@@ -5,10 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 
-import com.codepath.welldone.activity.CreateReportActivity;
+import com.codepath.welldone.model.AbstractListItem;
 import com.codepath.welldone.model.Pump;
+import com.codepath.welldone.model.PumpListItem;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
@@ -16,7 +16,9 @@ import com.parse.ParseUser;
  * Adapter to hold a list of pumps with their numbers, color-coded state, and
  * (reverse geo-coded in future) location.
  */
-public class PumpListAdapter extends ArrayAdapter<Pump> {
+public class PumpListAdapter extends ArrayAdapter<AbstractListItem> {
+
+    private LayoutInflater mInflater;
 
     public interface PumpListListener {
         public void onNewReportClicked(Pump pump);
@@ -30,47 +32,53 @@ public class PumpListAdapter extends ArrayAdapter<Pump> {
 
         super(context, R.layout.row_pump_list_item);
         currentUserLocation = (ParseGeoPoint) ParseUser.getCurrentUser().get("location");
+        mInflater = LayoutInflater.from(context);
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return AbstractListItem.RowType.values().length;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return getItem(position).getViewType();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        final Pump pump = getItem(position);
+        final AbstractListItem pump = getItem(position);
+        return pump.getView(mInflater, convertView, currentUserLocation, rowListener, getContext());
+    }
 
-        PumpRowView pumpRowView;
-
-        // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null) {
-            pumpRowView = (PumpRowView)LayoutInflater.from(getContext()).inflate(R.layout.row_pump_list_item, parent, false);
-        }
-        else {
-            pumpRowView = (PumpRowView)convertView;
-        }
-        pumpRowView.clearTextViews();
-
-        pumpRowView.mPump = pump;
-        pumpRowView.updateSubviews(currentUserLocation);
-
-        Button newReport = (Button)pumpRowView.findViewById(R.id.btnNewReport);
-        newReport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rowListener.onNewReportClicked(pump);
+    public int indexForPump(Pump pump) {
+        for (int i = 0; i < getCount(); i++) {
+            AbstractListItem item = getItem(i);
+            if (item instanceof PumpListItem) {
+                PumpListItem pumpListItem = (PumpListItem)item;
+                if (pumpListItem.pump.getObjectId().equals(pump.getObjectId())) {
+                    return i;
+                }
             }
-        });
+        }
+        return -1;
+    }
 
-        Button navigateButton = (Button)pumpRowView.findViewById(R.id.btnNavigate);
-        navigateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ParseGeoPoint point = (ParseGeoPoint)ParseUser.getCurrentUser().get("location");
-                String fromLocation = "-4.377073, 34.281780";//String.format("%s,%s", point.getLatitude(), point.getLongitude());
-                CreateReportActivity.askAboutPumpNavigation(getContext(), fromLocation, pump, "Open in Maps?", false);
+    /**
+     * @return the nth Pump object in the list. Skips headers. Check for null
+     */
+    public Pump getPumpAtIndex(int index) {
+        int currentIndex = 0;
+        for (int i = 0; i < getCount(); i++) {
+            AbstractListItem item = getItem(i);
+            if (item instanceof PumpListItem) {
+                if (index == currentIndex) {
+                    return ((PumpListItem) item).pump;
+                }
+                currentIndex++;
             }
-        });
-
-
-
-        return pumpRowView;
+        }
+        return null;
     }
 }

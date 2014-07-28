@@ -1,12 +1,12 @@
 apply plugin: 'android'
 
 android {
-    compileSdkVersion 20
+    compileSdkVersion 'android-L'
     buildToolsVersion '20.0.0'
     defaultConfig {
         applicationId 'com.codepath.welldone'
-        minSdkVersion 16
-        targetSdkVersion 20
+        minSdkVersion 21
+        targetSdkVersion 21
         versionCode 1
         versionName '1.0'
     }
@@ -23,6 +23,9 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('libs/Parse-1.5.1.jar')
+    compile 'com.android.support:cardview-v7:+'
+    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.nhaarman.listviewanimations:library:2.6.0'
     compile 'com.google.android.gms:play-services:+'
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
 }

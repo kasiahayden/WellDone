@@ -16,6 +16,7 @@ import com.codepath.welldone.fragment.PumpMapFragment;
 import com.codepath.welldone.helper.NetworkUtil;
 import com.codepath.welldone.helper.StringUtil;
 import com.codepath.welldone.model.Pump;
+import com.codepath.welldone.model.PumpListItem;
 import com.parse.ParseAnalytics;
 
 import org.json.JSONException;
@@ -170,8 +171,9 @@ public class PumpBrowser extends Activity implements PumpListAdapter.PumpListLis
     public void onNewReportClicked(Pump pump) {
         Intent intent = new Intent(this, CreateReportActivity.class);
         intent.putExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, pump.getObjectId());
-        int index = mListFragment.mPumpArrayAdapter.getPosition(pump) + 1;
-        intent.putExtra("nextPumpObjectId", mListFragment.mPumpArrayAdapter.getItem(index).getObjectId());
+        int index = mListFragment.mPumpArrayAdapter.indexForPump(pump) + 1;
+        PumpListItem pumpListItem = (PumpListItem)mListFragment.mPumpArrayAdapter.getItem(index);
+        intent.putExtra("nextPumpObjectId", pumpListItem.pump.getObjectId());
         startActivity(intent);
     }
 

@@ -21,13 +21,15 @@ import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
 import com.codepath.welldone.activity.PumpBrowser;
 import com.codepath.welldone.helper.NetworkUtil;
-import com.codepath.welldone.helper.PumpUtil;
+import com.codepath.welldone.model.AbstractListItem;
+import com.codepath.welldone.model.HeaderListItem;
 import com.codepath.welldone.model.Pump;
+import com.codepath.welldone.model.PumpListItem;
 import com.codepath.welldone.persister.PumpPersister;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -44,16 +46,19 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
     public static final int TARGET_DETAILS_HEIGHT = 130;
     public PumpListAdapter mPumpArrayAdapter;
+    private AlphaInAnimationAdapter alphaAdapter;
 
     private ListView lvPumps;
     private ProgressBar pbLoading;
     private PullToRefreshLayout ptrlPumps;
+
 
     private ParseUser currentUser;
 
     public PumpListAdapter.PumpListListener mListener;
     private final String TAG = "PumpListFragment";
 
+    private boolean shouldExpandSelectedRow;
     public int mCurrentPumpIndex;
     // The default view of pump list is sorted by distance from currently logged-in user.
     private int sortMenuItemSelected;
@@ -66,12 +71,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
      * @return the currently highlighted (expanded) pump
      */
     public Pump getCurrentPump() {
-        try {
-            return mPumpArrayAdapter.getItem(mCurrentPumpIndex);
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return mPumpArrayAdapter.getPumpAtIndex(mCurrentPumpIndex);
     }
 
     public static PumpListFragment newInstance() {
@@ -253,7 +253,11 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         ptrlPumps = (PullToRefreshLayout) v.findViewById(R.id.ptrlPumps);
 
         lvPumps = (ListView) v.findViewById(R.id.lvPumps);
-        lvPumps.setAdapter(mPumpArrayAdapter);
+
+        alphaAdapter = new AlphaInAnimationAdapter(mPumpArrayAdapter);
+        alphaAdapter.setAbsListView(lvPumps);
+
+        lvPumps.setAdapter(alphaAdapter);
         pbLoading = (ProgressBar) v.findViewById(R.id.pbLoading);
     }
 
@@ -262,6 +266,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         lvPumps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                shouldExpandSelectedRow = true;
                 Pump pump = (Pump) parent.getItemAtPosition(position);
                 Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
 
@@ -427,48 +432,31 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         });
     }
 
+
     private void addPumpsToAdapter(List<ParseObject> pumpList, boolean additionalSort) {
 
-        List<Pump> sortedPumps;
-        // The data in being fetched on both onCreateView() and onResume(), causing the list to be
-        // populated twice. So clear the adapter just before adding items to it.
-        // XXX This is messed up, but hey, this is demo night.
-        mPumpArrayAdapter.clear();
+        List<AbstractListItem> sortedPumps = new ArrayList<AbstractListItem>();
+        sortedPumps.add(new HeaderListItem());
 
-        // return the results as they are
-        if (!additionalSort) {
-            sortedPumps = new ArrayList<Pump>();
-            for (int i = 0; i < pumpList.size(); i++) {
-                Pump pump = (Pump)pumpList.get(i);
-                if (pump.getObjectId().equals(mCurrentPumpID)) {
-                    mCurrentPumpIndex = i;
-                }
-                sortedPumps.add(pump);
+        for (int i = 0; i < pumpList.size(); i++) {
+            Pump pump = (Pump)pumpList.get(i);
+            if (pump.isBroken()) {
+                sortedPumps.add(new PumpListItem(pump));
             }
         }
-        else {
-            // Apply custom sorting (outside of DB query) to sort by distance from current user.
-            final List<Pump> pumps = new ArrayList<Pump>(pumpList.size());
-            for (ParseObject object : pumpList) {
-                final Pump pump = (Pump) object;
-                pumps.add(pump);
-            }
-            sortedPumps = PumpUtil.sortPumps(pumps, ((ParseGeoPoint) currentUser.get("location")));
-            for (int i = 0; i < sortedPumps.size(); i++) {
-                Pump pump = sortedPumps.get(i);
-                if (pump.getObjectId().equals(mCurrentPumpID)) {
-                    mCurrentPumpIndex = i;
-                }
+
+        sortedPumps.add(new HeaderListItem());
+
+        for (int i = 0; i < pumpList.size(); i++) {
+            Pump pump = (Pump)pumpList.get(i);
+            if (pump.getCurrentStatus().equals("Fix in progress")) {
+                sortedPumps.add(new PumpListItem(pump));
             }
         }
+
         mPumpArrayAdapter.addAll(sortedPumps);
-        lvPumps.setSelection(mCurrentPumpIndex);
 
-        int firstPosition = lvPumps.getFirstVisiblePosition();
-        int wantedChild = mCurrentPumpIndex - firstPosition;
-        PumpRowView thePumpView = (PumpRowView)lvPumps.getChildAt(wantedChild);
-        if (thePumpView != null) {
-            thePumpView.toggleExpandedState();
-        }
     }
+
+
 }
