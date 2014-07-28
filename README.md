@@ -11,7 +11,7 @@ Notifications:
 * The important part of each notification is the objectId/ID
   field. This is what is used to identify a particular Parse object.
 
-![Walkthrough](anim_walkthrough.gif)
+![Walkthrough](WellDone+Internal+Demo.gif)
 
 ![SMS Handling](anim_sms_handling.gif)
 
