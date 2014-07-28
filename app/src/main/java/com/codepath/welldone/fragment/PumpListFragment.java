@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.codepath.welldone.PumpListAdapter;
+import com.codepath.welldone.PumpListListener;
 import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
 import com.codepath.welldone.activity.PumpBrowser;
@@ -52,7 +53,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
     private ParseUser currentUser;
 
-    public PumpListAdapter.PumpListListener mListener;
+    public PumpListListener mListener;
     private final String TAG = "PumpListFragment";
 
     private boolean shouldExpandSelectedRow;
@@ -132,7 +133,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         final View v = inflater.inflate(R.layout.fragment_pump_list, container, false);
 
         setupViews(v);
-        mPumpArrayAdapter.rowListener = (PumpListAdapter.PumpListListener) getActivity();
+        mPumpArrayAdapter.rowListener = (PumpListListener) getActivity();
 
         ActionBarPullToRefresh.from(getActivity())
                 // Here we mark just the ListView and it's Empty View as pullable
@@ -151,7 +152,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (PumpListAdapter.PumpListListener) activity;
+            mListener = (PumpListListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -242,6 +243,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
             public void done(final List<ParseObject> pumpList, ParseException e) {
 
                 if (e == null) {
+                    mListener.onListRefreshederested();
 
                     Log.d("info", "Fetching pumps from local DB. Found " + pumpList.size());
 
@@ -276,6 +278,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
                 if (e == null) {
                     Log.d("info", "Fetching pumps from remote DB. Found " + pumpList.size());
                     addPumpsToAdapter(pumpList, additionalSort);
+                    mListener.onListRefreshederested();
 
                     // Unpin previously cached data and re-pin the newly fetched.
                     if (pumpList != null && !pumpList.isEmpty()) {

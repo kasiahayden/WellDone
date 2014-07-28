@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
-import com.codepath.welldone.PumpListAdapter;
+import com.codepath.welldone.PumpListListener;
 import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
 import com.codepath.welldone.activity.CreateReportActivity;
@@ -22,7 +22,7 @@ public class PumpListItem implements AbstractListItem {
     }
 
     @Override
-    public View getView(final LayoutInflater inflater, final View convertView, final ParseGeoPoint location, final PumpListAdapter.PumpListListener listener, final Context context) {
+    public View getView(final LayoutInflater inflater, final View convertView, final ParseGeoPoint location, final PumpListListener listener, final Context context) {
 
         PumpRowView pumpRowView;
 

@@ -20,10 +20,6 @@ public class PumpListAdapter extends ArrayAdapter<AbstractListItem> {
 
     private LayoutInflater mInflater;
 
-    public interface PumpListListener {
-        public void onNewReportClicked(Pump pump);
-    }
-
     public PumpListListener rowListener;
 
     private ParseGeoPoint currentUserLocation;

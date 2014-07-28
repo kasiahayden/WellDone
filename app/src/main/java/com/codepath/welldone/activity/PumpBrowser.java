@@ -13,7 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.codepath.welldone.PumpListAdapter;
+import com.codepath.welldone.PumpListListener;
 import com.codepath.welldone.R;
 import com.codepath.welldone.fragment.PumpListFragment;
 import com.codepath.welldone.fragment.PumpMapFragment;
@@ -31,17 +31,16 @@ import org.json.JSONObject;
 /**
  * Fragment container: either displays a list of pumps or the map.
  */
-public class PumpBrowser extends FragmentActivity implements PumpListAdapter.PumpListListener {
+public class PumpBrowser extends FragmentActivity implements PumpListListener {
 
     public static final String EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID = "pumpObjectId";
-    PumpMapFragment mMapFragment;
-    PumpListFragment mListFragment;
     private MenuItem mLogMeOut;
 
     ViewPager mPager;
     PagerSlidingTabStrip mTabs;
 
     private boolean PRETEND_WE_ARE_COMING_FROM_A_PUSH_NOTIF = false;
+    private ListMapPagerAdapter mListMapPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +49,8 @@ public class PumpBrowser extends FragmentActivity implements PumpListAdapter.Pum
 
         setContentView(R.layout.activity_pump_browser);
         mPager = (ViewPager)findViewById(R.id.pumpsViewPager);
-        mPager.setAdapter(new ListMapPagerAdapter(getSupportFragmentManager()));
+        mListMapPagerAdapter = new ListMapPagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mListMapPagerAdapter);
         mTabs = (PagerSlidingTabStrip)findViewById(R.id.slidingTabs);
         mTabs.setViewPager(mPager);
 
@@ -96,6 +96,11 @@ public class PumpBrowser extends FragmentActivity implements PumpListAdapter.Pum
         return true;
     }
 
+    public void onListRefreshederested() {
+        mListMapPagerAdapter.mMapFragment.mPumpListAdapter = mListMapPagerAdapter.mPumpListFragment.mPumpArrayAdapter;
+        mListMapPagerAdapter.mMapFragment.resetMapUIAndCardView();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item == mLogMeOut) {
@@ -107,22 +112,25 @@ public class PumpBrowser extends FragmentActivity implements PumpListAdapter.Pum
     }
 
     public int getCurrentPumpIndex() {
-        return mListFragment.mCurrentPumpIndex;
+        if (mListMapPagerAdapter.mPumpListFragment == null) {
+            return -1;
+        }
+        return mListMapPagerAdapter.mPumpListFragment.mCurrentPumpIndex;
     }
 
     public void onNewReportClicked(Pump pump) {
         Intent intent = new Intent(this, CreateReportActivity.class);
         intent.putExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, pump.getObjectId());
-        int index = mListFragment.mPumpArrayAdapter.indexForPump(pump) + 1;
-        PumpListItem pumpListItem = (PumpListItem)mListFragment.mPumpArrayAdapter.getItem(index);
+        int index = mListMapPagerAdapter.mPumpListFragment.mPumpArrayAdapter.indexForPump(pump) + 1;
+        PumpListItem pumpListItem = (PumpListItem)mListMapPagerAdapter.mPumpListFragment.mPumpArrayAdapter.getItem(index);
         intent.putExtra("nextPumpObjectId", pumpListItem.pump.getObjectId());
         startActivity(intent);
     }
 
     public static class ListMapPagerAdapter extends FragmentPagerAdapter {
 
-        PumpListFragment mPumpListFragment;
-        PumpMapFragment mMapFragment;
+        protected PumpListFragment mPumpListFragment;
+        protected PumpMapFragment mMapFragment;
 
         public ListMapPagerAdapter(FragmentManager fm) {
             super(fm);

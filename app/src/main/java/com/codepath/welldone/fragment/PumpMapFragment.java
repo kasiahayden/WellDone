@@ -7,11 +7,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.welldone.PumpListAdapter;
+import com.codepath.welldone.PumpListListener;
 import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
 import com.codepath.welldone.activity.CreateReportActivity;
@@ -67,52 +69,34 @@ public class PumpMapFragment extends Fragment {
 
     @Override
     public void onResume() {
+        Log.d("DBG", "Map resuming.");
         super.onResume();
         if (mPump != null && getMap() != null) {
             centerMapOnPump(mPump);
         }
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                resetMapUIAndCardView();
+            }
+        }, 500);
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden) {
-            if (mPump != null && getMap() != null) {
-                getMap().getUiSettings().setZoomControlsEnabled(false);
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        getMap().clear();
-                        addPipsToMap();
-                        mDetailsPager.setAdapter(getViewPagerAdapter());
-                        centerMapOnPump(mPump);
-                        mDetailsPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                            @Override
-                            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                            }
-
-                            @Override
-                            public void onPageSelected(int position) {
-                                mPump = mPumpListAdapter.getPumpAtIndex(position);
-                                centerMapOnPump(mPump);
-                            }
-
-                            @Override
-                            public void onPageScrollStateChanged(int state) {
-
-                            }
-                        });
-                        mDetailsPager.setCurrentItem(((PumpBrowser)getActivity()).getCurrentPumpIndex());
-                    }
-                }, 500);
-            }
-        }
+    public void resetMapUIAndCardView() {
+        getMap().getUiSettings().setZoomControlsEnabled(false);
+        getMap().clear();
+        addPipsToMap();
+        mDetailsPager.setAdapter(getViewPagerAdapter());
+        centerMapOnPump(mPump);
+        mDetailsPager.setCurrentItem(((PumpBrowser)getActivity()).getCurrentPumpIndex());
     }
 
     private void addPipsToMap() {
         GoogleMap map = getMap();
+        if (map == null || mPumpListAdapter == null) {
+            return;
+        }
         for (int i = 0; i < mPumpListAdapter.getCount(); i++) {
             Pump pump = mPumpListAdapter.getPumpAtIndex(i);
             MarkerOptions options = new MarkerOptions();
@@ -132,6 +116,9 @@ public class PumpMapFragment extends Fragment {
     }
 
     void centerMapOnPump(Pump pump) {
+        if (pump == null) {
+            return;
+        }
         double lat = pump.getLocation().getLatitude();
         double longitude = pump.getLocation().getLongitude();
         LatLng positionTopLeft = new LatLng(lat - MAP_DISPLAY_DELTA, longitude - MAP_DISPLAY_DELTA);
@@ -150,7 +137,7 @@ public class PumpMapFragment extends Fragment {
     }
 
     void onNewReportClicked(Pump pump) {
-        ((PumpListAdapter.PumpListListener)getActivity()).onNewReportClicked(pump);
+        ((PumpListListener)getActivity()).onNewReportClicked(pump);
     }
 
     PagerAdapter getViewPagerAdapter() {
