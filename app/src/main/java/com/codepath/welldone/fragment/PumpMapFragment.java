@@ -1,6 +1,7 @@
 package com.codepath.welldone.fragment;
 
 
+import android.graphics.Outline;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -78,6 +79,11 @@ public class PumpMapFragment extends Fragment {
                 resetMapUIAndCardView();
             }
         }, 500);
+
+        int size = getResources().getDimensionPixelSize(R.dimen.fab_size);
+        Outline outline = new Outline();
+        outline.setOval(0, 0, size, size);
+        getView().findViewById(R.id.fab).setOutline(outline);
     }
 
     public void resetMapUIAndCardView() {
@@ -162,7 +168,6 @@ public class PumpMapFragment extends Fragment {
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
                 final PumpRowView pumpRow = new PumpRowView(getActivity(), null);
-                pumpRow.setRootBackgroundColor(getResources().getColor(android.R.color.transparent));
                 final Pump thePump = mPumpListAdapter.getPumpAtIndex(position);
                 pumpRow.mPump = thePump;
                 pumpRow.updateSubviews( currentUserLocation);

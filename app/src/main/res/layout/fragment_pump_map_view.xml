@@ -13,8 +13,19 @@
         android:id="@+id/vpPumpRows"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"/>
+
+    <ImageButton
+        android:id="@+id/fab"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignRight="@id/vpPumpRows"
+        android:layout_marginRight="20dp"
+        android:layout_above="@id/vpPumpRows"
+        android:background="@drawable/ripple"
+        android:stateListAnimator="@anim/button_animator"
+        android:src="@drawable/ic_directions_arrow"
+        android:elevation="4dp"/>
 
 </RelativeLayout>
