@@ -267,7 +267,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 shouldExpandSelectedRow = true;
-                Pump pump = (Pump) parent.getItemAtPosition(position);
+                Pump pump = mPumpArrayAdapter.getPumpAtIndex(position);
                 Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
 
                 PumpRowView v = (PumpRowView) view;
@@ -308,6 +308,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
                 break;
             default:
                 // no action.
+                assert(false && "No sort was enabled. Bailing.".isEmpty());
         }
     }
 
@@ -436,7 +437,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
     private void addPumpsToAdapter(List<ParseObject> pumpList, boolean additionalSort) {
 
         List<AbstractListItem> sortedPumps = new ArrayList<AbstractListItem>();
-        sortedPumps.add(new HeaderListItem());
+        sortedPumps.add(new HeaderListItem("BROKEN"));
 
         for (int i = 0; i < pumpList.size(); i++) {
             Pump pump = (Pump)pumpList.get(i);
@@ -445,7 +446,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
             }
         }
 
-        sortedPumps.add(new HeaderListItem());
+        sortedPumps.add(new HeaderListItem("FIX IN PROGRESS"));
 
         for (int i = 0; i < pumpList.size(); i++) {
             Pump pump = (Pump)pumpList.get(i);

@@ -7,6 +7,7 @@
     <color name="textGray">#999999</color>
     <color name="textBlack">#666666</color>
     <color name="textRed">#f20033</color>
+    <color name="greenEnabled">#11cc11</color>
     <color name="cardOuterStroke">#e2e7f1</color>
     <color name="cardInnerStroke">#dde3ee</color>
     <color name="backgroundGray">#e7e6e7</color>

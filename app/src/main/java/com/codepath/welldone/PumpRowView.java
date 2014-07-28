@@ -1,14 +1,12 @@
 package com.codepath.welldone;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,7 +17,6 @@ import com.codepath.welldone.model.Report;
 import com.codepath.welldone.persister.ReportPersister;
 import com.parse.ParseGeoPoint;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 
 public class PumpRowView extends RelativeLayout {
@@ -82,26 +79,24 @@ public class PumpRowView extends RelativeLayout {
     }
 
     private void populateViewHolder() {
-        viewHolder.ivPump = (ImageView)findViewById(R.id.ivPump);
+        viewHolder.tvPump = (TextView)findViewById(R.id.tvPumpStatusIndicator);
         viewHolder.tvLastUpdated = (TextView)findViewById(R.id.tvPumpLastUpdated);
-        viewHolder.tvPriority = (TextView)findViewById(R.id.tvPriority);
-        viewHolder.tvStatus = (TextView)findViewById(R.id.tvPumpStatus);
         viewHolder.tvLocation = (TextView)findViewById(R.id.tvPumpLocation);
         viewHolder.tvPumpDistance = (TextView)findViewById(R.id.tvPumpDistance);
         viewHolder.tvFlavor = (TextView)findViewById(R.id.tvFlavor);
         viewHolder.tvMostRecentUpdate = (TextView)findViewById(R.id.tvMostRecentUpdate);
+        viewHolder.tvStatusIndicator = (TextView)findViewById(R.id.tvPumpStatusIndicator);
     }
 
     public void updateSubviews(ParseGeoPoint currentUserLocation) {
 
         viewHolder.tvLastUpdated.setText(String.format("%s ago",
                 DateTimeUtil.getRelativeTimeofTweet(mPump.getUpdatedAt().toString())));
-        viewHolder.tvStatus.setText(mPump.getCurrentStatus());
-        if (mPump.isBroken()) {
-            viewHolder.tvStatus.setTextColor(getResources().getColor(R.color.textRed));
-        }
-        viewHolder.tvPriority.setText(String.format("Priority Level %d", mPump.getPriority()));
         viewHolder.tvFlavor.setText(getResources().getString(R.string.default_pump_flavor_text, mPump.getName(), mPump.getName()));
+        viewHolder.tvStatusIndicator.setTextColor(mPump.isBroken() ?
+                getResources().getColor(R.color.textRed) :
+                getResources().getColor(R.color.greenEnabled));
+        viewHolder.tvStatusIndicator.setText(mPump.isBroken() ? "X" : "+");
 
         new AsyncTask<Void, Void, Report>() {
             @Override
@@ -122,18 +117,7 @@ public class PumpRowView extends RelativeLayout {
         viewHolder.tvPumpDistance.setText(
                 String.format("%s km", df.format(distanceFromOrigin.doubleValue())));
 
-        setPumpToRandomImage();
         setupLocationLabel(mPump);
-    }
-
-    private void setPumpToRandomImage() {
-        String filename = String.format("pump%d.png", 1 + Math.abs(mPump.getHash()) % 8);
-        try {
-            viewHolder.ivPump.setImageDrawable(Drawable.createFromStream(getContext().getAssets().open(filename), null));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void setRootBackgroundColor(int colorResource) {
@@ -153,22 +137,18 @@ public class PumpRowView extends RelativeLayout {
 
     public void clearTextViews() {
         viewHolder.tvLocation.setText("");
-        viewHolder.tvStatus.setText("");
-        viewHolder.tvStatus.setTextColor(getResources().getColor(R.color.darkGrayTextV2));
-        viewHolder.tvPriority.setText("");
         viewHolder.tvLastUpdated.setText("");
         viewHolder.tvPumpDistance.setText("");
         viewHolder.tvFlavor.setText("");
     }
 
     static class ViewHolder {
-        ImageView ivPump;
+        TextView tvPump;
         TextView tvLastUpdated;
         TextView tvLocation;
-        TextView tvStatus;
-        TextView tvPriority;
         TextView tvPumpDistance;
         TextView tvFlavor;
         TextView tvMostRecentUpdate;
+        TextView tvStatusIndicator;
     }
 }

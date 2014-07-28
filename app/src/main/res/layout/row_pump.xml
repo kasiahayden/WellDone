@@ -15,78 +15,80 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/ivPump"
-                android:scaleType="centerCrop"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+            <TextView
+                android:id="@+id/tvPumpStatusIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
+                android:includeFontPadding="false"
+                android:text="X"
+                android:textSize="60dp"
+                android:textColor="@color/textRed"
                 android:layout_margin="5dp"/>
 
             <TextView
                 android:id="@+id/tvPumpLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/ivPump"
-                android:layout_alignTop="@+id/ivPump"
+                android:layout_toRightOf="@+id/tvPumpStatusIndicator"
+                android:layout_alignTop="@+id/tvPumpStatusIndicator"
+                android:layout_marginTop="12dp"
                 android:layout_marginLeft="4dp"
-                android:includeFontPadding="false"
                 android:textColor="@color/darkGrayTextV2"
-                android:textSize="18dp"
-                android:text="@string/pump_name_label"/>
+                android:textSize="12dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Some random place."/>
 
             <TextView
                 android:id="@+id/tvPumpDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@id/tvPumpLocation"
-                android:textColor="@color/darkGrayTextV2"
-                android:layout_marginRight="4dp"
-                android:includeFontPadding="false"
-                android:fontFamily="sans-serif"
-                android:textSize="18dp"
-                android:text="10 km" />
-
-            <TextView
-                android:id="@+id/tvPumpStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvPumpLocation"
-                android:textColor="@color/darkGrayTextV2"
-                android:textSize="14dp"
-                android:text="Broken temporarily"
-                android:layout_alignLeft="@id/tvPumpLocation"/>
+                android:layout_alignBaseline="@id/tvPumpLocation"
+                android:layout_toRightOf="@id/tvPumpLocation"
+                android:textColor="@color/textGray"
+                android:layout_marginLeft="4dp"
+                android:fontFamily="sans-serif-light"
+                android:textSize="12dp"
+                android:text="(10 km away)" />
 
             <TextView
                 android:id="@+id/tvPumpLastUpdated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_alignBaseline="@id/tvPumpStatus"
                 android:textColor="@color/lightGrayTextV2"
                 android:layout_marginRight="4dp"
-                android:fontFamily="sans-serif"
-                android:textSize="14dp"
+                android:layout_centerVertical="true"
+                android:fontFamily="sans-serif-light"
+                android:textSize="12dp"
                 android:text="Feb. 31" />
 
-            <TextView
-                android:id="@+id/tvPriority"
+            <ImageView
+                android:id="@+id/ivGraphWord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvPumpStatus"
-                android:layout_alignLeft="@id/tvPumpStatus"
-                android:textSize="14dp"
+                android:layout_toRightOf="@id/tvPumpStatusIndicator"
+                android:layout_alignBottom="@id/tvPumpStatusIndicator"
+                android:layout_marginBottom="12dp"
+                android:src="@drawable/graphword"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
                 android:textColor="@color/textGray"
-                android:text="Priority Level 1" />
+                android:layout_alignBottom="@id/ivGraphWord"
+                android:layout_toRightOf="@id/ivGraphWord"
+                android:fontFamily="sans-serif-light"
+                android:text="14.0L/hr"/>
 
             <RelativeLayout
                 android:id="@+id/vgDetailsContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:visibility="gone"
-                android:layout_below="@id/ivPump">
+                android:layout_below="@id/tvPumpStatusIndicator">
                 <!-- Past reports link: Roboto medium 14 0x3399cc -->
                 <!-- Roboto regular 14 0x333333 -->
                 <TextView
