@@ -1,14 +1,11 @@
 package com.codepath.welldone.fragment;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -108,8 +105,6 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
                 + currentUser.get("location") + " " + currentUser.getACL());
 
         final SharedPreferences settings = getActivity().getPreferences(0);
-        sortMenuItemSelected = settings.getInt("lastSortMode", R.id.sortDistance);
-
         if (getArguments() != null) {
             mCurrentPumpID = getArguments().getString(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID);
         }
@@ -128,13 +123,6 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
         // Commit the edits!
         editor.commit();
-    }
-
-    // Add a special menu XML for this fragment only.
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        inflater.inflate(R.menu.pump_list, menu);
     }
 
     @Override
@@ -167,66 +155,6 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    /* This method is overridden so that the correct menu option is shown as checked after
-       pull-to-refresh is done.
-     */
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-
-        switch (sortMenuItemSelected) {
-            case R.id.sortDistance:
-                menu.findItem(R.id.sortDistance).setChecked(true);
-                break;
-            case R.id.sortPriority:
-                menu.findItem(R.id.sortPriority).setChecked(true);
-                break;
-            case R.id.sortLastUpdated:
-                menu.findItem(R.id.sortLastUpdated).setChecked(true);
-                break;
-            default:
-                super.onPrepareOptionsMenu(menu);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        // Only one item in the group is selected; no need to explicitly un-check any item.
-        switch (item.getItemId()) {
-            case R.id.sortDistance:
-                sortMenuItemSelected = R.id.sortDistance;
-                if (!item.isChecked()) {
-                    prepareForDataFetch();
-                    // XXX Adding the extra boolean param is BAD coding practice, but this is what time
-                    // allows for. :(
-                    fetchPumpsInBackground(ParseQuery.getQuery("Pump"), true
-                                           /* apply additional sort, outside of DB query */);
-                    item.setChecked(true);
-                }
-                return true;
-            case R.id.sortPriority:
-                sortMenuItemSelected = R.id.sortPriority;
-                if (!item.isChecked()) {
-                    prepareForDataFetch();
-                    fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByAscending("priority"),
-                                           false);
-                    item.setChecked(true);
-                }
-                return true;
-            case R.id.sortLastUpdated:
-                sortMenuItemSelected = R.id.sortLastUpdated;
-                if (!item.isChecked()) {
-                    prepareForDataFetch();
-                    fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
-                                           false);
-                    item.setChecked(true);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -288,53 +216,15 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
     // Fetch data (from local or remote source) based on the selected sort option
     private void fetchAndShowData() {
-
-        switch (sortMenuItemSelected) {
-
-            case R.id.sortDistance:
-                prepareForDataFetch();
-                fetchPumpsInBackground(ParseQuery.getQuery("Pump"), true
-                                       /* apply additional sort, outside of DB query */);
-                break;
-            case R.id.sortPriority:
-                prepareForDataFetch();
-                fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByAscending("priority"),
-                        false);
-                break;
-            case R.id.sortLastUpdated:
-                prepareForDataFetch();
-                fetchPumpsInBackground(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
-                        false);
-                break;
-            default:
-                // no action.
-                assert(false && "No sort was enabled. Bailing.".isEmpty());
-        }
+        prepareForDataFetch();
+        fetchPumpsInBackground(ParseQuery.getQuery("Pump"), true);
     }
 
     // Fetch data remotely based on the selected sort option
     private void fetchAndShowRemoteData() {
+        prepareForDataFetch();
+        fetchPumpsFromRemote(ParseQuery.getQuery("Pump"), true);
 
-        switch (sortMenuItemSelected) {
-
-            case R.id.sortDistance:
-                prepareForDataFetch();
-                fetchPumpsFromRemote(ParseQuery.getQuery("Pump"), true
-                                     /* apply additional sort, outside of DB query */);
-                break;
-            case R.id.sortPriority:
-                prepareForDataFetch();
-                fetchPumpsFromRemote(ParseQuery.getQuery("Pump").orderByAscending("priority"),
-                                     false);
-                break;
-            case R.id.sortLastUpdated:
-                prepareForDataFetch();
-                fetchPumpsFromRemote(ParseQuery.getQuery("Pump").orderByDescending("updatedAt"),
-                                     false);
-                break;
-            default:
-                // no action.
-        }
     }
 
     /**

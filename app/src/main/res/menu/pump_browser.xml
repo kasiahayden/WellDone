@@ -1,9 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".PumpList" >
-    <item android:id="@+id/action_map_me_bro"
-        android:icon="@drawable/ic_map"
+    <item android:id="@+id/action_log_me_the_fuck_out"
         android:orderInCategory="100"
-        android:title="Map"
-        android:showAsAction="always" />
+        android:title="Logout" />
 </menu>

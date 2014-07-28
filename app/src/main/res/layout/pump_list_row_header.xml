@@ -11,13 +11,13 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_alignParentTop="true"
-        android:background="@color/textGray"/>
+        android:background="@color/backgroundGray"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:id="@+id/tvListRowHeader"
-        android:textColor="@color/backgroundGray"
+        android:textColor="@color/textGray"
         android:fontFamily="sans-serif-light"
         android:text="Broken"/>
 </RelativeLayout>

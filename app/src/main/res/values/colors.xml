@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="offwhite">#FCFCFC</color> <!-- 252, 252, 252-->
-    <color name="darkBlue">#0092fc</color>    <!-- 3366cc -->
-    <color name="actionBarTopColor">#00aadc</color>
-    <color name="actionBarBottomColor">#00a7e1</color>
+    <color name="wellDoneBlue">#428be5</color>
     <color name="textGray">#999999</color>
     <color name="textBlack">#666666</color>
     <color name="textRed">#f20033</color>

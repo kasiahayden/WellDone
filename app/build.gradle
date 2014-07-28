@@ -25,7 +25,8 @@ dependencies {
     compile files('libs/Parse-1.5.1.jar')
     compile 'com.android.support:cardview-v7:+'
     compile 'com.android.support:appcompat-v7:+'
-    compile 'com.nhaarman.listviewanimations:library:2.6.0'
     compile 'com.google.android.gms:play-services:+'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'com.nhaarman.listviewanimations:library:2.6.0'
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
 }

@@ -34,20 +34,10 @@ public class SignInActivity extends Activity {
         setupViews();
     }
 
-    /* Leaving some of these overrides here for now even though they don't have any code.
-       I'm having to look into activity life cycles to do certain things reliably. */
-    @Override
-    public void onStart() {
-
-        super.onStart();
-        Log.d("debug", "onStart() called");
-    }
-
     @Override
     public void onResume() {
 
         super.onResume();
-        Log.d("debug", "onResume() called");
 
         final ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
@@ -56,34 +46,6 @@ public class SignInActivity extends Activity {
         } else {
             Log.d("debug", "No user logged in!");
         }
-    }
-
-    @Override
-    public void onPause() {
-
-        super.onPause();
-        Log.d("debug", "onPause() called");
-    }
-
-    @Override
-    public void onStop() {
-
-        super.onStop();
-        Log.d("debug", "onStop() called");
-    }
-
-    @Override
-    public void onRestart() {
-
-        super.onRestart();
-        Log.d("debug", "onStart() called");
-    }
-
-    @Override
-    public void onDestroy() {
-
-        super.onDestroy();
-        Log.d("debug", "onDestroy() called");
     }
 
     public void onSignIn(View v) {

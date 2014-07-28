@@ -1,10 +1,10 @@
 package com.codepath.welldone.fragment;
 
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -19,7 +19,7 @@ import com.codepath.welldone.activity.PumpBrowser;
 import com.codepath.welldone.model.Pump;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -30,7 +30,7 @@ import com.parse.ParseUser;
 public class PumpMapFragment extends Fragment {
     public static final double MAP_DISPLAY_DELTA = 0.96;
     public Pump mPump;
-    private MapFragment mapFragment;
+    private SupportMapFragment mapFragment;
     private ParseGeoPoint currentUserLocation;
 
     ViewPager mDetailsPager;
@@ -61,7 +61,7 @@ public class PumpMapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mapFragment = new MapFragment();
+        mapFragment = new SupportMapFragment();
         currentUserLocation = (ParseGeoPoint) ParseUser.getCurrentUser().get("location");
     }
 
