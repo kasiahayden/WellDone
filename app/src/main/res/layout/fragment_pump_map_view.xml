@@ -47,31 +47,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ImageButton
-        android:id="@+id/fabStartNavigate"
+
+    <FrameLayout
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_alignRight="@id/vpPumpRows"
         android:layout_marginRight="20dp"
-        android:layout_above="@id/vpPumpRows"
+        android:layout_above="@id/vpPumpRows">
+        <ImageButton
+            android:id="@+id/fabStartNavigate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
-        android:background="@drawable/dark_blue_ripple"
-        android:stateListAnimator="@anim/button_animator"
-        android:src="@drawable/ic_directions_arrow"
-        android:elevation="4dp"/>
+            android:background="@drawable/dark_blue_ripple"
+            android:stateListAnimator="@anim/button_animator"
+            android:src="@drawable/ic_directions_arrow"/>
 
-    <ImageButton
-        android:id="@+id/fabEndNavigate"
-        android:visibility="gone"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_alignRight="@id/vpPumpRows"
-        android:layout_marginRight="20dp"
-        android:layout_above="@id/vpPumpRows"
+        <ImageButton
+            android:id="@+id/fabEndNavigate"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
-        android:background="@drawable/white_ripple"
-        android:stateListAnimator="@anim/button_animator"
-        android:src="@drawable/ic_graycheck"/>
-
+            android:background="@drawable/white_ripple"
+            android:stateListAnimator="@anim/button_animator"
+            android:src="@drawable/ic_graycheck"/>
+    </FrameLayout>
 
 </RelativeLayout>

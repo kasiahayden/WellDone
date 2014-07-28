@@ -89,13 +89,13 @@ public class PumpMapFragment extends Fragment {
         }, 500);
 
         int size = getResources().getDimensionPixelSize(R.dimen.fab_size);
-        Outline outline = new Outline();
-        outline.setOval(0, 0, size, size);
-        getView().findViewById(R.id.fabStartNavigate).setOutline(outline);
+
 
         viewToBeRevealed = getView().findViewById(R.id.viewToBeRevealed);
         fabStartNavigation = getView().findViewById(R.id.fabStartNavigate);
         fabEndNavigation = getView().findViewById(R.id.fabEndNavigate);
+        setOutlinesOnFabs(size);
+
         fabEndNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,6 +113,13 @@ public class PumpMapFragment extends Fragment {
         });
     }
 
+    private void setOutlinesOnFabs(int size) {
+        Outline outline = new Outline();
+        outline.setOval(0, 0, size, size);
+        fabStartNavigation.setOutline(outline);
+        fabEndNavigation.setOutline(outline);
+    }
+
     private void beginAnimationToRevealEndNavFAB() {
         int xpos = 0;
         int ypos = 0;
@@ -127,7 +134,7 @@ public class PumpMapFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                fabStartNavigation.setVisibility(View.GONE);
+                fabStartNavigation.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -157,7 +164,7 @@ public class PumpMapFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                viewToBeRevealed.setVisibility(View.GONE);
+                viewToBeRevealed.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -188,7 +195,7 @@ public class PumpMapFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                fabEndNavigation.setVisibility(View.GONE);
+                fabEndNavigation.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -207,8 +214,8 @@ public class PumpMapFragment extends Fragment {
 
     private void resetMapFragmentUIToDisplayPager() {
         fabStartNavigation.setVisibility(View.VISIBLE);
-        fabEndNavigation.setVisibility(View.GONE);
-        viewToBeRevealed.setVisibility(View.GONE);
+        fabEndNavigation.setVisibility(View.INVISIBLE);
+        viewToBeRevealed.setVisibility(View.INVISIBLE);
     }
 
     private void beginAnimationToRevealNavigationOverviewAndHidePager() {
@@ -253,7 +260,6 @@ public class PumpMapFragment extends Fragment {
         addPipsToMap();
         mDetailsPager.setAdapter(getViewPagerAdapter());
         centerMapOnPump(mPump);
-//        mDetailsPager.setCurrentItem(((PumpBrowser)getActivity()).getCurrentPumpIndex());
     }
 
     private void addPipsToMap() {
