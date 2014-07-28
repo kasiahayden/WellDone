@@ -14,5 +14,6 @@ Key Features:
  - Create a new report with a pump along with a new photo
  - Navigate to next pump after creating a report
  - Offline mode: all changes to data are locally cached, by default. In the event of no network coverage, these changes sit in the cache and wait to be sent to the server. Once network becomes available, they are sent to the server and other users can pull down to view the latest data. It’s alright for the app to be killed in the meantime.
+ - Pull down to refresh data (fetches new data from server)
 
 ![Walkthrough](WellDone+Internal+Demo.gif)
