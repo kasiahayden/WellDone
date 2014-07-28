@@ -437,7 +437,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
     private void addPumpsToAdapter(List<ParseObject> pumpList, boolean additionalSort) {
 
         List<AbstractListItem> sortedPumps = new ArrayList<AbstractListItem>();
-        sortedPumps.add(new HeaderListItem("BROKEN"));
+        sortedPumps.add(new HeaderListItem("Broken"));
 
         for (int i = 0; i < pumpList.size(); i++) {
             Pump pump = (Pump)pumpList.get(i);
@@ -446,7 +446,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
             }
         }
 
-        sortedPumps.add(new HeaderListItem("FIX IN PROGRESS"));
+        sortedPumps.add(new HeaderListItem("Fix in progress"));
 
         for (int i = 0; i < pumpList.size(); i++) {
             Pump pump = (Pump)pumpList.get(i);
