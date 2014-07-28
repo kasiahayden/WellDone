@@ -90,8 +90,13 @@ public class PumpRowView extends RelativeLayout {
 
     public void updateSubviews(ParseGeoPoint currentUserLocation) {
 
-        viewHolder.tvLastUpdated.setText(String.format("%s ago",
-                DateTimeUtil.getRelativeTimeofTweet(mPump.getUpdatedAt().toString())));
+        String mostOfTheTimeCorrectRelativeTime = DateTimeUtil.getRelativeTimeofTweet(mPump.getUpdatedAt().toString());
+        if (mostOfTheTimeCorrectRelativeTime.equalsIgnoreCase("yesterday")) {
+            viewHolder.tvLastUpdated.setText(mostOfTheTimeCorrectRelativeTime);
+        }
+        else {
+            viewHolder.tvLastUpdated.setText(String.format("%s ago", mostOfTheTimeCorrectRelativeTime));
+        }
         viewHolder.tvFlavor.setText(getResources().getString(R.string.default_pump_flavor_text, mPump.getName(), mPump.getName()));
         viewHolder.tvStatusIndicator.setTextColor(mPump.isBroken() ?
                 getResources().getColor(R.color.textRed) :

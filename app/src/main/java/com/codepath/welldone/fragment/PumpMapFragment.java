@@ -35,6 +35,7 @@ import com.parse.ParseUser;
 public class PumpMapFragment extends Fragment {
     public static final String EXTRA_PUMP_ID_TO_DISPLAY = "pumpIDToDisplay";
     public static final double MAP_DISPLAY_DELTA = 0.48;
+    public static final int CIRCULAR_REVEAL_DURATION_NAVIGATE = 500;
     public Pump mPump;
     public PumpListAdapter mPumpListAdapter;
     private SupportMapFragment mapFragment;
@@ -42,7 +43,8 @@ public class PumpMapFragment extends Fragment {
     ViewPager mDetailsPager;
 
     View viewToBeRevealed;
-    View floatingActionButton;
+    View fabStartNavigation;
+    View fabEndNavigation;
 
 
     public PumpMapFragment() {
@@ -89,42 +91,160 @@ public class PumpMapFragment extends Fragment {
         int size = getResources().getDimensionPixelSize(R.dimen.fab_size);
         Outline outline = new Outline();
         outline.setOval(0, 0, size, size);
-        getView().findViewById(R.id.fab).setOutline(outline);
+        getView().findViewById(R.id.fabStartNavigate).setOutline(outline);
 
         viewToBeRevealed = getView().findViewById(R.id.viewToBeRevealed);
-        floatingActionButton = getView().findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        fabStartNavigation = getView().findViewById(R.id.fabStartNavigate);
+        fabEndNavigation = getView().findViewById(R.id.fabEndNavigate);
+        fabEndNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int xpos = floatingActionButton.getRight() / 2;
-                int ypos = viewToBeRevealed.getBottom() / 2;
-                ValueAnimator reveal = ViewAnimationUtils.createCircularReveal(viewToBeRevealed, xpos,
-                        ypos, 10, mDetailsPager.getWidth());
-                reveal.addListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animator) {
-                        viewToBeRevealed.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animator) {
-
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animator) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animator) {
-
-                    }
-                });
-                reveal.setDuration(1000);
-                reveal.start();
+                beginAnimationToUnrevealEndNavFAB();
+                beginAnimationToUnrevealNavigationOverlayView();
             }
         });
+
+        fabStartNavigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                beginAnimationToRevealNavigationOverviewAndHidePager();
+                beginAnimationToRevealEndNavFAB();
+            }
+        });
+    }
+
+    private void beginAnimationToRevealEndNavFAB() {
+        int xpos = 0;
+        int ypos = 0;
+        int finalRadius = 320; /// Width of the FAB, hopefully
+        ValueAnimator revealEndButton = ViewAnimationUtils.createCircularReveal(fabEndNavigation, xpos, ypos, 0, finalRadius);
+        Log.d("DBG", String.format("Revealing fabEnd from x:%d, y:%d, width:%d", xpos, ypos, finalRadius));
+        revealEndButton.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                fabEndNavigation.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                fabStartNavigation.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        revealEndButton.setDuration(CIRCULAR_REVEAL_DURATION_NAVIGATE);
+        revealEndButton.start();
+    }
+
+    private void beginAnimationToUnrevealNavigationOverlayView() {
+        int xpos = 0;
+        int ypos = 0;
+        int beginWidth = 1000; /// Width of the FAB, hopefully
+        ValueAnimator revealStartButton = ViewAnimationUtils.createCircularReveal(viewToBeRevealed, xpos, ypos, beginWidth, 0);
+        Log.d("DBG", String.format("Unrevealing fabEnd from x:%d, y:%d, begin width:%d", xpos, ypos, beginWidth));
+        revealStartButton.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                viewToBeRevealed.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        revealStartButton.setDuration(CIRCULAR_REVEAL_DURATION_NAVIGATE);
+        revealStartButton.start();
+    }
+
+    private void beginAnimationToUnrevealEndNavFAB() {
+        int xpos = 0;
+        int ypos = 0;
+        int finalRadius = 320; /// Width of the FAB, hopefully
+        ValueAnimator revealStartButton = ViewAnimationUtils.createCircularReveal(fabEndNavigation, xpos, ypos, finalRadius, 0);
+        Log.d("DBG", String.format("Revealing fabEnd from x:%d, y:%d, width:%d", xpos, ypos, finalRadius));
+        revealStartButton.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                fabStartNavigation.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                fabEndNavigation.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        revealStartButton.setDuration(CIRCULAR_REVEAL_DURATION_NAVIGATE);
+        revealStartButton.start();
+    }
+
+    private void resetMapFragmentUIToDisplayPager() {
+        fabStartNavigation.setVisibility(View.VISIBLE);
+        fabEndNavigation.setVisibility(View.GONE);
+        viewToBeRevealed.setVisibility(View.GONE);
+    }
+
+    private void beginAnimationToRevealNavigationOverviewAndHidePager() {
+        int xpos = mDetailsPager.getRight();
+        int ypos = 0;
+        int finalRadius = mDetailsPager.getWidth() * 2;
+        Log.d("DBG", String.format("Revealing navigation overlay view from x:%d, y:%d, width:%d", xpos, ypos, finalRadius));
+        ValueAnimator reveal = ViewAnimationUtils.createCircularReveal(
+                viewToBeRevealed,
+                xpos,
+                ypos,
+                112,
+                finalRadius);
+        reveal.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                viewToBeRevealed.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        reveal.setDuration(CIRCULAR_REVEAL_DURATION_NAVIGATE);
+        reveal.start();
     }
 
     public void resetMapUIAndCardView() {

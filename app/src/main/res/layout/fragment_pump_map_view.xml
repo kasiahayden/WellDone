@@ -17,6 +17,7 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:padding="8dp"
         android:layout_alignLeft="@id/vpPumpRows"
         android:layout_alignTop="@id/vpPumpRows"
         android:background="@color/wellDoneBlue">
@@ -24,14 +25,20 @@
             android:id="@+id/tvLocationDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="4dp"
+            android:textSize="18dp"
             android:text="Well 14 is 2 Miles Away"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="28dp"
             android:fontFamily="sans-serif-light"
+            android:textSize="18dp"
             android:layout_below="@id/tvLocationDescription"
             android:text="Follow the route above"/>
-
     </RelativeLayout>
 
     <RelativeLayout
@@ -41,15 +48,30 @@
         android:layout_height="match_parent" />
 
     <ImageButton
-        android:id="@+id/fab"
+        android:id="@+id/fabStartNavigate"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_alignRight="@id/vpPumpRows"
         android:layout_marginRight="20dp"
         android:layout_above="@id/vpPumpRows"
-        android:background="@drawable/ripple"
+
+        android:background="@drawable/dark_blue_ripple"
         android:stateListAnimator="@anim/button_animator"
         android:src="@drawable/ic_directions_arrow"
         android:elevation="4dp"/>
+
+    <ImageButton
+        android:id="@+id/fabEndNavigate"
+        android:visibility="gone"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignRight="@id/vpPumpRows"
+        android:layout_marginRight="20dp"
+        android:layout_above="@id/vpPumpRows"
+
+        android:background="@drawable/white_ripple"
+        android:stateListAnimator="@anim/button_animator"
+        android:src="@drawable/ic_graycheck"/>
+
 
 </RelativeLayout>
