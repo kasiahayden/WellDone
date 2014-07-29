@@ -33,6 +33,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
     public ViewHolder viewHolder;
     View fabStartNavigation;
     View fabEndNavigation;
+    View fabAddReport;
     View mNavigationOverlayViewToBeRevealed;
 
 
@@ -54,6 +55,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
         int size = getResources().getDimensionPixelSize(R.dimen.fab_size);
         fabStartNavigation = findViewById(R.id.fabStartNavigate);
         fabEndNavigation = findViewById(R.id.fabEndNavigate);
+        fabAddReport = findViewById(R.id.fabAddReport);
         setOutlinesOnFabs(size);
         fabEndNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +78,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
         outline.setOval(0, 0, size, size);
         fabStartNavigation.setOutline(outline);
         fabEndNavigation.setOutline(outline);
+        fabAddReport.setOutline(outline);
     }
     private void beginAnimationToRevealEndNavFAB() {
         int xpos = 0;
@@ -169,6 +172,39 @@ public class ExpandablePumpRowView extends RelativeLayout {
         revealStartButton.start();
     }
 
+
+    private void beginAnimationToRevealAddReportFab() {
+        int xpos = 0;
+        int ypos = 0;
+        int finalRadius = 320; /// Width of the FAB, hopefully
+        ValueAnimator revealAddReportButton = ViewAnimationUtils.createCircularReveal(fabAddReport, xpos, ypos, 0, finalRadius);
+        Log.d("DBG", String.format("Revealing add report from x:%d, y:%d, width:%d", xpos, ypos, finalRadius));
+        revealAddReportButton.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                fabAddReport.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                fabEndNavigation.setVisibility(View.INVISIBLE);
+                fabStartNavigation.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        revealAddReportButton.setDuration(CIRCULAR_REVEAL_DURATION_NAVIGATE);
+        revealAddReportButton.start();
+    }
+
     private void beginAnimationToRevealNavigationOverviewAndHidePager() {
         int xpos = this.getRight();
         int ypos = 0;
@@ -230,6 +266,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
             detailsContainer.startAnimation(anim);
         }
         else {
+            beginAnimationToRevealAddReportFab();
             detailsContainer.setVisibility(View.VISIBLE);
             DropDownAnim anim = new DropDownAnim(detailsContainer, TARGET_DETAILS_HEIGHT, true);
             anim.setDuration(ANIMATE_IN_DURATION_MILLIS);

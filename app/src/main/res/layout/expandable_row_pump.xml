@@ -147,6 +147,7 @@
         android:layout_height="56dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
+        android:paddingBottom="4dp"
         android:layout_marginRight="20dp">
         <ImageButton
             android:id="@+id/fabStartNavigate"
@@ -166,6 +167,17 @@
             android:background="@drawable/white_ripple"
             android:stateListAnimator="@anim/button_animator"
             android:src="@drawable/ic_graycheck"/>
+
+        <ImageButton
+            android:id="@+id/fabAddReport"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:background="@drawable/ripple_green"
+            android:stateListAnimator="@anim/button_animator"
+            android:src="@drawable/ic_addreport64"/>
+
     </FrameLayout>
 
 
