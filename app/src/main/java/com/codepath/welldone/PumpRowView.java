@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -79,13 +80,12 @@ public class PumpRowView extends RelativeLayout {
     }
 
     private void populateViewHolder() {
-        viewHolder.tvPump = (TextView)findViewById(R.id.tvPumpStatusIndicator);
         viewHolder.tvLastUpdated = (TextView)findViewById(R.id.tvPumpLastUpdated);
         viewHolder.tvLocation = (TextView)findViewById(R.id.tvPumpLocation);
         viewHolder.tvPumpDistance = (TextView)findViewById(R.id.tvPumpDistance);
         viewHolder.tvFlavor = (TextView)findViewById(R.id.tvFlavor);
         viewHolder.tvMostRecentUpdate = (TextView)findViewById(R.id.tvMostRecentUpdate);
-        viewHolder.tvStatusIndicator = (TextView)findViewById(R.id.tvPumpStatusIndicator);
+        viewHolder.ivStatusIndicator = (ImageView)findViewById(R.id.ivPumpStatusIndicator);
     }
 
     public void updateSubviews(ParseGeoPoint currentUserLocation) {
@@ -98,10 +98,9 @@ public class PumpRowView extends RelativeLayout {
             viewHolder.tvLastUpdated.setText(String.format("%s ago", mostOfTheTimeCorrectRelativeTime));
         }
         viewHolder.tvFlavor.setText(getResources().getString(R.string.default_pump_flavor_text, mPump.getName(), mPump.getName()));
-        viewHolder.tvStatusIndicator.setTextColor(mPump.isBroken() ?
-                getResources().getColor(R.color.textRed) :
-                getResources().getColor(R.color.greenEnabled));
-        viewHolder.tvStatusIndicator.setText(mPump.isBroken() ? "X" : "+");
+        viewHolder.ivStatusIndicator.setImageResource(mPump.isBroken() ?
+                R.drawable.ic_well_broken:
+                R.drawable.ic_well_working);
 
         new AsyncTask<Void, Void, Report>() {
             @Override
@@ -148,12 +147,11 @@ public class PumpRowView extends RelativeLayout {
     }
 
     static class ViewHolder {
-        TextView tvPump;
         TextView tvLastUpdated;
         TextView tvLocation;
         TextView tvPumpDistance;
         TextView tvFlavor;
         TextView tvMostRecentUpdate;
-        TextView tvStatusIndicator;
+        ImageView ivStatusIndicator;
     }
 }

@@ -7,25 +7,21 @@
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
     android:background="@color/offwhite">
-    <TextView
-        android:id="@+id/tvPumpStatusIndicator"
+    <ImageView
+        android:id="@+id/ivPumpStatusIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/ic_well_broken"
+        android:layout_margin="10dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:includeFontPadding="false"
-        android:text="X"
-        android:textSize="60dp"
-        android:textColor="@color/textRed"
-        android:layout_margin="5dp"/>
+        android:layout_alignParentTop="true"/>
 
     <TextView
         android:id="@+id/tvPumpLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/tvPumpStatusIndicator"
-        android:layout_alignTop="@+id/tvPumpStatusIndicator"
-        android:layout_marginTop="12dp"
+        android:layout_toRightOf="@id/ivPumpStatusIndicator"
+        android:layout_alignTop="@id/ivPumpStatusIndicator"
         android:layout_marginLeft="4dp"
         android:textColor="@color/darkGrayTextV2"
         android:textSize="12dp"
@@ -60,9 +56,8 @@
         android:id="@+id/ivGraphWord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/tvPumpStatusIndicator"
-        android:layout_alignBottom="@id/tvPumpStatusIndicator"
-        android:layout_marginBottom="12dp"
+        android:layout_toRightOf="@id/ivPumpStatusIndicator"
+        android:layout_alignBottom="@id/ivPumpStatusIndicator"
         android:src="@drawable/graphword"/>
 
     <TextView
@@ -80,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:visibility="gone"
-        android:layout_below="@id/tvPumpStatusIndicator">
+        android:layout_below="@id/ivPumpStatusIndicator">
         <TextView
             android:id="@+id/tvMostRecentUpdate"
             android:layout_width="wrap_content"

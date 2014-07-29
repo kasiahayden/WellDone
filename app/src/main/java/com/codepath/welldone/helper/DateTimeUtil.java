@@ -107,10 +107,10 @@ public class DateTimeUtil {
 
         // If the regex couldn't be parsed, make the relative timestamp manually
         // Should never happen though
-        Log.d("debug", "Relative date didn't match pattern: " + fullRelativeDate);
         if (fullRelativeDate.equalsIgnoreCase("yesterday")) {
             return fullRelativeDate;
         }
+        Log.d("debug", "Relative date didn't match pattern: " + fullRelativeDate);
         final String[] info = fullRelativeDate.split("\\s");
         if (info.length > 2) {
             sb.append(info[0].toString()).append(" ").append(info[1].toString().substring(0, 1));
