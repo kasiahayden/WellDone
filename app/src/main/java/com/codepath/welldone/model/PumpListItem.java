@@ -3,14 +3,11 @@ package com.codepath.welldone.model;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 
 import com.codepath.welldone.PumpListListener;
 import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
-import com.codepath.welldone.activity.CreateReportActivity;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseUser;
 
 public class PumpListItem implements AbstractListItem {
 
@@ -37,24 +34,6 @@ public class PumpListItem implements AbstractListItem {
 
         pumpRowView.mPump = pump;
         pumpRowView.updateSubviews(location);
-
-        Button newReport = (Button)pumpRowView.findViewById(R.id.btnNewReport);
-        newReport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onNewReportClicked(pump);
-            }
-        });
-
-        Button navigateButton = (Button)pumpRowView.findViewById(R.id.btnNavigate);
-        navigateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ParseGeoPoint point = (ParseGeoPoint) ParseUser.getCurrentUser().get("location");
-                String fromLocation = "-4.377073, 34.281780";//String.format("%s,%s", point.getLatitude(), point.getLongitude());
-                CreateReportActivity.askAboutPumpNavigation(context, fromLocation, pump, "Open in Maps?", false);
-            }
-        });
 
         return pumpRowView;
     }

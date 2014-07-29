@@ -53,7 +53,8 @@
         android:layout_height="56dp"
         android:layout_alignRight="@id/vpPumpRows"
         android:layout_marginRight="20dp"
-        android:layout_above="@id/vpPumpRows">
+        android:layout_marginBottom="60dp"
+        android:layout_alignParentBottom="true">
         <ImageButton
             android:id="@+id/fabStartNavigate"
             android:layout_width="match_parent"

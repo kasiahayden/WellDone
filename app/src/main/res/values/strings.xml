@@ -24,7 +24,7 @@
     <string name="signin_text">SIGN IN</string>
     <string name="create_account_text">CREATE ACCOUNT</string>
     <string name="title_activity_sign_in">SignInActivity</string>
-    <string name="default_pump_flavor_text">%1$s was installed in 2012 as part of the relief effort funded by the TKyS. %2$s uses MoMoOS 3.1.</string>
+    <string name="default_pump_flavor_text"><![CDATA[ Part of the <a>MSABI Mkusa School System</a>]]></string>
 
     <string name="sort_by">Sort by</string>
 </resources>

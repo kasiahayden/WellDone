@@ -203,8 +203,6 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
                 Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
                 if (view instanceof PumpRowView) {
                     PumpRowView v = (PumpRowView) view;
-                    v.toggleExpandedState();
-
                     mCurrentPumpIndex = position;
                 }
             }

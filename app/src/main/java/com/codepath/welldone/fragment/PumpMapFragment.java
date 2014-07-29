@@ -16,11 +16,10 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 
+import com.codepath.welldone.ExpandablePumpRowView;
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.PumpListListener;
-import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
-import com.codepath.welldone.activity.CreateReportActivity;
 import com.codepath.welldone.model.Pump;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -328,25 +327,11 @@ public class PumpMapFragment extends Fragment {
              */
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
-                final PumpRowView pumpRow = new PumpRowView(getActivity(), null);
+                final ExpandablePumpRowView pumpRow = new ExpandablePumpRowView(getActivity(), null);
                 final Pump thePump = mPumpListAdapter.getPumpAtIndex(position);
                 pumpRow.mPump = thePump;
                 pumpRow.updateSubviews( currentUserLocation);
                 container.addView(pumpRow);
-                pumpRow.newReportButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onNewReportClicked(thePump);
-                    }
-                });
-                pumpRow.navigateButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ParseGeoPoint point = (ParseGeoPoint)ParseUser.getCurrentUser().get("location");
-                        String fromLocation = String.format("%s,%s", point.getLatitude(), point.getLongitude());
-                        CreateReportActivity.askAboutPumpNavigation(getActivity(), fromLocation, thePump, "Open in Maps?", false);
-                    }
-                });
 
                 pumpRow.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -360,7 +345,7 @@ public class PumpMapFragment extends Fragment {
 
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
-                PumpRowView prv = (PumpRowView)object;
+                ExpandablePumpRowView prv = (ExpandablePumpRowView)object;
                 container.removeView(prv);
             }
 
