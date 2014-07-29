@@ -353,6 +353,8 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
         mPumpArrayAdapter.addAll(sortedPumps);
 
+        mListener.onListRefreshederested();
+
     }
 
 

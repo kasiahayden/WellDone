@@ -34,7 +34,7 @@ import com.parse.ParseUser;
 
 public class PumpMapFragment extends Fragment {
     public static final String EXTRA_PUMP_ID_TO_DISPLAY = "pumpIDToDisplay";
-    public static final double MAP_DISPLAY_DELTA = 0.48;
+    public static final double MAP_DISPLAY_DELTA = 0.06;
     public static final int CIRCULAR_REVEAL_DURATION_NAVIGATE = 500;
     public Pump mPump;
     public PumpListAdapter mPumpListAdapter;
@@ -212,12 +212,6 @@ public class PumpMapFragment extends Fragment {
         revealStartButton.start();
     }
 
-    private void resetMapFragmentUIToDisplayPager() {
-        fabStartNavigation.setVisibility(View.VISIBLE);
-        fabEndNavigation.setVisibility(View.INVISIBLE);
-        viewToBeRevealed.setVisibility(View.INVISIBLE);
-    }
-
     private void beginAnimationToRevealNavigationOverviewAndHidePager() {
         int xpos = mDetailsPager.getRight();
         int ypos = 0;
@@ -382,7 +376,28 @@ public class PumpMapFragment extends Fragment {
         ft.commit();
 
         mDetailsPager = (ViewPager)v.findViewById(R.id.vpPumpRows);
+        mDetailsPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                Pump currentPump = mPumpListAdapter.getPumpAtIndex(i);
+                Log.d("DBG", String.format("Centering on pump %s with status %s", currentPump.getAddress(), currentPump.getCurrentStatus()));
+                centerMapOnPump(currentPump);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
         return v;
     }
 
+    public void recenterMapOnPump(Pump currentPump) {
+        centerMapOnPump(currentPump);
+    }
 }
