@@ -29,8 +29,8 @@
         android:layout_alignTop="@id/topLayoutGuide">
         <ImageView
             android:id="@+id/ivWrenchCreate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/create_report_side_icon_size"
+            android:layout_height="@dimen/create_report_side_icon_size"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_wrench_create"/>
@@ -73,8 +73,8 @@
             android:layout_marginRight="24dp"/>
         <ImageView
             android:id="@+id/icGearCreate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/create_report_side_icon_size"
+            android:layout_height="@dimen/create_report_side_icon_size"
             android:src="@drawable/ic_gear_create"
             android:layout_alignLeft="@id/ivWrenchCreate"
             android:layout_below="@id/vpUpdateStatus"
@@ -130,6 +130,38 @@
             android:text="Broken / Cracked Pipe"
             android:textSize="18dp"/>
 
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_below="@id/tvBrokenPipeSelector"
+            android:background="@color/backgroundBorderGray"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"/>
+
+        <ImageView
+            android:id="@+id/icNotebook"
+            android:layout_width="@dimen/create_report_side_icon_size"
+            android:layout_height="@dimen/create_report_side_icon_size"
+            android:src="@drawable/ic_notebook"
+            android:layout_alignLeft="@id/ivWrenchCreate"
+            android:layout_below="@id/tvBrokenPipeSelector"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/etNotesField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Write any other notes here"
+            android:layout_toRightOf="@id/icNotebook"
+            android:layout_below="@id/tvBrokenPipeSelector"/>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_below="@id/etNotesField"
+            android:background="@color/backgroundBorderGray"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"/>
 
     </RelativeLayout>
 
