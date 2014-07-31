@@ -2,31 +2,33 @@
 
     <style name="WellDoneBaseTheme" parent="android:Theme.Material.Light">
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:colorPrimaryDark">#306097</item>
+        <item name="android:colorPrimary">@color/wellDoneBlue</item>
+        <item name="android:titleTextStyle">@style/WellDone.ActionBar.TitleTextStyle</item>
     </style>
 
-    <style name="WellDone.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <style name="WellDone.ActionBar.TitleTextStyle" parent="android:TextAppearance.Material.Widget.ActionBar.Title">
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="GreenActionBar"
-        parent="android:Widget.Material.Light.ActionBar">
-        <item name="android:background">#119922</item>
-        <item name="android:titleTextStyle">@style/WellDone.ActionBar.TitleTextStyle</item>
-    </style>
-    
     <style name="CreateReportTheme" parent="@style/WellDoneBaseTheme">
         <item name="android:actionBarStyle">@style/GreenActionBar</item>
-    </style>
-    <style name="WellDoneBlueActionBar"
-        parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:colorPrimaryDark">#328551</item>
     </style>
 
+    <style name="PumpBrowserTheme" parent="@style/WellDoneBaseTheme">
+        <item name="android:actionBarStyle">@style/BlueActionBar</item>
+        <item name="android:colorPrimaryDark">#306097</item>
+    </style>
 
-    <style name="MyActionBar"
-        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+    <style name="BlueActionBar" parent="android:Widget.Material.Light.ActionBar">
         <item name="android:background">@color/wellDoneBlue</item>
+        <item name="android:titleTextStyle">@style/WellDone.ActionBar.TitleTextStyle</item>
+    </style>
+
+    <style name="GreenActionBar" parent="android:Widget.Material.Light.ActionBar">
+        <item name="android:background">@color/createReportGreen</item>
+        <item name="android:titleTextStyle">@style/WellDone.ActionBar.TitleTextStyle</item>
     </style>
 
 </resources>

@@ -6,6 +6,7 @@
     <color name="textBlack">#666666</color>
     <color name="textRed">#f20033</color>
     <color name="greenEnabled">#11cc11</color>
+    <color name="createReportGreen">#4bc779</color>
     <color name="cardOuterStroke">#e2e7f1</color>
     <color name="cardInnerStroke">#dde3ee</color>
     <color name="backgroundGray">#e7e6e7</color>
@@ -13,5 +14,7 @@
     <color name="addPhotoGrayText">@color/backgroundBorderGray</color>
     <color name="cardFill">@color/offwhite</color>
     <color name="lightGrayTextV2">#878787</color>
+    <color name="createLightGrayText">#a2a2a2</color>
+    <color name="createDarkGrayText">#797978</color>
     <color name="darkGrayTextV2">#535353</color>
 </resources>

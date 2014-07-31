@@ -1,108 +1,136 @@
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.codepath.welldone.activity.CreateReportActivity">
+    <View
+        android:id="@+id/greenBackground"
+        android:layout_width="match_parent"
+        android:layout_height="92dp"
+        android:background="@color/createReportGreen"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Well 13 -> Add a Report"
+        android:textColor="@android:color/white"
+        android:textSize="24dp"
+        android:fontFamily="sans-serif-light"
+        android:layout_margin="22dp"
+        android:layout_alignBottom="@id/greenBackground"/>
+    <View
+        android:id="@+id/topLayoutGuide"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_alignBottom="@id/greenBackground"/>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <RelativeLayout
-            android:id="@+id/ivPlaceholderImageContainer"
-            android:layout_width="match_parent"
-            android:layout_margin="0dp"
-            android:background="@color/backgroundGray"
-            android:layout_height="180dp">
-            <ImageView
-                android:id="@+id/ivCameraIcon"
-                android:layout_width="90dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_camera"
-                android:contentDescription="@android:color/transparent" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="Add a photo"
-                android:textColor="@color/textGray"
-                android:layout_below="@id/ivCameraIcon"/>
-            <ImageView
-                android:id="@+id/ivNewPumpPhoto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:visibility="gone"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/backgroundBorderGray"
-                android:layout_alignParentBottom="true"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_below="@id/ivPlaceholderImageContainer"
-            android:layout_centerHorizontal="true"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin">
-
-            <TextView
-                android:id="@+id/tvPumpStatusLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="8dp"
-                android:textColor="@color/textGray"
-                android:textSize="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_toLeftOf="@+id/spPumpStatus"
-                android:text="@string/pump_status_label" />
-
-            <Spinner
-                android:id="@+id/spPumpStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="4dp"
-                android:entries="@array/pump_status_options" />
-
-            <EditText
-                android:id="@+id/etReportNotes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvPumpStatusLabel"
-                android:layout_marginTop="20dp"
-                android:ems="10"
-                android:hint="@string/report_notes_hint"
-                android:textSize="15sp"
-                android:inputType="textCapSentences|textMultiLine" />
-
-            <Button
-                android:id="@+id/btnSubmitReport"
-                android:layout_width="170dp"
-                android:layout_height="35dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/etReportNotes"
-                android:layout_marginTop="40dp"
-                android:background="@drawable/new_report"
-                android:focusable="false"
-                android:onClick="onReportSubmit"
-                android:text="@string/submit_report"
-                android:textColor="@color/offwhite"
-                android:textSize="14sp" />
-        </RelativeLayout>
-        <ProgressBar
-            android:id="@+id/pbLoading"
-            android:visibility="invisible"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@id/topLayoutGuide">
+        <ImageView
+            android:id="@+id/ivWrenchCreate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/ic_wrench_create"/>
+        <TextView
+            android:id="@+id/tvStatusUpdateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ivWrenchCreate"
+            android:layout_marginLeft="@dimen/createReportRowPadding"
+            android:layout_alignBottom="@id/ivWrenchCreate"
+            android:layout_marginBottom="4dp"
+            android:textColor="@color/createLightGrayText"
+            android:text="Status Update"
+            android:textSize="14dp"/>
+
+        <TextView
+            android:id="@+id/tvCurrentlyLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tvStatusUpdateLabel"
+            android:layout_below="@id/tvStatusUpdateLabel"
+            android:textColor="@color/createDarkGrayText"
+            android:layout_marginTop="8dp"
+            android:text="Currently"
+            android:textSize="14dp"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vpUpdateStatus"
+            android:layout_below="@id/tvCurrentlyLabel"
+            android:layout_alignLeft="@id/tvCurrentlyLabel"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"/>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_below="@id/vpUpdateStatus"
+            android:background="@color/backgroundBorderGray"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"/>
+        <ImageView
+            android:id="@+id/icGearCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_gear_create"
+            android:layout_alignLeft="@id/ivWrenchCreate"
+            android:layout_below="@id/vpUpdateStatus"
+            android:layout_marginTop="8dp"
+            />
+        <TextView
+            android:id="@+id/tvRepairsMadeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/icGearCreate"
+            android:layout_alignLeft="@id/tvStatusUpdateLabel"
+            android:textColor="@color/createLightGrayText"
+            android:layout_marginBottom="4dp"
+            android:text="Repairs Made"
+            android:textSize="14dp"/>
+
+        <TextView
+            android:id="@+id/tvPumpHandleSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvRepairsMadeLabel"
+            android:layout_alignLeft="@id/icGearCreate"
+            android:textColor="@color/createDarkGrayText"
+            android:drawableLeft="@drawable/ic_check_create"
+            android:drawablePadding="16dp"
+            android:layout_marginBottom="4dp"
+            android:text="Pump Handle"
+            android:textSize="18dp"/>
+
+        <TextView
+            android:id="@+id/tvCloggedPipeSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvPumpHandleSelector"
+            android:layout_alignLeft="@id/icGearCreate"
+            android:textColor="@color/createDarkGrayText"
+            android:drawableLeft="@drawable/ic_check_create"
+            android:drawablePadding="16dp"
+            android:layout_marginBottom="4dp"
+            android:text="Clogged Pipe / Spout"
+            android:textSize="18dp"/>
+
+        <TextView
+            android:id="@+id/tvBrokenPipeSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvCloggedPipeSelector"
+            android:layout_alignLeft="@id/icGearCreate"
+            android:textColor="@color/createDarkGrayText"
+            android:drawableLeft="@drawable/ic_check_create"
+            android:drawablePadding="16dp"
+            android:layout_marginBottom="4dp"
+            android:text="Broken / Cracked Pipe"
+            android:textSize="18dp"/>
+
+
     </RelativeLayout>
-</ScrollView>
+
+</RelativeLayout>

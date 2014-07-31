@@ -6,46 +6,29 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.welldone.R;
-import com.codepath.welldone.helper.AddressUtil;
-import com.codepath.welldone.helper.DateTimeUtil;
 import com.codepath.welldone.helper.ImageUtil;
 import com.codepath.welldone.helper.NetworkUtil;
-import com.codepath.welldone.helper.StringUtil;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.Report;
 import com.codepath.welldone.persister.PumpPersister;
 import com.codepath.welldone.persister.ReportPersister;
-import com.parse.FindCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Class to handle creation and persistence of a report.
@@ -59,116 +42,98 @@ public class CreateReportActivity extends Activity {
     public static final String PHOTO_FILE_EXTENSION = ".jpg";
     public static final String EXTRA_PUMP_OBJECT_ID = "pumpObjectId";
 
-    private EditText etReportNotes;
-    private ImageView ivPumpImageToBeReported;
-    private ImageView ivAddPictureToReportImage;
-    private ProgressBar pbLoading;
-    private Spinner spPumpStatus;
-
+    ViewPager vpUpdateStatus;
     private Pump pumpToBeReported;
     private Pump pumpToNavigateToAfterReporting;
-    private String fixedPumpPhotoFileName;
-    private Bitmap newImageBitmap;
+
+    private TextView tvPumpHandleSelector;
+
+    private ProgressBar pbLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_report);
+        vpUpdateStatus = (ViewPager)findViewById(R.id.vpUpdateStatus);
+        vpUpdateStatus.setAdapter(getPagerAdapter());
+        vpUpdateStatus.setPageMargin(-200);
+        vpUpdateStatus.setOnPageChangeListener(getOnPageChangeListener());
+        pbLoading = (ProgressBar)findViewById(R.id.pbLoading);
+        tvPumpHandleSelector = (TextView)findViewById(R.id.tvPumpHandleSelector);
+        tvPumpHandleSelector.getCompoundDrawables()[0].setVisible(false, true);
+        tvPumpHandleSelector.invalidate();
+    }
 
-        setupViews();
-        setupListeners();
-        getDataFromIntent();
+    private ViewPager.OnPageChangeListener getOnPageChangeListener() {
+        return new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
 
-        getActionBar().setTitle(StringUtil.getConcatenatedString("New Report for ",
-                AddressUtil.stripCountryFromAddress(pumpToBeReported.getAddress())));
+            }
 
-        ReportPersister.getLatestReportForPump(pumpToBeReported);
+            @Override
+            public void onPageSelected(int i) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        };
+    }
+
+    private PagerAdapter getPagerAdapter() {
+        return new PagerAdapter() {
+            @Override
+            public int getCount() {
+                return 3;
+            }
+
+            @Override
+            public boolean isViewFromObject(View view, Object object) {
+                return view == object;
+            }
+
+            /*
+            A very simple PagerAdapter may choose to use the page Views themselves as key objects,
+            returning them from instantiateItem(ViewGroup, int) after creation and adding them to
+            the parent ViewGroup. A matching destroyItem(ViewGroup, int, Object) implementation
+            would remove the View from the parent ViewGroup and isViewFromObject(View, Object)
+            could be implemented as return view == object;.
+             */
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                final TextView tv = new TextView(CreateReportActivity.this);
+                switch (position) {
+                    case 0:
+                        tv.setText("BROKEN");
+                        break;
+                    case 1:
+                        tv.setText("IN PROGRESS");
+                        break;
+                    case 2:
+                        tv.setText("FUNCTIONAL");
+                        break;
+                }
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
+                tv.setTextColor(getResources().getColor(R.color.createDarkGrayText));
+                container.addView(tv);
+                return tv;
+            }
+
+            @Override
+            public void destroyItem(ViewGroup container, int position, Object object) {
+                container.removeView((View)object);
+            }
+
+        };
     }
 
     @Override
     protected void onResume() {
-
         super.onResume();
-
-        final String baseTitle = StringUtil.getConcatenatedString("New Report for ",
-                AddressUtil.stripCountryFromAddress(pumpToBeReported.getAddress()));
-        if (!NetworkUtil.isNetworkAvailable(this)) {
-            getActionBar().setTitle(StringUtil.getConcatenatedString(baseTitle, " (Offline)"));
-        } else {
-            getActionBar().setTitle(baseTitle);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        // On successful return of camera activity, show the taken image
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-
-            final Uri fixedPumpPhotoUri = Uri.fromFile(new File(fixedPumpPhotoFileName));
-            // by this point we have the camera photo on disk
-            newImageBitmap = BitmapFactory.decodeFile(fixedPumpPhotoUri.getPath());
-
-            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    try {
-                        InputStream inputStream = getContentResolver().openInputStream(fixedPumpPhotoUri);
-                        final Drawable newImageDrawable = Drawable.createFromStream(inputStream, fixedPumpPhotoUri.toString());
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                ivPumpImageToBeReported.setImageDrawable(newImageDrawable);
-                                ivPumpImageToBeReported.setVisibility(View.VISIBLE);
-                            }
-                        });
-                    }
-                    catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    pbLoading.setVisibility(ProgressBar.INVISIBLE);
-                }
-            };
-            task.execute();
-
-        } else { // Result was a failure
-            newImageBitmap = null;
-            Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
-            pbLoading.setVisibility(ProgressBar.INVISIBLE);
-        }
-    }
-
-    public void onReportSubmit(View v) {
-
-        final String pumpStatusToBeReported = spPumpStatus.getSelectedItem().toString();
-        final String reportNotes = etReportNotes.getText().toString();
-        final String reportTitle = StringUtil.getConcatenatedString("Pump_",
-                AddressUtil.getConcatenatedCityFromAddress(pumpToBeReported.getAddress()), "_",
-                DateTimeUtil.getLocalDateTimeForFileName(new Date()), ".html");
-
-        // Set the new status and priority on the pump
-        pumpToBeReported.setCurrentStatus(pumpStatusToBeReported);
-        pumpToBeReported.setPriority(Pump.getPriorityFromStatus(pumpStatusToBeReported));
-
-        // Create a new report to be pinned locally and persisted remotely
-        final Report reportToBePersisted = new Report();
-        reportToBePersisted.setReportDetails(pumpToBeReported,
-                                             ParseUser.getCurrentUser(),
-                                             pumpStatusToBeReported,
-                                             reportTitle,
-                                             reportNotes);
-
-        pbLoading.setVisibility(ProgressBar.VISIBLE);
-        pinReportLocally(reportToBePersisted, newImageBitmap);
-        String singidaNearARoad = "-6.911844,33.591054";
-        askAboutPumpNavigation(this, singidaNearARoad, pumpToNavigateToAfterReporting, "Report submitted!", true);
     }
 
     public static void askAboutPumpNavigation(final Context context, final String currentAddress, final Pump newPump, String title, final boolean shouldPopActivityStackOnDecision) {
@@ -203,27 +168,6 @@ public class CreateReportActivity extends Activity {
                 .show();
     }
 
-    /* Private methods */
-    private void setupViews() {
-
-        etReportNotes = (EditText) findViewById(R.id.etReportNotes);
-        ivPumpImageToBeReported = (ImageView) findViewById(R.id.ivNewPumpPhoto);
-        ivAddPictureToReportImage = (ImageView) findViewById(R.id.ivCameraIcon);
-        pbLoading = (ProgressBar) findViewById(R.id.pbLoading);
-        spPumpStatus = (Spinner) findViewById(R.id.spPumpStatus);
-    }
-
-    private void setupListeners() {
-
-        ivAddPictureToReportImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pbLoading.setVisibility(View.VISIBLE);
-                startTakePictureIntent();
-            }
-        });
-    }
-
     private void getDataFromIntent() {
 
         final String pumpObjectId = getIntent().getStringExtra(EXTRA_PUMP_OBJECT_ID);
@@ -238,59 +182,6 @@ public class CreateReportActivity extends Activity {
 
         final String nextPumpObjectId = getIntent().getStringExtra("nextPumpObjectId");
         pumpToNavigateToAfterReporting = PumpPersister.getPumpByObjectIdSyncly(nextPumpObjectId);
-    }
-
-    // Get the newly created file name and start the camera activity
-    private void startTakePictureIntent() {
-
-        final Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePhotoIntent.resolveActivity(getPackageManager()) != null) {
-
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-                Log.d("debug", "Created photo: " + photoFile.toString());
-            } catch (IOException ex) {
-                Toast.makeText(this, "Couldn't take picture!", Toast.LENGTH_LONG).show();
-            }
-
-            if (photoFile != null) {
-                takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                startActivityForResult(takePhotoIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-            }
-        }
-    }
-
-    // Create a file name that the taken image will be saved under
-    private File createImageFile() throws IOException {
-
-        // Create an image file name
-        final String timeStamp = DateTimeUtil.getFriendlyTimeStamp();
-        final String imageFileName =
-                StringUtil.getConcatenatedString(APP_TAG, "_", pumpToBeReported.getName(), "_",
-                        timeStamp);
-        final File storageDir =
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-
-        // Create the storage directory if it does not exist
-        if (!storageDir.exists() && !storageDir.mkdirs()){
-            Log.d("debug", "Failed to create directory " + storageDir);
-            throw new IOException("Couldn't access external storage!");
-        }
-
-        final File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                PHOTO_FILE_EXTENSION,         /* suffix */
-                storageDir      /* directory */
-        );
-        Log.d("debug", "Saved image to file: " + image.toString());
-
-        // Save a file: path for use with ACTION_VIEW intents
-        fixedPumpPhotoFileName = image.getAbsolutePath();
-        Log.d("debug", "fixedPumpPhotoFileName: " + fixedPumpPhotoFileName);
-        return image;
     }
 
     // Persist a given report locally and check if it was pinned
@@ -400,33 +291,5 @@ public class CreateReportActivity extends Activity {
                     "Report cached successfully.",
                     Toast.LENGTH_SHORT).show();
         }
-    }
-
-    // Check if a report was persisted locally
-    // Added just for debugging.
-    private void checkIfReportPersistedLocally(Report report) {
-
-        final ParseQuery query = ParseQuery.getQuery("Pump");
-        final Pump updatedPump = report.getPump();
-        query.whereEqualTo("objectId", updatedPump.getObjectId());
-        query.fromPin(PumpPersister.ALL_PUMPS);
-
-        query.findInBackground(new FindCallback<ParseObject>() {
-
-            public void done(final List<ParseObject> pumpList, ParseException e) {
-
-                if (e == null) {
-
-                    Log.d("debug", "Checking if updated pump was pinned locally " + updatedPump.getName());
-                    Log.d("debug", "Query result size " + pumpList.size());
-                    final Pump locallyFetchedPump = (Pump) pumpList.iterator().next();
-                    Log.d("debug", "Locally queried pump name: " + locallyFetchedPump.getName());
-                    Log.d("debug", "Locally queried pump status: " + locallyFetchedPump.getCurrentStatus());
-
-                } else {
-                    Log.d("debug", "Pump was not pinned locally " + updatedPump.getName());
-                }
-            }
-        });
     }
 }
