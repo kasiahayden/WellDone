@@ -133,4 +133,19 @@
 
     </RelativeLayout>
 
+    <ImageButton
+        android:id="@+id/fabSubmitReport"
+        android:layout_width="@dimen/fab_size"
+        android:layout_height="@dimen/fab_size"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="70dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true"
+
+        android:background="@drawable/ripple_green"
+        android:stateListAnimator="@anim/button_animator"
+        android:elevation="8dp"
+        android:src="@drawable/ic_paperplanes"/>
+
+
 </RelativeLayout>

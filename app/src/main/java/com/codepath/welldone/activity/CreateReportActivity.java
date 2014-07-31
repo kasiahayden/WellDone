@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Outline;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -46,6 +47,8 @@ public class CreateReportActivity extends Activity {
     private Pump pumpToBeReported;
     private Pump pumpToNavigateToAfterReporting;
 
+    private View fabSubmitReport;
+
     private TextView tvPumpHandleSelector;
 
     private ProgressBar pbLoading;
@@ -61,6 +64,22 @@ public class CreateReportActivity extends Activity {
         vpUpdateStatus.setOnPageChangeListener(getOnPageChangeListener());
         pbLoading = (ProgressBar)findViewById(R.id.pbLoading);
         tvPumpHandleSelector = (TextView)findViewById(R.id.tvPumpHandleSelector);
+        setupSubmitReportButton();
+    }
+
+    private void setupSubmitReportButton() {
+        fabSubmitReport = findViewById(R.id.fabSubmitReport);
+
+        int size = getResources().getDimensionPixelSize(R.dimen.fab_size);
+        Outline outline = new Outline();
+        outline.setOval(0, 0, size, size);
+        fabSubmitReport.setOutline(outline);
+        fabSubmitReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     private ViewPager.OnPageChangeListener getOnPageChangeListener() {
