@@ -3,6 +3,7 @@ package com.codepath.welldone;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Outline;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.codepath.welldone.activity.CreateReportActivity;
 import com.codepath.welldone.helper.AddressUtil;
 import com.codepath.welldone.helper.DateTimeUtil;
 import com.codepath.welldone.model.Pump;
@@ -41,7 +43,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
 
     public Pump mPump;
 
-    public ExpandablePumpRowView(Context context, AttributeSet attrs){
+    public ExpandablePumpRowView(final Context context, AttributeSet attrs){
         super(context, attrs);
         View.inflate(context, R.layout.expandable_row_pump, this);
         detailsContainer = (ViewGroup)findViewById(R.id.vgDetailsContainer);
@@ -50,22 +52,26 @@ public class ExpandablePumpRowView extends RelativeLayout {
 
         viewHolder = new ViewHolder();
         populateViewHolder();
-
-
-        int size = getResources().getDimensionPixelSize(R.dimen.fab_size);
-        fabStartNavigation = findViewById(R.id.fabStartNavigate);
-        fabEndNavigation = findViewById(R.id.fabEndNavigate);
+        setupEndNavigationButton();
+        setupStartNavigationButton();
         fabAddReport = findViewById(R.id.fabAddReport);
-        setOutlinesOnFabs(size);
-        fabEndNavigation.setOnClickListener(new View.OnClickListener() {
+        fabAddReport.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                beginAnimationToUnrevealEndNavFAB();
-                beginAnimationToUnrevealNavigationOverlayView();
+                Intent i = new Intent(context, CreateReportActivity.class);
+                i.putExtra(CreateReportActivity.EXTRA_PUMP_OBJECT_ID, mPump.getObjectId());
+                context.startActivity(i);
             }
         });
 
-        fabStartNavigation.setOnClickListener(new View.OnClickListener() {
+
+        int size = getResources().getDimensionPixelSize(R.dimen.fab_size);
+        setOutlinesOnFabs(size);
+    }
+
+    private void setupStartNavigationButton() {
+        fabStartNavigation = findViewById(R.id.fabStartNavigate);
+        fabStartNavigation.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 beginAnimationToRevealNavigationOverviewAndHidePager();
@@ -73,6 +79,18 @@ public class ExpandablePumpRowView extends RelativeLayout {
             }
         });
     }
+
+    private void setupEndNavigationButton() {
+        fabEndNavigation = findViewById(R.id.fabEndNavigate);
+        fabEndNavigation.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                beginAnimationToUnrevealEndNavFAB();
+                beginAnimationToUnrevealNavigationOverlayView();
+            }
+        });
+    }
+
     private void setOutlinesOnFabs(int size) {
         Outline outline = new Outline();
         outline.setOval(0, 0, size, size);

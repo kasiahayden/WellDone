@@ -66,9 +66,6 @@ public class PumpMapFragment extends Fragment {
     public void onResume() {
         Log.d("DBG", "Map resuming.");
         super.onResume();
-        if (mPump != null && getMap() != null) {
-            centerMapOnPump(mPump);
-        }
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -201,9 +198,7 @@ public class PumpMapFragment extends Fragment {
 
             @Override
             public void onPageSelected(int i) {
-                Pump currentPump = mPumpListAdapter.getPumpAtIndex(i);
-                Log.d("DBG", String.format("Centering on pump %s with status %s", currentPump.getAddress(), currentPump.getCurrentStatus()));
-                centerMapOnPump(currentPump);
+                onPumpPagerSwitchedPages(i);
             }
 
             @Override
@@ -212,6 +207,13 @@ public class PumpMapFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    private void onPumpPagerSwitchedPages(int i) {
+        Pump currentPump = mPumpListAdapter.getPumpAtIndex(i);
+        Log.d("DBG", String.format("Centering on pump %s with status %s", currentPump.getAddress(), currentPump.getCurrentStatus()));
+        centerMapOnPump(currentPump);
+        mPump = currentPump;
     }
 
     public void recenterMapOnPump(Pump currentPump) {

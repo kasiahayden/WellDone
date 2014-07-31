@@ -57,6 +57,7 @@ public class CreateReportActivity extends Activity {
     // Reduce the image quality by 50% to reduce performance overhead in saving/retrieving
     public static final int COMPRESSION_FACTOR = 50;
     public static final String PHOTO_FILE_EXTENSION = ".jpg";
+    public static final String EXTRA_PUMP_OBJECT_ID = "pumpObjectId";
 
     private EditText etReportNotes;
     private ImageView ivPumpImageToBeReported;
@@ -225,7 +226,7 @@ public class CreateReportActivity extends Activity {
 
     private void getDataFromIntent() {
 
-        final String pumpObjectId = getIntent().getStringExtra("pumpObjectId");
+        final String pumpObjectId = getIntent().getStringExtra(EXTRA_PUMP_OBJECT_ID);
         Log.d("CreateReportActivity", "pumpObjectId passed in intents: " + pumpObjectId);
         pumpToBeReported = PumpPersister.getPumpByObjectIdSyncly(pumpObjectId);
         if (pumpToBeReported == null) {
