@@ -1,6 +1,9 @@
 package com.codepath.welldone.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +24,7 @@ import com.codepath.welldone.helper.NetworkUtil;
 import com.codepath.welldone.helper.StringUtil;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.PumpListItem;
+import com.codepath.welldone.persister.PumpPersister;
 import com.parse.ParseAnalytics;
 import com.parse.ParseUser;
 
@@ -34,7 +38,11 @@ import org.json.JSONObject;
 public class PumpBrowser extends FragmentActivity implements PumpListListener {
 
     public static final String EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID = "pumpObjectId";
+    public static final String RECEIVER_PUMP_UPDATE = "com.welldone.PUMP_UPDATE";
     private MenuItem mLogMeOut;
+
+
+    private BroadcastReceiver mReceiver;
 
     ViewPager mPager;
     PagerSlidingTabStrip mTabs;
@@ -45,6 +53,8 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setupTextMessageReceiver();
 
 
         setContentView(R.layout.activity_pump_browser);
@@ -71,6 +81,38 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
             getIntent().putExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, "mLZB4GWceT");
         }
 
+    }
+
+    private void setupTextMessageReceiver() {
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String pumpObjectId = intent.getStringExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID);
+                String newStatus = intent.getStringExtra("status");
+                Pump p = PumpPersister.getPumpByObjectIdSyncly(pumpObjectId);
+                if (p != null) {
+                    p.setCurrentStatus(newStatus);
+                    p.saveEventually();
+                    Log.d("DBG", String.format("Pump %s is now: %s", p.getObjectId(), p.getCurrentStatus()));
+                }
+                else {
+                    Log.d("DBG", String.format("Failed to load pump with ID %s", pumpObjectId));
+                }
+
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(RECEIVER_PUMP_UPDATE);
+        intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(mReceiver, intentFilter);
+
+
+        try {
+            DemoSMSReceiver.extractEncodedInformation("eyAicHVtcE9iamVjdElkIiA6ICJoMWhub3ZMczJaIiwgInN0YXR1cyI6ICJicm9rZW4ifQ==", this);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

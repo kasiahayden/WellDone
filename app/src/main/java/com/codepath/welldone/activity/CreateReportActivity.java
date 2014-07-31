@@ -61,8 +61,6 @@ public class CreateReportActivity extends Activity {
         vpUpdateStatus.setOnPageChangeListener(getOnPageChangeListener());
         pbLoading = (ProgressBar)findViewById(R.id.pbLoading);
         tvPumpHandleSelector = (TextView)findViewById(R.id.tvPumpHandleSelector);
-        tvPumpHandleSelector.getCompoundDrawables()[0].setVisible(false, true);
-        tvPumpHandleSelector.invalidate();
     }
 
     private ViewPager.OnPageChangeListener getOnPageChangeListener() {

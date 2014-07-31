@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
-    android:background="@color/offwhite">
+    android:background="?android:attr/selectableItemBackground">
     <ImageView
         android:id="@+id/ivPumpStatusIndicator"
         android:layout_width="wrap_content"
