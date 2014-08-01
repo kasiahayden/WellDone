@@ -9,9 +9,9 @@
     android:background="?android:attr/selectableItemBackground">
     <ImageView
         android:id="@+id/ivPumpStatusIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_well_broken"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_list_broken"
         android:layout_margin="10dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"/>

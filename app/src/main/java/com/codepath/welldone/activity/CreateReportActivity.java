@@ -15,13 +15,17 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.welldone.R;
+import com.codepath.welldone.helper.AddressUtil;
+import com.codepath.welldone.helper.DateTimeUtil;
 import com.codepath.welldone.helper.ImageUtil;
 import com.codepath.welldone.helper.NetworkUtil;
+import com.codepath.welldone.helper.StringUtil;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.Report;
 import com.codepath.welldone.persister.PumpPersister;
@@ -29,7 +33,10 @@ import com.codepath.welldone.persister.ReportPersister;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import java.util.Date;
 
 /**
  * Class to handle creation and persistence of a report.
@@ -47,9 +54,12 @@ public class CreateReportActivity extends Activity {
     private Pump pumpToBeReported;
     private Pump pumpToNavigateToAfterReporting;
 
+    private int mCurrentStatusIndex;
+
     private View fabSubmitReport;
 
     private TextView tvPumpHandleSelector;
+    private EditText mAdditionalNotesField;
 
     private ProgressBar pbLoading;
 
@@ -64,7 +74,10 @@ public class CreateReportActivity extends Activity {
         vpUpdateStatus.setOnPageChangeListener(getOnPageChangeListener());
         pbLoading = (ProgressBar)findViewById(R.id.pbLoading);
         tvPumpHandleSelector = (TextView)findViewById(R.id.tvPumpHandleSelector);
+        mAdditionalNotesField = (EditText)findViewById(R.id.etNotesField);
         setupSubmitReportButton();
+
+        getDataFromIntent();
     }
 
     private void setupSubmitReportButton() {
@@ -80,6 +93,18 @@ public class CreateReportActivity extends Activity {
 
             }
         });
+    }
+
+    private String getCurrentPumpStatusString() {
+        switch (mCurrentStatusIndex) {
+            case 0:
+                return "Broken";
+            case 1:
+                return "Fix in progress";
+            case 2:
+                return "Operational";
+        }
+        return null;
     }
 
     private ViewPager.OnPageChangeListener getOnPageChangeListener() {
@@ -153,6 +178,31 @@ public class CreateReportActivity extends Activity {
         super.onResume();
     }
 
+    private void onSubmitReport() {
+        final String pumpStatusToBeReported = getCurrentPumpStatusString();
+        final String reportNotes = mAdditionalNotesField.getText().toString();
+        final String reportTitle = StringUtil.getConcatenatedString("Pump_",
+                AddressUtil.getConcatenatedCityFromAddress(pumpToBeReported.getAddress()), "_",
+                DateTimeUtil.getLocalDateTimeForFileName(new Date()), ".html");
+
+        // Set the new status and priority on the pump
+        pumpToBeReported.setCurrentStatus(pumpStatusToBeReported);
+        pumpToBeReported.setPriority(Pump.getPriorityFromStatus(pumpStatusToBeReported));
+
+        // Create a new report to be pinned locally and persisted remotely
+        final Report reportToBePersisted = new Report();
+        reportToBePersisted.setReportDetails(pumpToBeReported,
+                ParseUser.getCurrentUser(),
+                pumpStatusToBeReported,
+                reportTitle,
+                reportNotes);
+
+        pbLoading.setVisibility(ProgressBar.VISIBLE);
+        String singidaNearARoad = "-6.911844,33.591054";
+        askAboutPumpNavigation(this, singidaNearARoad, pumpToNavigateToAfterReporting, "Report submitted!", true);
+    }
+
+
     public static void askAboutPumpNavigation(final Context context, final String currentAddress, final Pump newPump, String title, final boolean shouldPopActivityStackOnDecision) {
         new AlertDialog.Builder(context)
                 .setTitle(title)
@@ -194,11 +244,17 @@ public class CreateReportActivity extends Activity {
             Toast.makeText(this, "No pump selected for creating report!", Toast.LENGTH_SHORT).show();
             return;
         }
-        Log.d("debug", "Working with pump: " + pumpToBeReported.getObjectId() + " "
-                + pumpToBeReported.getName());
+        Log.d("DBG", String.format("Working with pump: %s %s", pumpToBeReported.getObjectId(), pumpToBeReported.getName()));
 
         final String nextPumpObjectId = getIntent().getStringExtra("nextPumpObjectId");
         pumpToNavigateToAfterReporting = PumpPersister.getPumpByObjectIdSyncly(nextPumpObjectId);
+
+        updatePumpStatusSpinner();
+    }
+
+    private void updatePumpStatusSpinner() {
+        mCurrentStatusIndex = 0;
+        /// Scroll to the right position
     }
 
     // Persist a given report locally and check if it was pinned

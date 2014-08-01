@@ -45,9 +45,18 @@ public class PumpRowView extends RelativeLayout {
         else {
             viewHolder.tvLastUpdated.setText(String.format("%s ago", mostOfTheTimeCorrectRelativeTime));
         }
-        viewHolder.ivStatusIndicator.setImageResource(mPump.isBroken() ?
-                R.drawable.ic_well_broken:
-                R.drawable.ic_well_working);
+
+        int imageResource;
+        if (mPump.isBroken()) {
+            imageResource = R.drawable.ic_list_broken;
+        }
+        else if (mPump.getCurrentStatus().equalsIgnoreCase("Fix in progress")) {
+            imageResource = R.drawable.ic_list_in_progress;
+        }
+        else {
+            imageResource = R.drawable.ic_list_good;
+        }
+        viewHolder.ivStatusIndicator.setImageResource(imageResource);
 
         final Double distanceFromOrigin =
                 currentUserLocation.distanceInKilometersTo(mPump.getLocation());

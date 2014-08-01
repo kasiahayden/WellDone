@@ -93,10 +93,13 @@ public class PumpMapFragment extends Fragment {
             final Pump pump = mPumpListAdapter.getPumpAtIndex(i);
             MarkerOptions options = new MarkerOptions();
             if (pump.getCurrentStatus().equalsIgnoreCase("broken")) {
-                options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_broken_unfocused));
+                options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_broken));
+            }
+            else if (pump.getCurrentStatus().equalsIgnoreCase("Fix in progress")) {
+                options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_fix_in_progress));
             }
             else {
-                options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_working_unfocused));
+                options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_good));
             }
             double lat = pump.getLocation().getLatitude();
             double longitude = pump.getLocation().getLongitude();
