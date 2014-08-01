@@ -10,4 +10,7 @@
     <dimen name="fab_size">56dp</dimen>
     <dimen name="create_report_side_icon_size">36dp</dimen>
     <dimen name="createReportRowPadding">24dp</dimen>
+    <dimen name="sparkWidth">220dp</dimen>
+    <dimen name="sparkHeight">36dp</dimen>
+
 </resources>

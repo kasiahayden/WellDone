@@ -140,7 +140,7 @@ public class CreateReportActivity extends Activity {
         ImageView[] imageViews = {mPumpHandleCheck, mCloggedPipeCheck, mBrokenPipeCheck};
         for (ImageView iv : imageViews) {
             if (iv != someCheck) {
-                
+
                 iv.setVisibility(View.INVISIBLE);
             }
         }

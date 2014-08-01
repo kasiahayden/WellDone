@@ -38,6 +38,8 @@ public class ExpandablePumpRowView extends RelativeLayout {
     View fabAddReport;
     View mNavigationOverlayViewToBeRevealed;
 
+    ImageView mSparks[];
+
 
     private DecimalFormat df = new DecimalFormat("#.#");
 
@@ -67,7 +69,55 @@ public class ExpandablePumpRowView extends RelativeLayout {
 
         int size = getResources().getDimensionPixelSize(R.dimen.fab_size);
         setOutlinesOnFabs(size);
+
+        mSparks = new ImageView[]{(ImageView)findViewById(R.id.spark1),
+                (ImageView)findViewById(R.id.spark2),
+                (ImageView)findViewById(R.id.spark3),
+                (ImageView)findViewById(R.id.spark4) };
+
+        for (ImageView iv : mSparks) {
+            iv.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onSparkClicked(view);
+                }
+            });
+        }
     }
+
+
+    private void onSparkClicked(View v) {
+        ImageView spark = (ImageView)v;
+        if (spark == mSparks[0]) {
+            spark.setImageResource(R.drawable.spark1a);
+        }
+        else if (spark == mSparks[1]) {
+            spark.setImageResource(R.drawable.spark2a);
+        }
+        else if (spark == mSparks[2]) {
+            spark.setImageResource(R.drawable.spark3a);
+        }
+        else if (spark == mSparks[3]) {
+            spark.setImageResource(R.drawable.spark4a);
+        }
+        resetSparksBesides(spark);
+    }
+
+    private void resetSparksBesides(ImageView spark) {
+        if (spark != mSparks[0]) {
+            mSparks[0].setImageResource(R.drawable.spark1);
+        }
+        if (spark != mSparks[1]) {
+            mSparks[1].setImageResource(R.drawable.spark2);
+        }
+        if (spark != mSparks[2]) {
+            mSparks[2].setImageResource(R.drawable.spark3);
+        }
+        if (spark != mSparks[3]) {
+            mSparks[3].setImageResource(R.drawable.spark4);
+        }
+    }
+
 
     private void setupStartNavigationButton() {
         fabStartNavigation = findViewById(R.id.fabStartNavigate);
@@ -297,7 +347,6 @@ public class ExpandablePumpRowView extends RelativeLayout {
         viewHolder.tvLocation = (TextView)findViewById(R.id.tvPumpLocation);
         viewHolder.tvPumpDistance = (TextView)findViewById(R.id.tvPumpDistance);
         viewHolder.tvFlavor = (TextView)findViewById(R.id.tvFlavor);
-        viewHolder.tvMostRecentUpdate = (TextView)findViewById(R.id.tvMostRecentUpdate);
         viewHolder.ivStatusIndicator = (ImageView)findViewById(R.id.ivPumpStatusIndicator);
     }
 
@@ -345,7 +394,6 @@ public class ExpandablePumpRowView extends RelativeLayout {
         TextView tvLocation;
         TextView tvPumpDistance;
         TextView tvFlavor;
-        TextView tvMostRecentUpdate;
         ImageView ivStatusIndicator;
     }
 }

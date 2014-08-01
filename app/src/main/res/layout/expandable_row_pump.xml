@@ -89,30 +89,56 @@
 
         <RelativeLayout
             android:id="@+id/vgDetailsContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="300dp"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
             android:layout_below="@id/pumpStatusContainer">
-            <TextView
-                android:id="@+id/tvMostRecentUpdate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:textColor="@color/textGray"
-                android:textStyle="italic"
-                android:textSize="14dp"
-                android:text="..."/>
            <TextView
                android:id="@+id/tvFlavor"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_margin="5dp"
                android:textColor="@color/textBlack"
-               android:layout_below="@id/tvMostRecentUpdate"
                android:textSize="14dp"
                android:text="@string/default_pump_flavor_text"/>
+
+            <ImageView
+                android:id="@+id/spark1"
+                android:layout_centerHorizontal="true"
+                android:layout_width="@dimen/sparkWidth"
+                android:layout_height="@dimen/sparkHeight"
+                android:layout_below="@id/tvFlavor"
+                android:src="@drawable/spark1"
+                android:scaleType="centerInside"/>
+            <ImageView
+                android:id="@+id/spark2"
+                android:layout_centerHorizontal="true"
+                android:layout_width="@dimen/sparkWidth"
+                android:layout_height="@dimen/sparkHeight"
+                android:layout_below="@id/spark1"
+                android:src="@drawable/spark2"
+                android:scaleType="centerInside"/>
+            <ImageView
+                android:id="@+id/spark3"
+                android:layout_centerHorizontal="true"
+                android:layout_width="@dimen/sparkWidth"
+                android:layout_height="@dimen/sparkHeight"
+                android:layout_below="@id/spark2"
+                android:src="@drawable/spark3"
+                android:scaleType="centerInside"/>
+            <ImageView
+                android:id="@+id/spark4"
+                android:layout_centerHorizontal="true"
+                android:layout_width="@dimen/sparkWidth"
+                android:layout_height="@dimen/sparkHeight"
+                android:layout_below="@id/spark3"
+                android:src="@drawable/spark4"
+                android:scaleType="centerInside"/>
+
         </RelativeLayout>
+
     </RelativeLayout>
 
+    <!-- Blue navigation overlay -->
     <RelativeLayout
         android:id="@+id/viewToBeRevealed"
         android:visibility="gone"
