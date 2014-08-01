@@ -25,7 +25,7 @@ import java.text.DecimalFormat;
 
 public class ExpandablePumpRowView extends RelativeLayout {
 
-    public static final int TARGET_DETAILS_HEIGHT = 900;
+    public static final int TARGET_DETAILS_HEIGHT = 600;
     public static final int ANIMATE_IN_DURATION_MILLIS = 300;
     public static final int ANIMATE_OUT_DURATION_MILLIS = 500;
     public static final int CIRCULAR_REVEAL_DURATION_NAVIGATE = 500;

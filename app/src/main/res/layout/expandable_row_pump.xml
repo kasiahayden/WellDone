@@ -54,21 +54,6 @@
             android:text="Some random place."/>
 
 
-        <TextView
-            android:id="@+id/tvPumpDistance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="12dp"
-
-            android:textColor="@color/wellDoneBlue"
-            android:fontFamily="sans-serif-light"
-            android:textSize="10dp"
-            android:text="10 km" />
-
-
         <ImageView
             android:id="@+id/ivGraphWord"
             android:layout_width="wrap_content"
@@ -87,6 +72,8 @@
             android:fontFamily="sans-serif-light"
             android:text="14.0L/hr"/>
 
+
+        <!-- Sparks container -->
         <RelativeLayout
             android:id="@+id/vgDetailsContainer"
             android:layout_width="match_parent"
@@ -100,13 +87,25 @@
                android:textColor="@color/textBlack"
                android:textSize="14dp"
                android:text="@string/default_pump_flavor_text"/>
+            <View
+                android:id="@+id/sparkTopLayoutGuide"
+                android:layout_below="@id/tvFlavor"
+                android:layout_width="match_parent"
+                android:layout_height="1px"/>
 
+            <ImageView
+                android:layout_width="270dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="36dp"
+                android:layout_marginTop="8dp"
+                android:layout_alignTop="@id/sparkTopLayoutGuide"
+                android:src="@drawable/timeslider_july18"/>
             <ImageView
                 android:id="@+id/spark1"
                 android:layout_centerHorizontal="true"
                 android:layout_width="@dimen/sparkWidth"
                 android:layout_height="@dimen/sparkHeight"
-                android:layout_below="@id/tvFlavor"
+                android:layout_below="@id/sparkTopLayoutGuide"
                 android:src="@drawable/spark1"
                 android:scaleType="centerInside"/>
             <ImageView
@@ -206,5 +205,16 @@
 
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/tvPumpDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/vgFloatingActionButtonContainer"
+        android:layout_alignLeft="@id/vgFloatingActionButtonContainer"
+        android:layout_marginLeft="12dp"
+        android:textColor="@color/wellDoneBlue"
+        android:fontFamily="sans-serif-light"
+        android:textSize="10dp"
+        android:text="10 km" />
 
 </RelativeLayout>
