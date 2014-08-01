@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Well 13 -> Add a Report"
+        android:text="Well 13 > Add a Report"
         android:textColor="@android:color/white"
         android:textSize="24dp"
         android:fontFamily="sans-serif-light"
@@ -41,10 +41,10 @@
             android:layout_toRightOf="@id/ivWrenchCreate"
             android:layout_marginLeft="@dimen/createReportRowPadding"
             android:layout_alignBottom="@id/ivWrenchCreate"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             android:textColor="@color/createLightGrayText"
             android:text="Status Update"
-            android:textSize="14dp"/>
+            android:textSize="16dp"/>
 
         <TextView
             android:id="@+id/tvCurrentlyLabel"
@@ -62,7 +62,7 @@
             android:layout_below="@id/tvCurrentlyLabel"
             android:layout_alignLeft="@id/tvCurrentlyLabel"
             android:layout_width="match_parent"
-            android:layout_height="100dp"/>
+            android:layout_height="60dp"/>
 
         <View
             android:layout_width="wrap_content"
@@ -87,54 +87,84 @@
             android:layout_alignBottom="@id/icGearCreate"
             android:layout_alignLeft="@id/tvStatusUpdateLabel"
             android:textColor="@color/createLightGrayText"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="10dp"
             android:text="Repairs Made"
-            android:textSize="14dp"/>
+            android:textSize="16dp"/>
+
+        <ImageView
+            android:id="@+id/ivCheckPumpHandle"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_below="@id/icGearCreate"
+            android:layout_alignLeft="@id/icGearCreate"
+            android:visibility="invisible"
+            android:src="@drawable/ic_report_check_gray"/>
 
         <TextView
             android:id="@+id/tvPumpHandleSelector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvRepairsMadeLabel"
-            android:layout_alignLeft="@id/icGearCreate"
+            android:layout_alignBottom="@id/ivCheckPumpHandle"
+            android:layout_alignLeft="@id/tvStatusUpdateLabel"
             android:textColor="@color/createDarkGrayText"
-            android:drawableLeft="@drawable/ic_check_create"
             android:drawablePadding="16dp"
             android:layout_marginBottom="4dp"
+            android:onClick="onRepairTypeSelectorClicked"
+            android:clickable="true"
             android:text="Pump Handle"
             android:textSize="18dp"/>
+
+        <ImageView
+            android:id="@+id/ivCheckCloggedPipe"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_below="@id/ivCheckPumpHandle"
+            android:layout_alignLeft="@id/ivCheckPumpHandle"
+            android:visibility="invisible"
+            android:src="@drawable/ic_report_check_gray"/>
 
         <TextView
             android:id="@+id/tvCloggedPipeSelector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvPumpHandleSelector"
-            android:layout_alignLeft="@id/icGearCreate"
+            android:layout_alignBottom="@id/ivCheckCloggedPipe"
             android:textColor="@color/createDarkGrayText"
-            android:drawableLeft="@drawable/ic_check_create"
-            android:drawablePadding="16dp"
+            android:layout_alignLeft="@id/tvStatusUpdateLabel"
             android:layout_marginBottom="4dp"
+            android:onClick="onRepairTypeSelectorClicked"
+            android:clickable="true"
             android:text="Clogged Pipe / Spout"
             android:textSize="18dp"/>
+
+        <ImageView
+            android:id="@+id/ivCheckBrokenPipe"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_below="@id/ivCheckCloggedPipe"
+            android:layout_alignLeft="@id/ivCheckCloggedPipe"
+            android:visibility="invisible"
+            android:src="@drawable/ic_report_check_gray"/>
 
         <TextView
             android:id="@+id/tvBrokenPipeSelector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvCloggedPipeSelector"
-            android:layout_alignLeft="@id/icGearCreate"
+            android:layout_alignLeft="@id/tvStatusUpdateLabel"
+            android:layout_alignBottom="@id/ivCheckBrokenPipe"
             android:textColor="@color/createDarkGrayText"
-            android:drawableLeft="@drawable/ic_check_create"
-            android:drawablePadding="16dp"
             android:layout_marginBottom="4dp"
+            android:onClick="onRepairTypeSelectorClicked"
+            android:clickable="true"
             android:text="Broken / Cracked Pipe"
             android:textSize="18dp"/>
 
         <View
+            android:id="@+id/repairsBottomLayoutGuide"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
             android:layout_below="@id/tvBrokenPipeSelector"
             android:background="@color/backgroundBorderGray"
+            android:layout_marginTop="8dp"
             android:layout_marginLeft="24dp"
             android:layout_marginRight="24dp"/>
 
@@ -144,7 +174,7 @@
             android:layout_height="@dimen/create_report_side_icon_size"
             android:src="@drawable/ic_notebook"
             android:layout_alignLeft="@id/ivWrenchCreate"
-            android:layout_below="@id/tvBrokenPipeSelector"
+            android:layout_below="@id/repairsBottomLayoutGuide"
             android:layout_marginTop="8dp"/>
 
         <EditText
@@ -153,15 +183,8 @@
             android:layout_height="wrap_content"
             android:hint="Write any other notes here"
             android:layout_toRightOf="@id/icNotebook"
-            android:layout_below="@id/tvBrokenPipeSelector"/>
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_below="@id/etNotesField"
-            android:background="@color/backgroundBorderGray"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"/>
+            android:layout_marginLeft="12dp"
+            android:layout_below="@id/repairsBottomLayoutGuide"/>
 
     </RelativeLayout>
 
@@ -174,10 +197,16 @@
         android:layout_marginRight="20dp"
         android:layout_alignParentRight="true"
 
-        android:background="@drawable/ripple_green"
+        android:background="@drawable/white_ripple"
         android:stateListAnimator="@anim/button_animator"
         android:elevation="8dp"
-        android:src="@drawable/ic_paperplanes"/>
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_sendreport_enabled"/>
 
+    <ProgressBar
+        android:id="@+id/pbLoading"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

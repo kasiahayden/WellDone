@@ -16,6 +16,8 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,9 +58,21 @@ public class CreateReportActivity extends Activity {
 
     private int mCurrentStatusIndex;
 
-    private View fabSubmitReport;
+    private ImageButton fabSubmitReport;
 
-    private TextView tvPumpHandleSelector;
+
+
+    private TextView mPumpHandleSelector;
+    private ImageView mPumpHandleCheck;
+
+    private TextView mCloggedPipeSelector;
+    private ImageView mCloggedPipeCheck;
+
+    private TextView mBrokenPipeSelector;
+    private ImageView mBrokenPipeCheck;
+
+
+
     private EditText mAdditionalNotesField;
 
     private ProgressBar pbLoading;
@@ -73,15 +87,26 @@ public class CreateReportActivity extends Activity {
         vpUpdateStatus.setPageMargin(-200);
         vpUpdateStatus.setOnPageChangeListener(getOnPageChangeListener());
         pbLoading = (ProgressBar)findViewById(R.id.pbLoading);
-        tvPumpHandleSelector = (TextView)findViewById(R.id.tvPumpHandleSelector);
+        populateRepairTypeFields();
         mAdditionalNotesField = (EditText)findViewById(R.id.etNotesField);
         setupSubmitReportButton();
 
         getDataFromIntent();
     }
 
+    private void populateRepairTypeFields() {
+        mPumpHandleSelector = (TextView)findViewById(R.id.tvPumpHandleSelector);
+        mPumpHandleCheck = (ImageView)findViewById(R.id.ivCheckPumpHandle);
+
+        mCloggedPipeCheck = (ImageView)findViewById(R.id.ivCheckCloggedPipe);
+        mCloggedPipeSelector = (TextView)findViewById(R.id.tvCloggedPipeSelector);
+
+        mBrokenPipeCheck = (ImageView)findViewById(R.id.ivCheckBrokenPipe);
+        mBrokenPipeSelector = (TextView)findViewById(R.id.tvBrokenPipeSelector);
+    }
+
     private void setupSubmitReportButton() {
-        fabSubmitReport = findViewById(R.id.fabSubmitReport);
+        fabSubmitReport = (ImageButton)findViewById(R.id.fabSubmitReport);
 
         int size = getResources().getDimensionPixelSize(R.dimen.fab_size);
         Outline outline = new Outline();
@@ -90,9 +115,57 @@ public class CreateReportActivity extends Activity {
         fabSubmitReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                onSubmitReport();
             }
         });
+    }
+
+    public void onRepairTypeSelectorClicked(View v) {
+        TextView clickedView = (TextView)v;
+        if (clickedView == mBrokenPipeSelector) {
+            mBrokenPipeCheck.setVisibility(View.VISIBLE);
+            disableChecksBeside(mBrokenPipeCheck);
+        }
+        else if (clickedView == mCloggedPipeSelector) {
+            mCloggedPipeCheck.setVisibility(View.VISIBLE);
+            disableChecksBeside(mCloggedPipeCheck);
+        }
+        else {
+            mPumpHandleCheck.setVisibility(View.VISIBLE);
+            disableChecksBeside(mPumpHandleCheck);
+        }
+    }
+
+    private void disableChecksBeside(ImageView someCheck) {
+        ImageView[] imageViews = {mPumpHandleCheck, mCloggedPipeCheck, mBrokenPipeCheck};
+        for (ImageView iv : imageViews) {
+            if (iv != someCheck) {
+                
+                iv.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    private void setFirstVisibleChecksToGreen() {
+        ImageView[] imageViews = {mPumpHandleCheck, mCloggedPipeCheck, mBrokenPipeCheck};
+        for (ImageView iv : imageViews) {
+            if (iv.getVisibility() == View.VISIBLE) {
+                iv.setImageResource(R.drawable.ic_report_check_green);
+            }
+        }
+    }
+
+
+    private int getPagerStatusValueForStatusString(String statusString) {
+        if (statusString.equalsIgnoreCase("Broken")) {
+            return 0;
+        }
+        else if (statusString.equalsIgnoreCase("Fix in progress")) {
+            return 1;
+        }
+        else {
+            return 2;
+        }
     }
 
     private String getCurrentPumpStatusString() {
@@ -116,7 +189,7 @@ public class CreateReportActivity extends Activity {
 
             @Override
             public void onPageSelected(int i) {
-
+                mCurrentStatusIndex = i;
             }
 
             @Override
@@ -179,6 +252,7 @@ public class CreateReportActivity extends Activity {
     }
 
     private void onSubmitReport() {
+        setFirstVisibleChecksToGreen();
         final String pumpStatusToBeReported = getCurrentPumpStatusString();
         final String reportNotes = mAdditionalNotesField.getText().toString();
         final String reportTitle = StringUtil.getConcatenatedString("Pump_",
@@ -197,9 +271,16 @@ public class CreateReportActivity extends Activity {
                 reportTitle,
                 reportNotes);
 
+        pinReportLocally(reportToBePersisted, null);
+
         pbLoading.setVisibility(ProgressBar.VISIBLE);
-        String singidaNearARoad = "-6.911844,33.591054";
-        askAboutPumpNavigation(this, singidaNearARoad, pumpToNavigateToAfterReporting, "Report submitted!", true);
+
+        disableSubmitReportButton();
+    }
+
+    private void disableSubmitReportButton() {
+        fabSubmitReport.setImageResource(R.drawable.ic_sendreport_disabled);
+        fabSubmitReport.setClickable(false);
     }
 
 
@@ -238,7 +319,7 @@ public class CreateReportActivity extends Activity {
     private void getDataFromIntent() {
 
         final String pumpObjectId = getIntent().getStringExtra(EXTRA_PUMP_OBJECT_ID);
-        Log.d("CreateReportActivity", "pumpObjectId passed in intents: " + pumpObjectId);
+        Log.d("CreateReportActivity", String.format("Retrieving pumpObjectId = %s", pumpObjectId));
         pumpToBeReported = PumpPersister.getPumpByObjectIdSyncly(pumpObjectId);
         if (pumpToBeReported == null) {
             Toast.makeText(this, "No pump selected for creating report!", Toast.LENGTH_SHORT).show();
@@ -246,15 +327,13 @@ public class CreateReportActivity extends Activity {
         }
         Log.d("DBG", String.format("Working with pump: %s %s", pumpToBeReported.getObjectId(), pumpToBeReported.getName()));
 
-        final String nextPumpObjectId = getIntent().getStringExtra("nextPumpObjectId");
-        pumpToNavigateToAfterReporting = PumpPersister.getPumpByObjectIdSyncly(nextPumpObjectId);
-
-        updatePumpStatusSpinner();
+        updatePumpStatusSpinner(pumpToBeReported.getCurrentStatus());
     }
 
-    private void updatePumpStatusSpinner() {
-        mCurrentStatusIndex = 0;
+    private void updatePumpStatusSpinner(String newStatus) {
+        mCurrentStatusIndex = getPagerStatusValueForStatusString(newStatus);
         /// Scroll to the right position
+        vpUpdateStatus.setCurrentItem(mCurrentStatusIndex, true);
     }
 
     // Persist a given report locally and check if it was pinned
