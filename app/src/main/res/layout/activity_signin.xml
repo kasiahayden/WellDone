@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/offwhite"
+    android:background="@drawable/turquiose_water_kids"
     android:layout_height="match_parent">
 
-    <ProgressBar
+   <ProgressBar
         android:id="@+id/pbLoading"
         android:visibility="invisible"
         android:layout_width="wrap_content"
@@ -12,27 +12,20 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 
-    <ImageView
-        android:id="@+id/ivAppLogoBig"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
-        android:src="@drawable/ic_welldoneblue"
-        android:contentDescription="@android:color/transparent" />
-
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ivAppLogoBig"
-        android:layout_marginLeft="24dp"
+        android:background="@drawable/edittext_underline"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="60dp"
         android:layout_marginRight="24dp"
         android:gravity="left|bottom"
-        android:textColor="@color/textBlack"
+        android:textColor="@color/offwhite"
+        android:textColorHint="@color/offwhite"
         android:hint="@string/username_hint"
         android:inputType="textAutoComplete"
-        android:textSize="14sp"
+        android:textSize="28sp"
         android:singleLine="true">
         <requestFocus/>
     </EditText>
@@ -41,33 +34,34 @@
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etUsername"
-        android:layout_marginTop="16dp"
-        android:layout_alignLeft="@+id/etUsername"
-        android:layout_alignRight="@+id/etUsername"
-        android:textColor="@color/textBlack"
+        android:background="@drawable/edittext_underline"
+        android:textColor="@color/offwhite"
+        android:textColorHint="@color/offwhite"
         android:ems="10"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:gravity="left|bottom"
         android:hint="@string/password_hint"
         android:singleLine="true"
-        android:textSize="14sp"
-        android:inputType="textPassword"/>
+        android:textSize="28sp"
+        android:inputType="textPassword"
+        android:layout_below="@+id/etUsername"
+        android:layout_alignStart="@+id/etUsername"
+        android:layout_alignEnd="@+id/etUsername"/>
 
     <Button
         android:id="@+id/btnSignIn"
         android:layout_width="170dp"
-        android:layout_height="35dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
+        android:layout_height="60dp"
         android:background="@drawable/new_report"
         android:focusable="false"
         android:text="@string/signin_text"
         android:onClick="onSignIn"
         android:textColor="@color/offwhite"
         android:textSize="14sp"
-        android:layout_below="@+id/etPassword" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true" />
 
 
 </RelativeLayout>
