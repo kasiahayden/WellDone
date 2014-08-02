@@ -38,7 +38,7 @@ public class DemoSMSReceiver extends BroadcastReceiver
                 str += "\n";
             }
 
-            str = "eyAicHVtcE9iamVjdElkIiA6ICJoMWhub3ZMczJaIiwgInN0YXR1cyI6ICJCcm9rZW4ifQ==";
+            //str = "eyAicHVtcE9iamVjdElkIiA6ICJoMWhub3ZMczJaIiwgInN0YXR1cyI6ICJCcm9rZW4ifQ==";
             String textBody = msgs[0].getMessageBody().toString();
             try {
                 extractEncodedInformation(textBody, context);

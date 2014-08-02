@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,23 +30,28 @@ public class SmsReceiver extends BroadcastReceiver {
         Bundle bundle = intent.getExtras();
         SmsMessage[] msgs = null;
         String str = "";
+        JSONObject textBody = null;
         if (bundle != null)
         {
-            //---retrieve the SMS message received---
+
+
             Object[] pdus = (Object[]) bundle.get("pdus");
             msgs = new SmsMessage[pdus.length];
-            for (int i=0; i<msgs.length; i++){
-                msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-                str += "SMS from " + msgs[i].getOriginatingAddress();
-                str += " :";
-                str += msgs[i].getMessageBody().toString();
-                str += "\n";
+            msgs[0] = SmsMessage.createFromPdu((byte[]) pdus[0]);
+            //str = "eyAicHVtcE9iamVjdElkIiA6ICJoMWhub3ZMczJaIiwgInN0YXR1cyI6ICJCcm9rZW4ifQ==";
+            String strBase64 = msgs[0].getMessageBody().toString();
+            try {
+                textBody = extractEncodedInformation(strBase64, context);
             }
-            //---display the new SMS message---
-            Toast.makeText(context, "SmsReceiver:" + str, Toast.LENGTH_SHORT).show();
-            Log.d("SmsReceiver", str);
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-            // Example sms: "Broken: Pump 16. Location: 37.7858, -122.4079. ID: dDccN2A8K3"
+            //---display the new SMS message---
+            Toast.makeText(context, "SmsReceiver:" + textBody.toString(), Toast.LENGTH_SHORT).show();
+            Log.d("SmsReceiver", textBody.toString());
+
+            /*// Example sms: "Broken: Pump 16. Location: 37.7858, -122.4079. ID: dDccN2A8K3"
             Pattern OBJ_ID_PATTERN = Pattern.compile("ID: (\\w+)");
             Matcher m = OBJ_ID_PATTERN.matcher(str);
             String objectId = null;
@@ -52,12 +59,39 @@ public class SmsReceiver extends BroadcastReceiver {
                 objectId = m.group(1);
             }
             Log.d("SmsReceiver", "match: " + objectId);
+
             if (objectId != null) {
                 Intent i = new Intent(context, PumpDetails.class);
                 i.putExtra("pumpObjectId", objectId);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.getApplicationContext().startActivity(i);
+            }*/
+
+
+            //---pass object id as intent to PumpBrowser---
+            String objectId = null;
+            String status = null;
+            try {
+                objectId = textBody.getString(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID);
+                status = textBody.getString("status");
+
+                Intent i = new Intent();
+                i.setAction(PumpBrowser.RECEIVER_PUMP_UPDATE);
+                i.addCategory(Intent.CATEGORY_DEFAULT);
+                i.putExtra(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID,
+                        objectId);
+                i.putExtra("status", status);
+                context.sendBroadcast(i);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+
+            /*Intent i = new Intent(context, PumpBrowser.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.putExtra(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, objectId);
+            context.getApplicationContext().startActivity(i);*/
+
+
 
         }
     }
@@ -99,4 +133,18 @@ public class SmsReceiver extends BroadcastReceiver {
             Log.d(TAG, "Exception: " + e.getMessage());
         }
     }*/
+
+    public static JSONObject extractEncodedInformation(String str, Context context) throws JSONException {
+        String obj = new String(Base64.decode(str, 0));
+        JSONObject decoded = new JSONObject(obj);
+        return decoded;
+    }
+
+    /*Intent i = new Intent();
+    i.setAction(PumpBrowser.RECEIVER_PUMP_UPDATE);
+    i.addCategory(Intent.CATEGORY_DEFAULT);
+    i.putExtra(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID,
+            decoded.getString(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID));
+    i.putExtra("status", decoded.getString("status"));
+    context.sendBroadcast(i);*/
 }

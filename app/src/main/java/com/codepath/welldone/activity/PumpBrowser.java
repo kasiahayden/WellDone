@@ -87,6 +87,7 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                Log.d(PumpBrowser.class.toString(), "Received an intent");
                 String pumpObjectId = intent.getStringExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID);
                 String newStatus = intent.getStringExtra("status");
                 Pump p = PumpPersister.getPumpByObjectIdSyncly(pumpObjectId);
@@ -94,11 +95,12 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
                     p.setCurrentStatus(newStatus);
                     p.saveEventually();
                     Log.d("DBG", String.format("Pump %s is now: %s", p.getObjectId(), p.getCurrentStatus()));
+                    mPager.setCurrentItem(1, true); // 1 == PumpMapFragment
+                    getPumpMapFragment().setCurrentlyDisplayedPump(p);
                 }
                 else {
                     Log.d("DBG", String.format("Failed to load pump with ID %s", pumpObjectId));
                 }
-
             }
         };
         IntentFilter intentFilter = new IntentFilter();
@@ -106,13 +108,6 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(mReceiver, intentFilter);
 
-
-        try {
-            DemoSMSReceiver.extractEncodedInformation("eyAicHVtcE9iamVjdElkIiA6ICJoMWhub3ZMczJaIiwgInN0YXR1cyI6ICJicm9rZW4ifQ==", this);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
