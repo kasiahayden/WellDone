@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.welldone.ExpandablePumpRowView;
+import com.codepath.welldone.ExternalNavigation;
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.PumpListListener;
 import com.codepath.welldone.R;
@@ -27,7 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
-public class PumpMapFragment extends Fragment {
+public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.PumpRowDelegate {
     public static final String EXTRA_PUMP_ID_TO_DISPLAY = "pumpIDToDisplay";
     public static final double MAP_DISPLAY_DELTA = 0.06;
     public Pump mPump;
@@ -160,6 +161,7 @@ public class PumpMapFragment extends Fragment {
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
                 final ExpandablePumpRowView pumpRow = new ExpandablePumpRowView(getActivity(), null);
+                pumpRow.rowDelegate = this;
                 final Pump thePump = mPumpListAdapter.getPumpAtIndex(position);
                 pumpRow.mPump = thePump;
                 pumpRow.updateSubviews( currentUserLocation);
@@ -221,5 +223,10 @@ public class PumpMapFragment extends Fragment {
 
     public void recenterMapOnPump(Pump currentPump) {
         centerMapOnPump(currentPump);
+    }
+
+    @Override
+    public void onPumpNavigateClicked(Pump pumpThatWasClicked) {
+        ExternalNavigation.askAboutPumpNavigation(getActivity(), ExternalNavigation.HARD_CODED_START_LOCAITON, pumpThatWasClicked,"Whatever", false);
     }
 }

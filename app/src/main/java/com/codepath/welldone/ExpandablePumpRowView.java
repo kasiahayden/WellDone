@@ -39,11 +39,17 @@ public class ExpandablePumpRowView extends RelativeLayout {
     View mNavigationOverlayViewToBeRevealed;
 
     ImageView mSparks[];
-
+    // average output, precipitation, water pressure, battery charge
 
     private DecimalFormat df = new DecimalFormat("#.#");
 
     public Pump mPump;
+
+    public interface PumpRowDelegate {
+        public void onPumpNavigateClicked(Pump pumpThatWasClicked);
+    }
+
+    public PumpRowDelegate rowDelegate;
 
     public ExpandablePumpRowView(final Context context, AttributeSet attrs){
         super(context, attrs);
@@ -55,7 +61,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
         viewHolder = new ViewHolder();
         populateViewHolder();
         setupEndNavigationButton();
-        setupStartNavigationButton();
+        setupClaimPumpButton();
         fabAddReport = findViewById(R.id.fabAddReport);
         fabAddReport.setOnClickListener(new OnClickListener() {
             @Override
@@ -119,8 +125,8 @@ public class ExpandablePumpRowView extends RelativeLayout {
     }
 
 
-    private void setupStartNavigationButton() {
-        fabStartNavigation = findViewById(R.id.fabStartNavigate);
+    private void setupClaimPumpButton() {
+        fabStartNavigation = findViewById(R.id.fabStarPump);
         fabStartNavigation.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,6 +154,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
         fabEndNavigation.setOutline(outline);
         fabAddReport.setOutline(outline);
     }
+
     private void beginAnimationToRevealEndNavFAB() {
         int xpos = 0;
         int ypos = 0;
@@ -350,6 +357,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
         viewHolder.ivStatusIndicator = (ImageView)findViewById(R.id.ivPumpStatusIndicator);
     }
 
+    /// @require mPump has already been set
     public void updateSubviews(ParseGeoPoint currentUserLocation) {
 
         String mostOfTheTimeCorrectRelativeTime = DateTimeUtil.getRelativeTimeofTweet(mPump.getUpdatedAt().toString());
@@ -367,7 +375,13 @@ public class ExpandablePumpRowView extends RelativeLayout {
         final Double distanceFromOrigin =
                 currentUserLocation.distanceInKilometersTo(mPump.getLocation());
         viewHolder.tvPumpDistance.setText(
-                String.format("%s km", df.format(distanceFromOrigin.doubleValue())));
+                String.format("%s km away", df.format(distanceFromOrigin.doubleValue())));
+        viewHolder.tvPumpDistance.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rowDelegate.onPumpNavigateClicked(mPump);
+            }
+        });
 
         setupLocationLabel(mPump);
     }
