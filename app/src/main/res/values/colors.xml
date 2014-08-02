@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="offwhite">#FCFCFC</color> <!-- 252, 252, 252-->
-    <color name="wellDoneBlue">#428be5</color>
+    <color name="wellDoneBlue">#21ace3</color>
     <color name="textGray">#999999</color>
     <color name="textBlack">#666666</color>
     <color name="textRed">#f20033</color>

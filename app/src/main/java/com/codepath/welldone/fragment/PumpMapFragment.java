@@ -161,7 +161,7 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
                 final ExpandablePumpRowView pumpRow = new ExpandablePumpRowView(getActivity(), null);
-                pumpRow.rowDelegate = this;
+                pumpRow.rowDelegate = PumpMapFragment.this;
                 final Pump thePump = mPumpListAdapter.getPumpAtIndex(position);
                 pumpRow.mPump = thePump;
                 pumpRow.updateSubviews( currentUserLocation);
@@ -170,7 +170,7 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
                 pumpRow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        pumpRow.toggleExpandedState();
+                        pumpRow.onRowClick();
                     }
                 });
 

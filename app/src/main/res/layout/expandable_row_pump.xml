@@ -166,7 +166,7 @@
             android:layout_marginLeft="28dp"
             android:layout_marginTop="4dp"
             android:textSize="18dp"
-            android:text="Well 14 is 2 Miles Away"/>
+            android:text="Well 14 has been claimed"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -175,9 +175,10 @@
             android:fontFamily="sans-serif-light"
             android:textSize="18dp"
             android:layout_below="@id/tvLocationDescription"
-            android:text="Follow the route above"/>
+            android:text="Other technicians have been notified that this well's repairs are in progress"/>
     </RelativeLayout>
 
+    <!-- Action buttons -->
     <FrameLayout
         android:id="@+id/vgFloatingActionButtonContainer"
         android:layout_width="56dp"
@@ -189,30 +190,32 @@
             android:id="@+id/fabStarPump"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:padding="10dp"
             android:background="@drawable/dark_blue_ripple"
             android:stateListAnimator="@anim/button_animator"
             android:scaleType="fitXY"
             android:src="@drawable/ic_star_outline"/>
 
         <ImageButton
-            android:id="@+id/fabEndNavigate"
+            android:id="@+id/fabStarredIndicator"
             android:visibility="gone"
+            android:padding="0dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:background="@drawable/white_ripple"
             android:stateListAnimator="@anim/button_animator"
-            android:src="@drawable/ic_graycheck"/>
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_star_blue"/>
 
         <ImageButton
             android:id="@+id/fabAddReport"
             android:visibility="gone"
+            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:background="@drawable/ripple_green"
             android:stateListAnimator="@anim/button_animator"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_addreport64"/>
 
     </FrameLayout>

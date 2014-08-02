@@ -2,7 +2,7 @@
 
     <style name="WellDoneBaseTheme" parent="android:Theme.Material.Light">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:colorPrimaryDark">#306097</item>
+        <item name="android:colorPrimaryDark">#0E88B5</item>
         <item name="android:colorPrimary">@color/wellDoneBlue</item>
         <item name="android:titleTextStyle">@style/WellDone.ActionBar.TitleTextStyle</item>
     </style>
@@ -18,7 +18,7 @@
 
     <style name="PumpBrowserTheme" parent="@style/WellDoneBaseTheme">
         <item name="android:actionBarStyle">@style/BlueActionBar</item>
-        <item name="android:colorPrimaryDark">#306097</item>
+        <item name="android:colorPrimaryDark">#0E88B5</item>
     </style>
 
     <style name="BlueActionBar" parent="android:Widget.Material.Light.ActionBar">
