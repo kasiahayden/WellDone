@@ -1,9 +1,11 @@
 package com.codepath.welldone.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Outline;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -46,6 +48,8 @@ public class CreateReportActivity extends Activity {
     public static final int COMPRESSION_FACTOR = 50;
     public static final String PHOTO_FILE_EXTENSION = ".jpg";
     public static final String EXTRA_PUMP_OBJECT_ID = "pumpObjectId";
+    public static final int CREATE_REPORT_SUCCESSFUL_OR_NOT_REQUEST_CODE = 1234;
+    public static final int CREATE_REPORT_SUCCESSFUL_OR_NOT_REQUEST_CODE_SUCCESS = RESULT_FIRST_USER;
 
     ViewPager mUpdateStatusPager;
     private Pump pumpToBeReported;
@@ -201,11 +205,21 @@ public class CreateReportActivity extends Activity {
                 }
                 if (i == 1) {
                     resetTextColorOnPagerSubviews();
-                    mInProgressPagerSubview.setTextColor(getResources().getColor(R.color.createDarkGrayText));
+                    if (mInProgressPagerSubview != null) {
+                        mInProgressPagerSubview.setTextColor(getResources().getColor(R.color.createDarkGrayText));
+                    }
+                    else {
+                        Log.e("DBG", "Warning. selecting item before pager is populated.");
+                    }
                 }
                 else if (i == 2) {
                     resetTextColorOnPagerSubviews();
-                    mOperationalPagerSubview.setTextColor(getResources().getColor(R.color.createDarkGrayText));
+                    if (mOperationalPagerSubview != null) {
+                        mOperationalPagerSubview.setTextColor(getResources().getColor(R.color.createDarkGrayText));
+                    }
+                    else {
+                        Log.e("DBG", "Warning. selecting item before pager is populated.");
+                    }
                 }
             }
 
@@ -218,9 +232,15 @@ public class CreateReportActivity extends Activity {
 
     private void resetTextColorOnPagerSubviews() {
         int disabledColor = getResources().getColor(R.color.createLightGrayText);
-        mBrokenPagerSubview.setTextColor(disabledColor);
-        mInProgressPagerSubview.setTextColor(disabledColor);
-        mOperationalPagerSubview.setTextColor(disabledColor);
+        if (mBrokenPagerSubview != null) {
+            mBrokenPagerSubview.setTextColor(disabledColor);
+        }
+        if (mInProgressPagerSubview != null) {
+            mInProgressPagerSubview.setTextColor(disabledColor);
+        }
+        if (mOperationalPagerSubview != null) {
+            mOperationalPagerSubview.setTextColor(disabledColor);
+        }
     }
 
     private PagerAdapter getPagerAdapter() {
@@ -304,6 +324,17 @@ public class CreateReportActivity extends Activity {
         pbLoading.setVisibility(ProgressBar.VISIBLE);
 
         disableInterfaceElements();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                /// TODO Put this in a more sensible place
+                Intent result = new Intent();
+                result.putExtra(PumpBrowser.EXTRA_PUMP_OBJECT_ID, pumpToBeReported.getObjectId());
+                setResult(CREATE_REPORT_SUCCESSFUL_OR_NOT_REQUEST_CODE_SUCCESS, result);
+                finish();
+            }
+        }, 1000);
     }
 
     private void disableInterfaceElements() {
@@ -374,6 +405,7 @@ public class CreateReportActivity extends Activity {
                     pbLoading.setVisibility(ProgressBar.INVISIBLE);
 
                 } else {
+
                     // We should never get here! But just in case we do, show a toast
                     Log.d("debug", "Report could not be pinned successfully: " + pumpName);
                     Toast.makeText(getApplicationContext(),

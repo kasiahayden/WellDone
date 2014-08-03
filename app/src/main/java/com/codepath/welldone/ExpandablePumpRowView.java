@@ -2,6 +2,7 @@ package com.codepath.welldone;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Outline;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -52,6 +54,34 @@ public class ExpandablePumpRowView extends RelativeLayout {
         if (!mPump.isClaimedByATechnician()) {
             toggleExpandedState();
         }
+    }
+
+    public void updateFieldsToAnimateAndMatchPump(final Pump currentPump) {
+        final ImageView pumpStatusImage = (ImageView)findViewById(R.id.ivPumpStatusIndicator);
+        AlphaAnimation fadeOutIcon = new AlphaAnimation(1.0f, 0.0f);
+        fadeOutIcon.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                pumpStatusImage.setImageResource(currentPump.getDrawableBasedOnStatus());
+                AlphaAnimation fadeInIcon = new AlphaAnimation(0.0f, 1.0f);
+                fadeInIcon.setDuration(1000);
+                fadeInIcon.start();
+                pumpStatusImage.startAnimation(fadeInIcon);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        fadeOutIcon.setDuration(1000);
+        pumpStatusImage.startAnimation(fadeOutIcon);
+
     }
 
     public interface PumpRowDelegate {
@@ -102,9 +132,8 @@ public class ExpandablePumpRowView extends RelativeLayout {
     private void onAddReport(Context context) {
         Intent i = new Intent(context, CreateReportActivity.class);
         i.putExtra(CreateReportActivity.EXTRA_PUMP_OBJECT_ID, mPump.getObjectId());
-        context.startActivity(i);
+        ((Activity)context).startActivityForResult(i, CreateReportActivity.CREATE_REPORT_SUCCESSFUL_OR_NOT_REQUEST_CODE);
     }
-
 
     private void onSparkClicked(View v) {
         ImageView spark = (ImageView)v;
@@ -395,9 +424,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
             viewHolder.tvLastUpdated.setText(String.format("%s ago", mostOfTheTimeCorrectRelativeTime));
         }
         viewHolder.tvFlavor.setText(getResources().getString(R.string.default_pump_flavor_text, mPump.getName(), mPump.getName()));
-        viewHolder.ivStatusIndicator.setImageResource(mPump.isBroken() ?
-                R.drawable.ic_well_broken:
-                R.drawable.ic_well_working);
+        viewHolder.ivStatusIndicator.setImageResource(mPump.getDrawableBasedOnStatus());
 
         final Double distanceFromOrigin =
                 currentUserLocation.distanceInKilometersTo(mPump.getLocation());

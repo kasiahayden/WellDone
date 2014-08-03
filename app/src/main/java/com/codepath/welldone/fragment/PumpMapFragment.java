@@ -154,6 +154,8 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
                         }
                     });
 
+                    pumpRow.setTag(position);
+
                     return pumpRow;
                 }
 
@@ -214,4 +216,10 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
         centerMapOnPump(p);
     }
 
+    public void animateCurrentPumpToUpdateItself(Pump currentPump) {
+//        int index = mPumpListAdapter.getPumpIndexBetweenZeroAndNumberOfPumps(currentPump);
+//        mDetailsPager.setCurrentItem(index, true);
+        ExpandablePumpRowView eprv = (ExpandablePumpRowView)mDetailsPager.findViewWithTag(mDetailsPager.getCurrentItem());
+        eprv.updateFieldsToAnimateAndMatchPump(currentPump);
+    }
 }
