@@ -47,7 +47,7 @@ public class CreateReportActivity extends Activity {
     public static final String PHOTO_FILE_EXTENSION = ".jpg";
     public static final String EXTRA_PUMP_OBJECT_ID = "pumpObjectId";
 
-    ViewPager vpUpdateStatus;
+    ViewPager mUpdateStatusPager;
     private Pump pumpToBeReported;
     private Pump pumpToNavigateToAfterReporting;
 
@@ -67,24 +67,34 @@ public class CreateReportActivity extends Activity {
     private ImageView mBrokenPipeCheck;
 
 
+    private TextView mPumpNameLabel;
+
 
     private EditText mAdditionalNotesField;
 
     private ProgressBar pbLoading;
+
+
+    private TextView mBrokenPagerSubview;
+    private TextView mInProgressPagerSubview;
+    private TextView mOperationalPagerSubview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_report);
-        vpUpdateStatus = (ViewPager)findViewById(R.id.vpUpdateStatus);
-        vpUpdateStatus.setAdapter(getPagerAdapter());
-        vpUpdateStatus.setPageMargin(-200);
-        vpUpdateStatus.setOnPageChangeListener(getOnPageChangeListener());
+        mUpdateStatusPager = (ViewPager)findViewById(R.id.vpUpdateStatus);
+        mUpdateStatusPager.setAdapter(getPagerAdapter());
+        mUpdateStatusPager.setPageMargin(-200);
+        mUpdateStatusPager.setOnPageChangeListener(getOnPageChangeListener());
+        mUpdateStatusPager.setOffscreenPageLimit(2);
         pbLoading = (ProgressBar)findViewById(R.id.pbLoading);
         populateRepairTypeFields();
         mAdditionalNotesField = (EditText)findViewById(R.id.etNotesField);
         setupSubmitReportButton();
+
+        mPumpNameLabel = (TextView)findViewById(R.id.tvPumpNameTopLabelCreateReport);
 
         getDataFromIntent();
     }
@@ -185,6 +195,18 @@ public class CreateReportActivity extends Activity {
             @Override
             public void onPageSelected(int i) {
                 mCurrentStatusIndex = i;
+                if (i == 0) {
+                    resetTextColorOnPagerSubviews();
+                    mBrokenPagerSubview.setTextColor(getResources().getColor(R.color.createDarkGrayText));
+                }
+                if (i == 1) {
+                    resetTextColorOnPagerSubviews();
+                    mInProgressPagerSubview.setTextColor(getResources().getColor(R.color.createDarkGrayText));
+                }
+                else if (i == 2) {
+                    resetTextColorOnPagerSubviews();
+                    mOperationalPagerSubview.setTextColor(getResources().getColor(R.color.createDarkGrayText));
+                }
             }
 
             @Override
@@ -192,6 +214,13 @@ public class CreateReportActivity extends Activity {
 
             }
         };
+    }
+
+    private void resetTextColorOnPagerSubviews() {
+        int disabledColor = getResources().getColor(R.color.createLightGrayText);
+        mBrokenPagerSubview.setTextColor(disabledColor);
+        mInProgressPagerSubview.setTextColor(disabledColor);
+        mOperationalPagerSubview.setTextColor(disabledColor);
     }
 
     private PagerAdapter getPagerAdapter() {
@@ -218,12 +247,15 @@ public class CreateReportActivity extends Activity {
                 final TextView tv = new TextView(CreateReportActivity.this);
                 switch (position) {
                     case 0:
+                        mBrokenPagerSubview = tv;
                         tv.setText("BROKEN");
                         break;
                     case 1:
+                        mInProgressPagerSubview = tv;
                         tv.setText("IN PROGRESS");
                         break;
                     case 2:
+                        mOperationalPagerSubview = tv;
                         tv.setText("FUNCTIONAL");
                         break;
                 }
@@ -235,7 +267,8 @@ public class CreateReportActivity extends Activity {
 
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
-                container.removeView((View)object);
+                Log.d("DBG", String.format("Deleting at index %d", position));
+                container.removeView((View) object);
             }
 
         };
@@ -270,12 +303,21 @@ public class CreateReportActivity extends Activity {
 
         pbLoading.setVisibility(ProgressBar.VISIBLE);
 
-        disableSubmitReportButton();
+        disableInterfaceElements();
     }
 
-    private void disableSubmitReportButton() {
+    private void disableInterfaceElements() {
         fabSubmitReport.setImageResource(R.drawable.ic_sendreport_disabled);
         fabSubmitReport.setClickable(false);
+
+        mPumpHandleSelector.setClickable(false);
+        mCloggedPipeSelector.setClickable(false);
+        mBrokenPipeCheck.setClickable(false);
+
+        mAdditionalNotesField.setEnabled(false);
+
+        mUpdateStatusPager.setEnabled(false);
+
     }
 
     private void getDataFromIntent() {
@@ -290,12 +332,14 @@ public class CreateReportActivity extends Activity {
         Log.d("DBG", String.format("Working with pump: %s %s", pumpToBeReported.getObjectId(), pumpToBeReported.getName()));
 
         updatePumpStatusSpinner(pumpToBeReported.getCurrentStatus());
+        mPumpNameLabel.setText(String.format("%s > Add Report", pumpToBeReported.getAddress()));
+
     }
 
     private void updatePumpStatusSpinner(String newStatus) {
         mCurrentStatusIndex = getPagerStatusValueForStatusString(newStatus);
         /// Scroll to the right position
-        vpUpdateStatus.setCurrentItem(mCurrentStatusIndex, true);
+        mUpdateStatusPager.setCurrentItem(mCurrentStatusIndex, true);
     }
 
     // Persist a given report locally and check if it was pinned
@@ -395,15 +439,10 @@ public class CreateReportActivity extends Activity {
 
     // This is primarily to distinguish between online and offline toast messages during demo.
     private void showToastBasedOnNetworkAvailability() {
-
         if (!NetworkUtil.isNetworkAvailable(this)) {
             Toast.makeText(getApplicationContext(),
                     "No network found. Report will be uploaded when Internet is available.",
                     Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getApplicationContext(),
-                    "Report cached successfully.",
-                    Toast.LENGTH_SHORT).show();
         }
     }
 }

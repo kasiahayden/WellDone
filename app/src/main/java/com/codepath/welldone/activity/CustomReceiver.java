@@ -16,7 +16,7 @@ import java.util.Iterator;
  */
 public class CustomReceiver extends BroadcastReceiver {
     private static final String TAG = "CustomReceiver";
-    public static final String pumpAction = "PUMP_ALERT";
+    public static final String INTENT_ACTION_PUMP_ALERT = "PUMP_ALERT";
 
 
     @Override
@@ -31,7 +31,7 @@ public class CustomReceiver extends BroadcastReceiver {
             {
                 String action = intent.getAction();
                 Log.d(TAG, "got action " + action );
-                if (action.equals(pumpAction)) {
+                if (action.equals(INTENT_ACTION_PUMP_ALERT)) {
                     String channel = intent.getExtras().getString("com.parse.Channel");
                     JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
 

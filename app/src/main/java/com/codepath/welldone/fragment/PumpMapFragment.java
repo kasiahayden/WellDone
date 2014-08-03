@@ -28,8 +28,6 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
 public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.PumpRowDelegate {
-    public static final String EXTRA_PUMP_ID_TO_DISPLAY = "pumpIDToDisplay";
-
     public static final double MAP_DISPLAY_DELTA = 0.06;
     public Pump mPump;
     public PumpListAdapter mPumpListAdapter;
@@ -140,13 +138,6 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
                     return view == object;
                 }
 
-                /*
-                A very simple PagerAdapter may choose to use the page Views themselves as key objects,
-                returning them from instantiateItem(ViewGroup, int) after creation and adding them to
-                the parent ViewGroup. A matching destroyItem(ViewGroup, int, Object) implementation
-                would remove the View from the parent ViewGroup and isViewFromObject(View, Object)
-                could be implemented as return view == object;.
-                 */
                 @Override
                 public Object instantiateItem(ViewGroup container, int position) {
                     final ExpandablePumpRowView pumpRow = new ExpandablePumpRowView(getActivity(), null);
