@@ -36,7 +36,7 @@ import org.json.JSONObject;
  */
 public class PumpBrowser extends FragmentActivity implements PumpListListener {
 
-    public static final String EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID = "pumpObjectId";
+    public static final String EXTRA_PUMP_OBJECT_ID = "pumpObjectId";
     public static final String RECEIVER_PUMP_UPDATE = "com.welldone.PUMP_UPDATE";
     private MenuItem mLogMeOut;
 
@@ -68,7 +68,7 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
             if (getIntent().hasExtra("com.parse.Data")) {
                 JSONObject json = new JSONObject(getIntent().getStringExtra("com.parse.Data"));
                 if (json.has("objectId")) {
-                    getIntent().putExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, json.getString("objectId"));
+                    getIntent().putExtra(EXTRA_PUMP_OBJECT_ID, json.getString("objectId"));
                 }
             }
         }
@@ -77,7 +77,7 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
         }
 
         if (PRETEND_WE_ARE_COMING_FROM_A_PUSH_NOTIF) {
-            getIntent().putExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, "mLZB4GWceT");
+            getIntent().putExtra(EXTRA_PUMP_OBJECT_ID, "mLZB4GWceT");
         }
 
     }
@@ -93,7 +93,7 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d(PumpBrowser.class.toString(), "Received an intent");
-                String pumpObjectId = intent.getStringExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID);
+                String pumpObjectId = intent.getStringExtra(EXTRA_PUMP_OBJECT_ID);
                 String newStatus = intent.getStringExtra("status");
                 Pump p = PumpPersister.getPumpByObjectIdSyncly(pumpObjectId);
                 if (p != null) {
@@ -145,6 +145,19 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
         getPumpMapFragment().mPumpListAdapter = getPumpListFragment().mPumpArrayAdapter;
         Pump p = getPumpListFragment().mPumpArrayAdapter.getPumpAtIndex(0);
         getPumpMapFragment().setCurrentlyDisplayedPump(p);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == CreateReportActivity.CREATE_REPORT_SUCCESSFUL_OR_NOT_REQUEST_CODE_SUCCESS) {
+            String pumpObjectID = data.getStringExtra(CreateReportActivity.EXTRA_PUMP_OBJECT_ID);
+            Pump currentPump = PumpPersister.getPumpByObjectIdSyncly(pumpObjectID);
+            getPumpMapFragment().setCurrentlyDisplayedPump(currentPump);
+
+            getPumpMapFragment().animateCurrentPumpToUpdateItself(currentPump);
+
+        }
     }
 
     @Override

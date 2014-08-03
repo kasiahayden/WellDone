@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.widget.Button;
 
 import com.codepath.welldone.model.Pump;
 
@@ -14,7 +15,7 @@ public class ExternalNavigation {
     public static final String HARD_CODED_START_LOCAITON = "-5.006505,32.836221";
 
     public static void askAboutPumpNavigation(final Context context, final String currentAddress, final Pump newPump, final boolean shouldPopActivityStackOnDecision) {
-        new AlertDialog.Builder(context)
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context)
                 .setTitle("Navigate to Pump?")
                 .setMessage(String.format("A route to %s will be calculated from your current position.", newPump.getAddress()))
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -36,7 +37,16 @@ public class ExternalNavigation {
                             ((Activity) context).finish();
                         }
                     }
-                })
-                .show();
+                });
+        final AlertDialog dialog = dialogBuilder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button b = (Button)dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                b.setTextColor(context.getResources().getColor(R.color.wellDoneBlue));
+            }
+        });
+        dialog.show();
+        int x = 0; x++;
     }
 }

@@ -37,13 +37,13 @@ public class SmsReceiver extends BroadcastReceiver {
             String objectId;
             String status;
             try {
-                objectId = textBody.getString(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID);
+                objectId = textBody.getString(PumpBrowser.EXTRA_PUMP_OBJECT_ID);
                 status = textBody.getString("status");
 
                 Intent i = new Intent();
                 i.setAction(PumpBrowser.RECEIVER_PUMP_UPDATE);
                 i.addCategory(Intent.CATEGORY_DEFAULT);
-                i.putExtra(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID,
+                i.putExtra(PumpBrowser.EXTRA_PUMP_OBJECT_ID,
                         objectId);
                 i.putExtra("status", status);
                 context.sendBroadcast(i);
