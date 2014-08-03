@@ -64,6 +64,10 @@ public class PumpRowView extends RelativeLayout {
                 String.format("%s km", df.format(distanceFromOrigin.doubleValue())));
 
         setupLocationLabel(mPump);
+
+        if (mPump.isClaimedByATechnician()) {
+            viewHolder.ivStatusIndicator.setImageResource(R.drawable.ic_star_blue);
+        }
     }
 
 

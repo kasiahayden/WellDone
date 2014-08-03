@@ -223,6 +223,7 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
 
     public void setCurrentlyDisplayedPump(Pump p) {
         int currentPumpIndexInBottomPagerThingy = mPumpListAdapter.indexForPump(p);
+        mPumpListAdapter.notifyDataSetChanged();
         mDetailsPager.setCurrentItem(currentPumpIndexInBottomPagerThingy, true);
         centerMapOnPump(p);
     }

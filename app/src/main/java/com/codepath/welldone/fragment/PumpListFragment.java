@@ -164,13 +164,13 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
     // Fetch data (from local or remote source) based on the selected sort option
     private void fetchAndShowData() {
         prepareForDataFetch();
-        fetchPumpsInBackground(ParseQuery.getQuery("Pump"), true);
+        fetchPumpsInBackground(ParseQuery.getQuery("Pump"));
     }
 
     // Fetch data remotely based on the selected sort option
     private void fetchAndShowRemoteData() {
         prepareForDataFetch();
-        fetchPumpsFromRemote(ParseQuery.getQuery("Pump"), true);
+        fetchPumpsFromRemote(ParseQuery.getQuery("Pump"));
 
     }
 
@@ -179,8 +179,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
      * First start with querying the local pin. If nothing there, query the remote source.
      * @param query
      */
-    private void fetchPumpsInBackground(final ParseQuery<ParseObject> query,
-                                        final boolean additionalSort) {
+    private void fetchPumpsInBackground(final ParseQuery<ParseObject> query) {
 
         query.fromPin(PumpPersister.ALL_PUMPS);
 
@@ -194,11 +193,11 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
                     Log.d("info", "Fetching pumps from local DB. Found " + pumpList.size());
 
                     if (pumpList.size() == 0) {
-                        fetchPumpsFromRemote(ParseQuery.getQuery("Pump"), additionalSort);
+                        fetchPumpsFromRemote(ParseQuery.getQuery("Pump"));
                     } else {
                         pbLoading.setVisibility(ProgressBar.INVISIBLE);
                         Log.d("debug", "Using pumps fetched from local DB.");
-                        addPumpsToAdapter(pumpList, additionalSort);
+                        addPumpsToAdapter(pumpList);
                     }
                 } else {
                     Log.d("error", "Exception while fetching pumps: " + e);
@@ -212,8 +211,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
      * Fetch pumps from remote source.
      * @param query
      */
-    private void fetchPumpsFromRemote(ParseQuery<ParseObject> query,
-                                      final boolean additionalSort) {
+    private void fetchPumpsFromRemote(ParseQuery<ParseObject> query) {
 
         Log.d("debug", "Fetching pumps from remote DB.");
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -223,7 +221,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
                 pbLoading.setVisibility(ProgressBar.INVISIBLE);
                 if (e == null) {
                     Log.d("info", "Fetching pumps from remote DB. Found " + pumpList.size());
-                    addPumpsToAdapter(pumpList, additionalSort);
+                    addPumpsToAdapter(pumpList);
                     mListener.onListRefreshederested();
 
                     // Unpin previously cached data and re-pin the newly fetched.
@@ -273,7 +271,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
     }
 
 
-    private void addPumpsToAdapter(List<ParseObject> pumpList, boolean additionalSort) {
+    private void addPumpsToAdapter(List<ParseObject> pumpList) {
 
         List<AbstractListItem> sortedPumps = new ArrayList<AbstractListItem>();
         sortedPumps.add(new HeaderListItem("Broken"));

@@ -42,6 +42,10 @@ public class Pump extends ParseObject {
         return getCurrentStatus().equalsIgnoreCase("broken");
     }
 
+    public boolean isClaimedByATechnician() { return getBoolean("isClaimedByATechnician"); }
+
+    public void setIsClaimedByATechnician(boolean isClaimed) { put("isClaimedByATechnician", isClaimed); }
+
     public static int getPriorityFromStatus(String status) {
 
         if (status.equalsIgnoreCase("fix in progress")) {

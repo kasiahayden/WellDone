@@ -38,12 +38,6 @@ public class ExpandablePumpRowView extends RelativeLayout {
     View fabAddReport;
     View mNavigationOverlayViewToBeRevealed;
 
-    boolean mPumpHasBeenClaimed;
-
-    boolean hasBeenClaimed() {
-        return mPumpHasBeenClaimed;
-    }
-
     ImageView mSparks[];
     // average output, precipitation, water pressure, battery charge
 
@@ -52,7 +46,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
     public Pump mPump;
 
     public void onRowClick() {
-        if (!hasBeenClaimed()) {
+        if (!mPump.isClaimedByATechnician()) {
             toggleExpandedState();
         }
     }
@@ -147,8 +141,8 @@ public class ExpandablePumpRowView extends RelativeLayout {
             @Override
             public void onClick(View view) {
                 beginAnimationToRevealNavigationOverviewAndHidePager();
-                beginAnimationToRevealEndNavFAB();
-                mPumpHasBeenClaimed = true;
+                beginAnimationToRevealUnstarFAB();
+                mPump.setIsClaimedByATechnician(true);
             }
         });
     }
@@ -160,7 +154,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
             public void onClick(View view) {
                 beginAnimationToRevealStarPumpFAB();
                 beginAnimationToUnrevealNavigationOverlayView();
-                mPumpHasBeenClaimed = false;
+                mPump.setIsClaimedByATechnician(false);
             }
         });
     }
@@ -173,13 +167,13 @@ public class ExpandablePumpRowView extends RelativeLayout {
         fabAddReport.setOutline(outline);
     }
 
-    private void beginAnimationToRevealEndNavFAB() {
+    private void beginAnimationToRevealUnstarFAB() {
         int xpos = 0;
         int ypos = 0;
         int finalRadius = 320; /// Width of the FAB, hopefully
-        ValueAnimator revealEndButton = ViewAnimationUtils.createCircularReveal(fabUnstarPump, xpos, ypos, 0, finalRadius);
+        ValueAnimator revealUnstarAnimation = ViewAnimationUtils.createCircularReveal(fabUnstarPump, xpos, ypos, 0, finalRadius);
         Log.d("DBG", String.format("Revealing fabEnd from x:%d, y:%d, width:%d", xpos, ypos, finalRadius));
-        revealEndButton.addListener(new Animator.AnimatorListener() {
+        revealUnstarAnimation.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
                 fabUnstarPump.setVisibility(View.VISIBLE);
@@ -200,8 +194,8 @@ public class ExpandablePumpRowView extends RelativeLayout {
 
             }
         });
-        revealEndButton.setDuration(CIRCULAR_REVEAL_DURATION_NAVIGATE);
-        revealEndButton.start();
+        revealUnstarAnimation.setDuration(CIRCULAR_REVEAL_DURATION_NAVIGATE);
+        revealUnstarAnimation.start();
     }
 
     private void beginAnimationToUnrevealNavigationOverlayView() {

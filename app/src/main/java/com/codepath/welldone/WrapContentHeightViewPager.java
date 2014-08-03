@@ -40,9 +40,6 @@ public class WrapContentHeightViewPager extends ViewPager {
             }
         }
         setMeasuredDimension(getMeasuredWidth(), maxHeight);
-//        stackOverflowMeasureMethod(widthMeasureSpec, heightMeasureSpec);
-
-
     }
 
     private void stackOverflowMeasureMethod(int widthMeasureSpec, int heightMeasureSpec) {
