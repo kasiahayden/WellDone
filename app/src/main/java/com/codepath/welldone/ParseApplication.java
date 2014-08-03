@@ -2,7 +2,7 @@ package com.codepath.welldone;
 
 import android.app.Application;
 
-import com.codepath.welldone.activity.PumpBrowser;
+import com.codepath.welldone.activity.SignInActivity;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.model.Report;
 import com.parse.Parse;
@@ -22,7 +22,7 @@ public class ParseApplication extends Application {
 
         Parse.initialize(this, "zs3GmrOhOzJCIyPE9Nu8k35FOfscjofe1NAa7HPP", "RBNwokWUIVKwv9dh8jtZmk90EKvYOiNRNlK2bXNP");
 
-        PushService.setDefaultPushCallback(this, PumpBrowser.class);
+        PushService.setDefaultPushCallback(this, SignInActivity.class);
 
         //THIS IS ONE-TIME ONLY. SET A ROLE, ADD EXISTING USERS AND DATA TO IT
         /*final ParseACL roleACL = new ParseACL();
