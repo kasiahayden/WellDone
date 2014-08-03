@@ -38,6 +38,9 @@ public class ExpandablePumpRowView extends RelativeLayout {
     View fabAddReport;
     View mNavigationOverlayViewToBeRevealed;
 
+
+    TextView mClaimedLabel;
+
     ImageView mSparks[];
     // average output, precipitation, water pressure, battery charge
 
@@ -62,6 +65,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
         View.inflate(context, R.layout.expandable_row_pump, this);
         detailsContainer = (ViewGroup)findViewById(R.id.vgDetailsContainer);
         detailsContainer.setVisibility(View.GONE);
+        mClaimedLabel = (TextView)findViewById(R.id.tvLocationDescription);
         mNavigationOverlayViewToBeRevealed = findViewById(R.id.viewToBeRevealed);
 
         viewHolder = new ViewHolder();
@@ -407,6 +411,8 @@ public class ExpandablePumpRowView extends RelativeLayout {
         });
 
         setupLocationLabel(mPump);
+
+        mClaimedLabel.setText(String.format("%s claimed", mPump.getAddress()));
     }
 
 
