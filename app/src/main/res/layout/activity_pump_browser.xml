@@ -14,7 +14,7 @@
         app:pstsShouldExpand="true"
         app:pstsIndicatorColor="@android:color/white"
         app:pstsUnderlineHeight="0dp"
-        app:pstsDividerColor="@android:color/white"
+        app:pstsDividerColor="@android:color/transparent"
         android:textColor="@android:color/white"
         android:background="@color/wellDoneBlue"/>
 

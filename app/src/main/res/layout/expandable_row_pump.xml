@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="33dp"
         android:background="@color/offwhite">
 
         <LinearLayout
@@ -78,12 +78,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12dp"
+            android:layout_marginLeft="8dp"
             android:textColor="@color/textGray"
             android:layout_alignBottom="@id/ivGraphWord"
             android:layout_toRightOf="@id/ivGraphWord"
             android:fontFamily="sans-serif-light"
             android:text="14.0L/hr"/>
-
 
         <!-- Sparks container -->
         <RelativeLayout
@@ -154,9 +154,9 @@
         android:id="@+id/viewToBeRevealed"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_alignTop="@id/vgPumpRoot"
-        android:padding="8dp"
+        android:layout_alignBottom="@id/vgPumpRoot"
         android:background="@color/wellDoneBlue">
         <TextView
             android:id="@+id/tvLocationDescription"
