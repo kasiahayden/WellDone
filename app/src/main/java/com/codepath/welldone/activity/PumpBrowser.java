@@ -23,7 +23,6 @@ import com.codepath.welldone.fragment.PumpMapFragment;
 import com.codepath.welldone.helper.NetworkUtil;
 import com.codepath.welldone.helper.StringUtil;
 import com.codepath.welldone.model.Pump;
-import com.codepath.welldone.model.PumpListItem;
 import com.codepath.welldone.persister.PumpPersister;
 import com.parse.ParseAnalytics;
 import com.parse.ParseUser;
@@ -95,8 +94,7 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
                     p.setCurrentStatus(newStatus);
                     p.saveEventually();
                     Log.d("DBG", String.format("Pump %s is now: %s", p.getObjectId(), p.getCurrentStatus()));
-                    mPager.setCurrentItem(1, true); // 1 == PumpMapFragment
-                    getPumpMapFragment().setCurrentlyDisplayedPump(p);
+                    switchToMapViewForPump(p);
                 }
                 else {
                     Log.d("DBG", String.format("Failed to load pump with ID %s", pumpObjectId));
@@ -136,7 +134,16 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
     public void onListRefreshederested() {
         Log.d("DBG", "onListRefreshederested");
         getPumpMapFragment().mPumpListAdapter = getPumpListFragment().mPumpArrayAdapter;
-        getPumpMapFragment().recenterMapOnPump(getPumpListFragment().getCurrentPump());
+    }
+
+    @Override
+    public void onPumpListRowSelected(Pump pump) {
+        switchToMapViewForPump(pump);
+    }
+
+    private void switchToMapViewForPump(Pump pump) {
+        mPager.setCurrentItem(1, true);
+        getPumpMapFragment().setCurrentlyDisplayedPump(pump);
     }
 
     private PumpMapFragment getPumpMapFragment() {
@@ -155,22 +162,6 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
             startActivity(loginIntent);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public int getCurrentPumpIndex() {
-        if (mListMapPagerAdapter.mPumpListFragment == null) {
-            return -1;
-        }
-        return mListMapPagerAdapter.mPumpListFragment.mCurrentPumpIndex;
-    }
-
-    public void onNewReportClicked(Pump pump) {
-        Intent intent = new Intent(this, CreateReportActivity.class);
-        intent.putExtra(EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, pump.getObjectId());
-        int index = mListMapPagerAdapter.mPumpListFragment.mPumpArrayAdapter.indexForPump(pump) + 1;
-        PumpListItem pumpListItem = (PumpListItem)mListMapPagerAdapter.mPumpListFragment.mPumpArrayAdapter.getItem(index);
-        intent.putExtra("nextPumpObjectId", pumpListItem.pump.getObjectId());
-        startActivity(intent);
     }
 
     public static class ListMapPagerAdapter extends FragmentPagerAdapter {

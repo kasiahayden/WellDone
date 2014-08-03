@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import com.codepath.welldone.ExpandablePumpRowView;
 import com.codepath.welldone.ExternalNavigation;
 import com.codepath.welldone.PumpListAdapter;
-import com.codepath.welldone.PumpListListener;
 import com.codepath.welldone.R;
 import com.codepath.welldone.model.Pump;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -132,10 +131,6 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
         return mapFragment.getMap();
     }
 
-    void onNewReportClicked(Pump pump) {
-        ((PumpListListener)getActivity()).onNewReportClicked(pump);
-    }
-
     PagerAdapter getViewPagerAdapter() {
         return new PagerAdapter() {
             @Override
@@ -219,10 +214,6 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
         Log.d("DBG", String.format("Centering on pump %s with status %s", currentPump.getAddress(), currentPump.getCurrentStatus()));
         centerMapOnPump(currentPump);
         mPump = currentPump;
-    }
-
-    public void recenterMapOnPump(Pump currentPump) {
-        centerMapOnPump(currentPump);
     }
 
     @Override

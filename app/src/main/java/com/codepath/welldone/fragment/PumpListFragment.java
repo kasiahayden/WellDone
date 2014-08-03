@@ -1,7 +1,6 @@
 package com.codepath.welldone.fragment;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,9 +14,7 @@ import android.widget.Toast;
 
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.PumpListListener;
-import com.codepath.welldone.PumpRowView;
 import com.codepath.welldone.R;
-import com.codepath.welldone.activity.PumpBrowser;
 import com.codepath.welldone.helper.NetworkUtil;
 import com.codepath.welldone.model.AbstractListItem;
 import com.codepath.welldone.model.HeaderListItem;
@@ -42,8 +39,6 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 public class PumpListFragment extends Fragment implements OnRefreshListener {
-
-    public static final int TARGET_DETAILS_HEIGHT = 130;
     public PumpListAdapter mPumpArrayAdapter;
     private AlphaInAnimationAdapter alphaAdapter;
 
@@ -53,36 +48,11 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
 
     private ParseUser currentUser;
-
     public PumpListListener mListener;
-    private final String TAG = "PumpListFragment";
-
-    private boolean shouldExpandSelectedRow;
-    public int mCurrentPumpIndex;
-    // The default view of pump list is sorted by distance from currently logged-in user.
-    private int sortMenuItemSelected;
-
-    private String mCurrentPumpID;
-
     public PumpListFragment() {}
-
-    /**
-     * @return the currently highlighted (expanded) pump
-     */
-    public Pump getCurrentPump() {
-        return mPumpArrayAdapter.getPumpAtIndex(mCurrentPumpIndex);
-    }
 
     public static PumpListFragment newInstance() {
         return new PumpListFragment();
-    }
-
-    public static PumpListFragment newInstance(String pumpToDisplay) {
-        PumpListFragment frag = new PumpListFragment();
-        Bundle b = new Bundle();
-        b.putString(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID, pumpToDisplay);
-        frag.setArguments(b);
-        return frag;
     }
 
 
@@ -99,32 +69,11 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         // There's an options menu for this fragment only
         setHasOptionsMenu(true);
 
-        mCurrentPumpIndex = 0;
         mPumpArrayAdapter = new PumpListAdapter((Activity)mListener);
 
         currentUser = ParseUser.getCurrentUser();
-        Log.d("debug", "Current user: " + currentUser.getUsername() + " "
-                + currentUser.get("location") + " " + currentUser.getACL());
 
-        final SharedPreferences settings = getActivity().getPreferences(0);
-        if (getArguments() != null) {
-            mCurrentPumpID = getArguments().getString(PumpBrowser.EXTRA_PUSH_NOTIFICATION_PUMP_OBJECT_ID);
-        }
-    }
-
-    @Override
-    public void onStop() {
-
-        super.onStop();
-
-        // We need an Editor object to make preference changes.
-        // All objects are from android.context.Context
-        final SharedPreferences settings = getActivity().getPreferences(0);
-        final SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("lastSortMode", sortMenuItemSelected);
-
-        // Commit the edits!
-        editor.commit();
+        Log.d("DBG", String.format("Current user: %s %s", currentUser.getUsername(), currentUser.get("location").toString()));
     }
 
     @Override
@@ -142,8 +91,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
                 .listener(this)
                 .setup(ptrlPumps);
 
-        setupListeners();
-
+        setupListRowListener();
         fetchAndShowData();
 
         return v;
@@ -193,17 +141,14 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         pbLoading = (ProgressBar) v.findViewById(R.id.pbLoading);
     }
 
-    private void setupListeners() {
-
+    private void setupListRowListener() {
         lvPumps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                shouldExpandSelectedRow = true;
-                Pump pump = mPumpArrayAdapter.getPumpAtIndex(position);
-                Log.d("debug", "Clicked on pump " + pump.getObjectId() + " " + pump.getName());
-                if (view instanceof PumpRowView) {
-                    PumpRowView v = (PumpRowView) view;
-                    mCurrentPumpIndex = position;
+                AbstractListItem pli = mPumpArrayAdapter.getItem(position);
+                if (pli instanceof PumpListItem) {
+                    PumpListItem thePumpListItem = (PumpListItem)pli;
+                    mListener.onPumpListRowSelected(thePumpListItem.pump);
                 }
             }
         });
@@ -350,6 +295,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
         }
 
         mPumpArrayAdapter.addAll(sortedPumps);
+        mPumpArrayAdapter.notifyDataSetChanged();
 
         mListener.onListRefreshederested();
 
