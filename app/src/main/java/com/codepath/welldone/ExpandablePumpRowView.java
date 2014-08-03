@@ -32,14 +32,13 @@ public class ExpandablePumpRowView extends RelativeLayout {
     public static final int ANIMATE_OUT_DURATION_MILLIS = 500;
     public static final int CIRCULAR_REVEAL_DURATION_NAVIGATE = 500;
 
-    private ViewGroup detailsContainer;
+    public Pump mPump;
+    public PumpRowDelegate rowDelegate;
 
-    public ViewHolder viewHolder;
     View fabStarPump;
     View fabUnstarPump;
     View fabAddReport;
     View mNavigationOverlayViewToBeRevealed;
-
 
     TextView mClaimedLabel;
 
@@ -47,8 +46,8 @@ public class ExpandablePumpRowView extends RelativeLayout {
     // average output, precipitation, water pressure, battery charge
 
     private DecimalFormat df = new DecimalFormat("#.#");
-
-    public Pump mPump;
+    private ViewGroup detailsContainer;
+    private ViewHolder viewHolder;
 
     public void onRowClick() {
         if (!mPump.isClaimedByATechnician()) {
@@ -86,9 +85,8 @@ public class ExpandablePumpRowView extends RelativeLayout {
 
     public interface PumpRowDelegate {
         public void onPumpNavigateClicked(Pump pumpThatWasClicked);
+        public void onPumpClaimClicked(Pump pumpThatWasClicked);
     }
-
-    public PumpRowDelegate rowDelegate;
 
     public ExpandablePumpRowView(final Context context, AttributeSet attrs){
         super(context, attrs);
@@ -100,7 +98,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
 
         viewHolder = new ViewHolder();
         populateViewHolder();
-        setupEndNavigationButton();
+        setupUnclaimButton();
         setupClaimPumpButton();
         fabAddReport = findViewById(R.id.fabAddReport);
         fabAddReport.setOnClickListener(new OnClickListener() {
@@ -178,11 +176,12 @@ public class ExpandablePumpRowView extends RelativeLayout {
                 beginAnimationToRevealNavigationOverviewAndHidePager();
                 beginAnimationToRevealUnstarFAB();
                 mPump.setIsClaimedByATechnician(true);
+                rowDelegate.onPumpClaimClicked(mPump);
             }
         });
     }
 
-    private void setupEndNavigationButton() {
+    private void setupUnclaimButton() {
         fabUnstarPump = findViewById(R.id.fabStarredIndicator);
         fabUnstarPump.setOnClickListener(new OnClickListener() {
             @Override

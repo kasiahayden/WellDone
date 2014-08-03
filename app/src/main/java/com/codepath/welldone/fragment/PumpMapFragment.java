@@ -68,11 +68,19 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
 
 
     public void resetMapUIAndCardView() {
+        resetMapUI();
+        resetCardView();
+    }
+
+    private void resetMapUI() {
         getMap().getUiSettings().setZoomControlsEnabled(false);
         getMap().clear();
         addPipsToMap();
-        mDetailsPager.setAdapter(getViewPagerAdapter());
         centerMapOnPump(mPump);
+    }
+
+    private void resetCardView() {
+        mDetailsPager.setAdapter(getViewPagerAdapter());
     }
 
     private void addPipsToMap() {
@@ -208,6 +216,12 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
     @Override
     public void onPumpNavigateClicked(Pump pumpThatWasClicked) {
         ExternalNavigation.askAboutPumpNavigation(getActivity(), ExternalNavigation.HARD_CODED_START_LOCAITON, pumpThatWasClicked, false);
+    }
+
+    @Override
+    public void onPumpClaimClicked(Pump pumpThatWasClicked) {
+        mPump = pumpThatWasClicked;
+        resetMapUI();
     }
 
     public void setCurrentlyDisplayedPump(Pump p) {

@@ -13,6 +13,7 @@ import java.util.HashMap;
 @ParseClassName("Pump")
 public class Pump extends ParseObject {
 
+    public static final String FIX_IN_PROGRESS = "Fix in progress";
     private static HashMap<String, String> pumpStatuses;
 
     public Pump() {
@@ -45,11 +46,14 @@ public class Pump extends ParseObject {
 
     public boolean isClaimedByATechnician() { return getBoolean("isClaimedByATechnician"); }
 
-    public void setIsClaimedByATechnician(boolean isClaimed) { put("isClaimedByATechnician", isClaimed); }
+    public void setIsClaimedByATechnician(boolean isClaimed) {
+        put("isClaimedByATechnician", isClaimed);
+        setCurrentStatus(FIX_IN_PROGRESS);
+    }
 
     public static int getPriorityFromStatus(String status) {
 
-        if (status.equalsIgnoreCase("fix in progress")) {
+        if (status.equalsIgnoreCase(FIX_IN_PROGRESS)) {
             return 4;
         }
         if (status.equalsIgnoreCase("operational")) {
@@ -69,7 +73,7 @@ public class Pump extends ParseObject {
         if (isBroken()) {
             return R.drawable.ic_list_broken;
         }
-        else if (getCurrentStatus().equalsIgnoreCase("Fix in progress")) {
+        else if (getCurrentStatus().equalsIgnoreCase(FIX_IN_PROGRESS)) {
             return R.drawable.ic_list_in_progress;
         }
         else {

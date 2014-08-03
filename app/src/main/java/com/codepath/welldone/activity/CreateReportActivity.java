@@ -474,7 +474,7 @@ public class CreateReportActivity extends Activity {
     private void showToastBasedOnNetworkAvailability() {
         if (!NetworkUtil.isNetworkAvailable(this)) {
             Toast.makeText(getApplicationContext(),
-                    "No network found. Report will be uploaded when Internet is available.",
+                    "Report sent over SMS. Changes will be synchronized with the server.",
                     Toast.LENGTH_LONG).show();
         }
     }
