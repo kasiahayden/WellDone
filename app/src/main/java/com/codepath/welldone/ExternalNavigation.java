@@ -13,15 +13,11 @@ public class ExternalNavigation {
 
     public static final String HARD_CODED_START_LOCAITON = "-5.006505,32.836221";
 
-    public static void askAboutPumpNavigation(final Context context, final String currentAddress, final Pump newPump, String title, final boolean shouldPopActivityStackOnDecision) {
+    public static void askAboutPumpNavigation(final Context context, final String currentAddress, final Pump newPump, final boolean shouldPopActivityStackOnDecision) {
         new AlertDialog.Builder(context)
-                .setTitle(title)
-                .setMessage(String.format("Navigate to next pump? \n\n%s: %s\n(%s, priority %d)",
-                        newPump.getName(),
-                        newPump.getAddress(),
-                        newPump.getCurrentStatus(),
-                        newPump.getPriority()))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setTitle("Navigate to Pump?")
+                .setMessage(String.format("A route to %s will be calculated from your current position.", newPump.getAddress()))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String url = String.format("http://maps.google.com/maps?saddr=%s&daddr=%s",
                                 currentAddress,
@@ -34,14 +30,13 @@ public class ExternalNavigation {
                         }
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (shouldPopActivityStackOnDecision && context instanceof Activity) {
                             ((Activity) context).finish();
                         }
                     }
                 })
-                .setIcon(R.drawable.ic_check)
                 .show();
     }
 }

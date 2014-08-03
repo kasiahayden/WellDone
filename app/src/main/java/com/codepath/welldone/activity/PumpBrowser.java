@@ -82,6 +82,12 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
+    }
+
     private void setupTextMessageReceiver() {
         mReceiver = new BroadcastReceiver() {
             @Override

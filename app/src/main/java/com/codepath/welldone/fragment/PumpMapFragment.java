@@ -205,7 +205,7 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
 
     @Override
     public void onPumpNavigateClicked(Pump pumpThatWasClicked) {
-        ExternalNavigation.askAboutPumpNavigation(getActivity(), ExternalNavigation.HARD_CODED_START_LOCAITON, pumpThatWasClicked, "Whatever", false);
+        ExternalNavigation.askAboutPumpNavigation(getActivity(), ExternalNavigation.HARD_CODED_START_LOCAITON, pumpThatWasClicked, false);
     }
 
     public void setCurrentlyDisplayedPump(Pump p) {
