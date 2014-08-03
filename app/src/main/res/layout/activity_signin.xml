@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@drawable/turquiose_water_kids"
     android:layout_height="match_parent">
+
+    <VideoView
+        android:id="@+id/vvMovieBackground"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="6000px"
+        android:layout_height="fill_parent" />
 
    <ProgressBar
         android:id="@+id/pbLoading"
@@ -12,12 +18,23 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 
+    <TextView
+        android:id="@+id/tvWellDone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:textSize="20dp"
+        android:textColor="@color/offwhite"
+        android:text="@string/well_done" />
+
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/edittext_underline"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="150dp"
         android:layout_marginLeft="60dp"
         android:layout_marginRight="24dp"
         android:gravity="left|bottom"
@@ -62,6 +79,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true" />
+
+
 
 
 </RelativeLayout>

@@ -26,4 +26,5 @@
     <string name="title_activity_sign_in">SignInActivity</string>
     <string name="default_pump_flavor_text">Part of the MSABI Mkusa School System</string>
     <string name="sort_by">Sort by</string>
+    <string name="well_done">WellDone</string>
 </resources>

@@ -2,12 +2,15 @@ package com.codepath.welldone.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.codepath.welldone.R;
 import com.codepath.welldone.helper.NetworkUtil;
@@ -32,6 +35,12 @@ public class SignInActivity extends Activity {
 
         getActionBar().hide();
         setupViews();
+
+        VideoView mVideoView = (VideoView) findViewById(R.id.vvMovieBackground);
+        mVideoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.welldone_bg));
+        mVideoView.setMediaController(new MediaController(this));
+        mVideoView.requestFocus();
+        mVideoView.start();
     }
 
     @Override
