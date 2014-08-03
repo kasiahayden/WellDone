@@ -335,6 +335,7 @@ public class CreateReportActivity extends Activity {
                 finish();
             }
         }, 1000);
+
     }
 
     private void disableInterfaceElements() {

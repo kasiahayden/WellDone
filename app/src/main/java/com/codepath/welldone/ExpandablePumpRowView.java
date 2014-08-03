@@ -133,6 +133,8 @@ public class ExpandablePumpRowView extends RelativeLayout {
         Intent i = new Intent(context, CreateReportActivity.class);
         i.putExtra(CreateReportActivity.EXTRA_PUMP_OBJECT_ID, mPump.getObjectId());
         ((Activity)context).startActivityForResult(i, CreateReportActivity.CREATE_REPORT_SUCCESSFUL_OR_NOT_REQUEST_CODE);
+
+        toggleExpandedState();
     }
 
     private void onSparkClicked(View v) {
