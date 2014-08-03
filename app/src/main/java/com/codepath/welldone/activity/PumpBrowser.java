@@ -133,6 +133,9 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
 
     public void onListRefreshederested() {
         Log.d("DBG", "onListRefreshederested");
+        if (getPumpMapFragment().mMapPagerAdapter != null) {
+            getPumpMapFragment().mMapPagerAdapter.notifyDataSetChanged();
+        }
         getPumpMapFragment().mPumpListAdapter = getPumpListFragment().mPumpArrayAdapter;
         Pump p = getPumpListFragment().mPumpArrayAdapter.getPumpAtIndex(0);
         getPumpMapFragment().setCurrentlyDisplayedPump(p);

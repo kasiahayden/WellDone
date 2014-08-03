@@ -29,12 +29,14 @@ import com.parse.ParseUser;
 
 public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.PumpRowDelegate {
     public static final String EXTRA_PUMP_ID_TO_DISPLAY = "pumpIDToDisplay";
+
     public static final double MAP_DISPLAY_DELTA = 0.06;
     public Pump mPump;
     public PumpListAdapter mPumpListAdapter;
     private SupportMapFragment mapFragment;
     private ParseGeoPoint currentUserLocation;
     ViewPager mDetailsPager;
+    public PagerAdapter mMapPagerAdapter;
 
     public PumpMapFragment() {
         // Required empty public constructor
@@ -45,19 +47,10 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
         return fragment;
     }
 
-    public static PumpMapFragment newInstance(String pumpToDisplay) {
-        PumpMapFragment frag = new PumpMapFragment ();
-        Bundle b = new Bundle();
-        b.putString(EXTRA_PUMP_ID_TO_DISPLAY, pumpToDisplay);
-        frag.setArguments(b);
-        return frag;
-    }
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("DBG", String.format(this.getClass().toString(), "onCreate"));
         mapFragment = new SupportMapFragment();
         currentUserLocation = (ParseGeoPoint) ParseUser.getCurrentUser().get("location");
     }
@@ -132,53 +125,56 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
     }
 
     PagerAdapter getViewPagerAdapter() {
-        return new PagerAdapter() {
-            @Override
-            public int getCount() {
-                if (mPumpListAdapter == null) {
-                    return 0;
-                }
-                return mPumpListAdapter.getCount();
-            }
-
-            @Override
-            public boolean isViewFromObject(View view, Object object) {
-                return view == object;
-            }
-
-            /*
-            A very simple PagerAdapter may choose to use the page Views themselves as key objects,
-            returning them from instantiateItem(ViewGroup, int) after creation and adding them to
-            the parent ViewGroup. A matching destroyItem(ViewGroup, int, Object) implementation
-            would remove the View from the parent ViewGroup and isViewFromObject(View, Object)
-            could be implemented as return view == object;.
-             */
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                final ExpandablePumpRowView pumpRow = new ExpandablePumpRowView(getActivity(), null);
-                pumpRow.rowDelegate = PumpMapFragment.this;
-                final Pump thePump = mPumpListAdapter.getPumpAtIndex(position);
-                pumpRow.mPump = thePump;
-                pumpRow.updateSubviews( currentUserLocation);
-                container.addView(pumpRow);
-
-                pumpRow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        pumpRow.onRowClick();
+        if (mMapPagerAdapter == null) {
+            mMapPagerAdapter = new PagerAdapter() {
+                @Override
+                public int getCount() {
+                    if (mPumpListAdapter == null) {
+                        return 0;
                     }
-                });
+                    return mPumpListAdapter.getTotalPumpCount();
+                }
 
-                return pumpRow;
-            }
+                @Override
+                public boolean isViewFromObject(View view, Object object) {
+                    return view == object;
+                }
 
-            @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
-                ExpandablePumpRowView prv = (ExpandablePumpRowView)object;
-                container.removeView(prv);
-            }
+                /*
+                A very simple PagerAdapter may choose to use the page Views themselves as key objects,
+                returning them from instantiateItem(ViewGroup, int) after creation and adding them to
+                the parent ViewGroup. A matching destroyItem(ViewGroup, int, Object) implementation
+                would remove the View from the parent ViewGroup and isViewFromObject(View, Object)
+                could be implemented as return view == object;.
+                 */
+                @Override
+                public Object instantiateItem(ViewGroup container, int position) {
+                    final ExpandablePumpRowView pumpRow = new ExpandablePumpRowView(getActivity(), null);
+                    pumpRow.rowDelegate = PumpMapFragment.this;
+                    final Pump thePump = mPumpListAdapter.getPumpAtIndex(position);
+                    pumpRow.mPump = thePump;
+                    pumpRow.updateSubviews(currentUserLocation);
+                    container.addView(pumpRow);
 
-        };
+                    pumpRow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            pumpRow.onRowClick();
+                        }
+                    });
+
+                    return pumpRow;
+                }
+
+                @Override
+                public void destroyItem(ViewGroup container, int position, Object object) {
+                    ExpandablePumpRowView prv = (ExpandablePumpRowView)object;
+                    container.removeView(prv);
+                }
+
+            };
+        }
+        return mMapPagerAdapter;
     }
 
     @Override
@@ -222,8 +218,7 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
     }
 
     public void setCurrentlyDisplayedPump(Pump p) {
-        int currentPumpIndexInBottomPagerThingy = mPumpListAdapter.indexForPump(p);
-        mPumpListAdapter.notifyDataSetChanged();
+        int currentPumpIndexInBottomPagerThingy = mPumpListAdapter.getPumpIndexBetweenZeroAndNumberOfPumps(p);
         mDetailsPager.setCurrentItem(currentPumpIndexInBottomPagerThingy, true);
         centerMapOnPump(p);
     }

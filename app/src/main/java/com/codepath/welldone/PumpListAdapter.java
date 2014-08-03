@@ -48,7 +48,7 @@ public class PumpListAdapter extends ArrayAdapter<AbstractListItem> {
         return pump.getView(mInflater, convertView, currentUserLocation, rowListener, getContext());
     }
 
-    public int indexForPump(Pump pump) {
+    public int indexForPumpIncludingHeaders(Pump pump) {
         for (int i = 0; i < getCount(); i++) {
             AbstractListItem item = getItem(i);
             if (item instanceof PumpListItem) {
@@ -56,6 +56,21 @@ public class PumpListAdapter extends ArrayAdapter<AbstractListItem> {
                 if (pumpListItem.pump.getObjectId().equals(pump.getObjectId())) {
                     return i;
                 }
+            }
+        }
+        return -1;
+    }
+
+    public int getPumpIndexBetweenZeroAndNumberOfPumps(Pump pump) {
+        int count = 0;
+        for (int i = 0; i < getCount(); i++) {
+            AbstractListItem item = getItem(i);
+            if (item instanceof PumpListItem) {
+                PumpListItem pumpListItem = (PumpListItem)item;
+                if (pumpListItem.pump.getObjectId().equals(pump.getObjectId())) {
+                    return count;
+                }
+                count++;
             }
         }
         return -1;
