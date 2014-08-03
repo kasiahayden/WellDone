@@ -42,7 +42,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
     public PumpListAdapter mPumpArrayAdapter;
     private AlphaInAnimationAdapter alphaAdapter;
 
-    private ListView lvPumps;
+    public ListView lvPumps;
     private ProgressBar pbLoading;
     private PullToRefreshLayout ptrlPumps;
 

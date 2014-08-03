@@ -17,7 +17,6 @@ import com.codepath.welldone.ExternalNavigation;
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.R;
 import com.codepath.welldone.model.Pump;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -114,7 +113,7 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
         builder.include(fartherAwayPosition);
         LatLngBounds bounds = builder.build();
         if (getMap() != null) {
-            getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
+//            getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
         }
     }
 

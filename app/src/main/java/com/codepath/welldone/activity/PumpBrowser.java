@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +15,9 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ScrollView;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.codepath.welldone.PumpListListener;
@@ -43,6 +47,8 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
 
     private BroadcastReceiver mReceiver;
 
+    private ScrollView mRootScroller;
+
     ViewPager mPager;
     PagerSlidingTabStrip mTabs;
 
@@ -62,6 +68,8 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
         mPager.setAdapter(mListMapPagerAdapter);
         mTabs = (PagerSlidingTabStrip)findViewById(R.id.slidingTabs);
         mTabs.setViewPager(mPager);
+
+        mRootScroller = (ScrollView)findViewById(R.id.svRootScroller);
 
         ParseAnalytics.trackAppOpened(getIntent());
         try {
@@ -122,6 +130,32 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
         } else {
             getActionBar().setTitle(appName.toString());
         }
+
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                mRootScroller.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        getPumpListFragment().lvPumps.getParent().requestDisallowInterceptTouchEvent(false);
+                        return false;
+                    }
+                });
+
+                getPumpListFragment().lvPumps.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        view.getParent().requestDisallowInterceptTouchEvent(true);
+                        return false;
+                    }
+                });
+            }
+        }, 500);
+
+
     }
 
     @Override
