@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.codepath.welldone.ExpandablePumpRowView;
 import com.codepath.welldone.ExternalNavigation;
@@ -30,7 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
-public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.PumpRowDelegate, GoogleMap.OnMarkerClickListener {
+public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.PumpRowDelegate, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     public static final double MAP_DISPLAY_DELTA = 0.03;
     public static final String MARKER_TECH_TITLE = "TECH";
     public Pump mPump;
@@ -142,6 +143,8 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
             }
         });
         map.setOnMarkerClickListener(this);
+        map.setOnInfoWindowClickListener(this);
+
         centerMapOnPump(mPump);
     }
 
@@ -152,6 +155,11 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
             Log.w("PumpMapFragment", "Clicked on map marker for technician");
         }
         return true; // false defaults to showing infoWindow set for every marker
+    }
+    public void onInfoWindowClick (Marker marker) {
+        Log.w("PumpMapFragment", "Clicked on info window for technician");
+        //Toast.makeText(getActivity(), "infoWindowClicked", Toast.LENGTH_SHORT).show();
+        //TODO spit us into text messaging app
     }
 
     void centerMapOnPump(Pump pump) {
