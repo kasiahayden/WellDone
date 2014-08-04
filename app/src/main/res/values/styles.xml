@@ -4,6 +4,12 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:colorPrimaryDark">#0E88B5</item>
         <item name="android:colorPrimary">@color/wellDoneBlue</item>
+        <item name="android:colorForeground">@android:color/white</item>
+        <item name="android:actionBarStyle">@style/WellDone.ActionBar.Style</item>
+        <item name="android:colorAccent">@android:color/white</item>
+    </style>
+    
+    <style name="WellDone.ActionBar.Style" parent="android:Theme.Material.Light.DarkActionBar">
         <item name="android:titleTextStyle">@style/WellDone.ActionBar.TitleTextStyle</item>
     </style>
 

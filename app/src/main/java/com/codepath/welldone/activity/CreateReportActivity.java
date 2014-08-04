@@ -364,7 +364,7 @@ public class CreateReportActivity extends Activity {
         Log.d("DBG", String.format("Working with pump: %s %s", pumpToBeReported.getObjectId(), pumpToBeReported.getName()));
 
         updatePumpStatusSpinner(pumpToBeReported.getCurrentStatus());
-        mPumpNameLabel.setText(String.format("%s > Add Report", pumpToBeReported.getAddress()));
+        mPumpNameLabel.setText(String.format("%s", pumpToBeReported.getAddress()));
 
     }
 

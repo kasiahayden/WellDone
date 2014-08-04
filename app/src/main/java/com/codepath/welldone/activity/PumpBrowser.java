@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -139,12 +138,13 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.pump_browser, menu);
-        mLogMeOut = menu.findItem(R.id.action_log_me_the_fuck_out);
-        return true;
-    }
+    // uncomment to add debug menu
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.pump_browser, menu);
+//        mLogMeOut = menu.findItem(R.id.action_log_me_the_fuck_out);
+//        return true;
+//    }
 
     public void onListRefreshederested() {
         Log.d("DBG", "onListRefreshederested");

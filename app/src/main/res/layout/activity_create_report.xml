@@ -13,12 +13,30 @@
         android:id="@+id/tvPumpNameTopLabelCreateReport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="asdf"
         android:textColor="@android:color/white"
         android:textSize="24dp"
         android:fontFamily="sans-serif-light"
-        android:layout_margin="22dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginBottom="22dp"
         android:layout_alignBottom="@id/greenBackground"/>
+    <ImageView
+        android:id="@+id/ivArrowImageTopBarCreate"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_margin="6dp"
+        android:layout_toRightOf="@id/tvPumpNameTopLabelCreateReport"
+        android:layout_alignBottom="@id/tvPumpNameTopLabelCreateReport"
+        android:src="@drawable/ic_triangle_white"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Report"
+        android:textColor="@android:color/white"
+        android:textSize="24dp"
+        android:fontFamily="sans-serif-light"
+        android:layout_toRightOf="@id/ivArrowImageTopBarCreate"
+        android:layout_alignBaseline="@id/tvPumpNameTopLabelCreateReport"/>
     <View
         android:id="@+id/topLayoutGuide"
         android:layout_width="wrap_content"
