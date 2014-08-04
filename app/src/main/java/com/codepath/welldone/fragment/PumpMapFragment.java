@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.codepath.welldone.ExpandablePumpRowView;
 import com.codepath.welldone.ExternalNavigation;
@@ -253,6 +252,8 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
     public void onPumpClaimClicked(Pump pumpThatWasClicked) {
         mPump = pumpThatWasClicked;
         resetMapUI();
+        mPumpListAdapter.notifyDataSetChanged();
+        mMapPagerAdapter.notifyDataSetChanged();
     }
 
     public void setCurrentlyDisplayedPump(Pump p) {
