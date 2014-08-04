@@ -18,6 +18,7 @@ import com.parse.ParseGeoPoint;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.util.Random;
 
 public class PumpRowView extends RelativeLayout {
 
@@ -29,6 +30,7 @@ public class PumpRowView extends RelativeLayout {
 
     private ImageView mGraphWord;
     private Context mContext;
+    private TextView mPumpFlowLabel;
 
     public PumpRowView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -44,6 +46,7 @@ public class PumpRowView extends RelativeLayout {
         viewHolder.tvPumpDistance = (TextView)findViewById(R.id.tvPumpDistance);
         viewHolder.ivStatusIndicator = (ImageView)findViewById(R.id.ivPumpStatusIndicator);
         mGraphWord = (ImageView)findViewById(R.id.ivGraphWord);
+        mPumpFlowLabel = (TextView)findViewById(R.id.tvPumpFlowLabelNonExpanding);
     }
 
     private Bitmap getBitmapFromAsset(String strName) {
@@ -78,15 +81,18 @@ public class PumpRowView extends RelativeLayout {
         setupLocationLabel(mPump);
 
         if (mPump.isClaimedByATechnician()) {
-            viewHolder.ivStatusIndicator.setImageResource(R.drawable.ic_star_blue_list);
+            viewHolder.ivStatusIndicator.setImageResource(R.drawable.ic_list_starred);
         }
 
         String fname = String.format("listviewSparkline%d.png", Math.abs(mPump.getHash()) % 9);
         mGraphWord.setImageBitmap(getBitmapFromAsset(fname));
 
+        mPumpFlowLabel.setText(generateRandomPumpFlowString());
     }
 
-
+    public static String generateRandomPumpFlowString() {
+        return String.format("%d.0L/hr", 9 + Math.abs(new Random().nextInt() % 20));
+    }
     private void setupLocationLabel(Pump pump) {
         try {
             viewHolder.tvLocation.setText(AddressUtil.stripCountryFromAddress(pump.getAddress()));

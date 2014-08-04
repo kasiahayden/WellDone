@@ -472,7 +472,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
 
         mClaimedLabel.setText(String.format("%s Claimed", mPump.getAddress()));
 
-        mPumpFlowLabel.setText(String.format("%d.0L/hr", 9 + Math.abs(new Random().nextInt() % 20)));
+        mPumpFlowLabel.setText(PumpRowView.generateRandomPumpFlowString());
     }
 
 
