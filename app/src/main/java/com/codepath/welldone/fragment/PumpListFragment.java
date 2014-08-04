@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.PumpListListener;
 import com.codepath.welldone.R;
+import com.codepath.welldone.activity.PumpBrowser;
 import com.codepath.welldone.helper.NetworkUtil;
 import com.codepath.welldone.model.AbstractListItem;
 import com.codepath.welldone.model.HeaderListItem;
@@ -39,6 +40,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 public class PumpListFragment extends Fragment implements OnRefreshListener {
+
     public PumpListAdapter mPumpArrayAdapter;
     private AlphaInAnimationAdapter alphaAdapter;
 
@@ -58,12 +60,20 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
     @Override
     public void onResume() {
+        Log.d("DBG", "List fragment onResume");
         super.onResume();
         fetchAndShowData();
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("DBG", "List fragment onPause");
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d("DBG", "List fragment onCreate");
 
         super.onCreate(savedInstanceState);
         // There's an options menu for this fragment only
@@ -92,8 +102,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
                 .setup(ptrlPumps);
 
         setupListRowListener();
-        fetchAndShowData();
-
+        Log.d("DBG", "List fragment onCreateView");
         return v;
     }
 
@@ -147,7 +156,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 AbstractListItem pli = mPumpArrayAdapter.getItem(position);
                 if (pli instanceof PumpListItem) {
-                    PumpListItem thePumpListItem = (PumpListItem)pli;
+                    PumpListItem thePumpListItem = (PumpListItem) pli;
                     mListener.onPumpListRowSelected(thePumpListItem.pump);
                 }
             }
@@ -159,6 +168,7 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
         pbLoading.setVisibility(ProgressBar.VISIBLE);
         mPumpArrayAdapter.clear();
+        mListener.onShouldInvalidatePagers();
     }
 
     // Fetch data (from local or remote source) based on the selected sort option

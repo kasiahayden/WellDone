@@ -8,4 +8,5 @@ import com.codepath.welldone.model.Pump;
 public interface PumpListListener {
     public void onListRefreshederested();
     public void onPumpListRowSelected(Pump pump);
+    public void onShouldInvalidatePagers();
 }

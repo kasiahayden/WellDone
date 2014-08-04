@@ -455,7 +455,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
 
         setupLocationLabel(mPump);
 
-        mClaimedLabel.setText(String.format("%s claimed", mPump.getAddress()));
+        mClaimedLabel.setText(String.format("%s Claimed", mPump.getAddress()));
     }
 
 

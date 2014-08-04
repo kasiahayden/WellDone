@@ -146,50 +146,51 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
     }
 
     PagerAdapter getViewPagerAdapter() {
-        if (mMapPagerAdapter == null) {
-            mMapPagerAdapter = new PagerAdapter() {
-                @Override
-                public int getCount() {
-                    if (mPumpListAdapter == null) {
-                        return 0;
+        mMapPagerAdapter = new PagerAdapter() {
+            @Override
+            public int getCount() {
+                int returnValue;
+                if (mPumpListAdapter == null) {
+                    returnValue = 0;
+                } else {
+                    returnValue = mPumpListAdapter.getTotalPumpCount();
+                }
+                return returnValue;
+            }
+
+            @Override
+            public boolean isViewFromObject(View view, Object object) {
+                return view == object;
+            }
+
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                final ExpandablePumpRowView pumpRow = new ExpandablePumpRowView(getActivity(), null);
+                pumpRow.rowDelegate = PumpMapFragment.this;
+                final Pump thePump = mPumpListAdapter.getPumpAtIndex(position);
+                pumpRow.mPump = thePump;
+                pumpRow.updateSubviews(currentUserLocation);
+                container.addView(pumpRow);
+
+                pumpRow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pumpRow.onRowClick();
                     }
-                    return mPumpListAdapter.getTotalPumpCount();
-                }
+                });
 
-                @Override
-                public boolean isViewFromObject(View view, Object object) {
-                    return view == object;
-                }
+                pumpRow.setTag(position);
 
-                @Override
-                public Object instantiateItem(ViewGroup container, int position) {
-                    final ExpandablePumpRowView pumpRow = new ExpandablePumpRowView(getActivity(), null);
-                    pumpRow.rowDelegate = PumpMapFragment.this;
-                    final Pump thePump = mPumpListAdapter.getPumpAtIndex(position);
-                    pumpRow.mPump = thePump;
-                    pumpRow.updateSubviews(currentUserLocation);
-                    container.addView(pumpRow);
+                return pumpRow;
+            }
 
-                    pumpRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            pumpRow.onRowClick();
-                        }
-                    });
+            @Override
+            public void destroyItem(ViewGroup container, int position, Object object) {
+                ExpandablePumpRowView prv = (ExpandablePumpRowView) object;
+                container.removeView(prv);
+            }
 
-                    pumpRow.setTag(position);
-
-                    return pumpRow;
-                }
-
-                @Override
-                public void destroyItem(ViewGroup container, int position, Object object) {
-                    ExpandablePumpRowView prv = (ExpandablePumpRowView)object;
-                    container.removeView(prv);
-                }
-
-            };
-        }
+        };
         return mMapPagerAdapter;
     }
 

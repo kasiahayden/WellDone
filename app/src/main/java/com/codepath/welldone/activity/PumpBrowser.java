@@ -129,6 +129,14 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
         } else {
             getActionBar().setTitle(appName.toString());
         }
+
+        if (getPumpMapFragment() != null && getPumpMapFragment().mMapPagerAdapter != null) {
+            getPumpMapFragment().mMapPagerAdapter.notifyDataSetChanged();
+            Log.d("DBG", "Notifying map pager that data set changed.");
+        }
+        else {
+            Log.d("DBG", "onResume called before the map fragment or pager existed.");
+        }
     }
 
     @Override
@@ -154,10 +162,20 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
         if (resultCode == CreateReportActivity.CREATE_REPORT_SUCCESSFUL_OR_NOT_REQUEST_CODE_SUCCESS) {
             String pumpObjectID = data.getStringExtra(CreateReportActivity.EXTRA_PUMP_OBJECT_ID);
             Pump currentPump = PumpPersister.getPumpByObjectIdSyncly(pumpObjectID);
-            getPumpMapFragment().setCurrentlyDisplayedPump(currentPump);
+//            getPumpMapFragment().setCurrentlyDisplayedPump(currentPump);
 
             getPumpMapFragment().animateCurrentPumpToUpdateItself(currentPump);
 
+        }
+    }
+
+    @Override
+    public void onShouldInvalidatePagers() {
+        if (getPumpMapFragment() != null && getPumpMapFragment().mMapPagerAdapter != null) {
+            getPumpMapFragment().mMapPagerAdapter.notifyDataSetChanged();
+        }
+        else {
+            Log.d("DBG", "Failed to invalidate pagers.");
         }
     }
 
