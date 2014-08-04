@@ -16,7 +16,9 @@ import com.codepath.welldone.ExpandablePumpRowView;
 import com.codepath.welldone.ExternalNavigation;
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.R;
+import com.codepath.welldone.TechnicianArrayList;
 import com.codepath.welldone.model.Pump;
+import com.codepath.welldone.model.Technician;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -31,6 +33,7 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
     public static final double MAP_DISPLAY_DELTA = 0.03;
     public Pump mPump;
     public PumpListAdapter mPumpListAdapter;
+    public TechnicianArrayList mTechnicianArrayList = new TechnicianArrayList();
     private SupportMapFragment mapFragment;
     private ParseGeoPoint currentUserLocation;
     ViewPager mDetailsPager;
@@ -85,12 +88,24 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
 
     private void addPipsToMap() {
         GoogleMap map = getMap();
+        MarkerOptions options = new MarkerOptions();
+        double lat;
+        double longitude;
+        LatLng position;
         if (map == null || mPumpListAdapter == null) {
             return;
         }
+        for (int i = 0; i < mTechnicianArrayList.getTotalTechCount(); i++) {
+            final Technician tech = (Technician) mTechnicianArrayList.TechArray.get(i);
+            options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_technician));
+            lat = tech.getLatitude();
+            longitude = tech.getLongitude();
+            position = new LatLng(lat, longitude);
+            options.position(position);
+            map.addMarker(options);
+        }
         for (int i = 0; i < mPumpListAdapter.getTotalPumpCount(); i++) {
             final Pump pump = mPumpListAdapter.getPumpAtIndex(i);
-            MarkerOptions options = new MarkerOptions();
             if (pump.getCurrentStatus().equalsIgnoreCase("broken")) {
                 options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_broken));
             }
@@ -100,9 +115,9 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
             else {
                 options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_good));
             }
-            double lat = pump.getLocation().getLatitude();
-            double longitude = pump.getLocation().getLongitude();
-            LatLng position = new LatLng(lat, longitude);
+            lat = pump.getLocation().getLatitude();
+            longitude = pump.getLocation().getLongitude();
+            position = new LatLng(lat, longitude);
             options.position(position);
             map.addMarker(options);
         }
