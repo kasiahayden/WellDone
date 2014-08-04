@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.codepath.welldone.PumpListAdapter;
 import com.codepath.welldone.PumpListListener;
 import com.codepath.welldone.R;
-import com.codepath.welldone.activity.PumpBrowser;
 import com.codepath.welldone.helper.NetworkUtil;
 import com.codepath.welldone.model.AbstractListItem;
 import com.codepath.welldone.model.HeaderListItem;
@@ -297,7 +296,23 @@ public class PumpListFragment extends Fragment implements OnRefreshListener {
 
         for (int i = 0; i < pumpList.size(); i++) {
             Pump pump = (Pump)pumpList.get(i);
-            if (pump.getCurrentStatus().equals("Fix in progress")) {
+            if (pump.getCurrentStatus().equals(Pump.FIX_IN_PROGRESS) && pump.isClaimedByATechnician()) {
+                sortedPumps.add(new PumpListItem(pump));
+            }
+        }
+
+        for (int i = 0; i < pumpList.size(); i++) {
+            Pump pump = (Pump)pumpList.get(i);
+            if (pump.getCurrentStatus().equals(Pump.FIX_IN_PROGRESS) && !pump.isClaimedByATechnician()) {
+                sortedPumps.add(new PumpListItem(pump));
+            }
+        }
+
+        sortedPumps.add(new HeaderListItem(Pump.OPERATIONAL));
+
+        for (int i = 0; i < pumpList.size(); i++) {
+            Pump pump = (Pump)pumpList.get(i);
+            if (pump.getCurrentStatus().equals(Pump.OPERATIONAL)) {
                 sortedPumps.add(new PumpListItem(pump));
             }
         }

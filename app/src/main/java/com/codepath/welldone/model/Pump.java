@@ -14,6 +14,7 @@ import java.util.HashMap;
 public class Pump extends ParseObject {
 
     public static final String FIX_IN_PROGRESS = "Fix in progress";
+    public static final String OPERATIONAL = "Operational";
     private static HashMap<String, String> pumpStatuses;
 
     public Pump() {
