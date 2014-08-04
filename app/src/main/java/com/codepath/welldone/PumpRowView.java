@@ -78,7 +78,7 @@ public class PumpRowView extends RelativeLayout {
         setupLocationLabel(mPump);
 
         if (mPump.isClaimedByATechnician()) {
-            viewHolder.ivStatusIndicator.setImageResource(R.drawable.ic_star_blue);
+            viewHolder.ivStatusIndicator.setImageResource(R.drawable.ic_star_blue_list);
         }
 
         String fname = String.format("listviewSparkline%d.png", Math.abs(mPump.getHash()) % 9);
