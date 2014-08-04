@@ -43,6 +43,8 @@ public class ExpandablePumpRowView extends RelativeLayout {
 
     TextView mClaimedLabel;
     TextView mPumpFlowLabel;
+    TextView mMeasuremeantTypeLabel;
+    TextView mMeasurementValueLabel;
 
     ImageView mSparks[];
     // average output, precipitation, water pressure, battery charge
@@ -98,6 +100,8 @@ public class ExpandablePumpRowView extends RelativeLayout {
         mClaimedLabel = (TextView)findViewById(R.id.tvLocationDescription);
         mNavigationOverlayViewToBeRevealed = findViewById(R.id.viewToBeRevealed);
         mPumpFlowLabel = (TextView)findViewById(R.id.tvPumpFlowLabel);
+        mMeasuremeantTypeLabel = (TextView)findViewById(R.id.tvMeasurementTypeLabel);
+        mMeasurementValueLabel = (TextView)findViewById(R.id.tvMeasurementValueLabel);
 
         viewHolder = new ViewHolder();
         populateViewHolder();
@@ -142,15 +146,23 @@ public class ExpandablePumpRowView extends RelativeLayout {
         ImageView spark = (ImageView)v;
         if (spark == mSparks[0]) {
             spark.setImageResource(R.drawable.spark1a);
+            mMeasuremeantTypeLabel.setText("Average Output");
+            mMeasurementValueLabel.setText(String.format("%dL", (new Random().nextInt() % 10)  + 13));
         }
         else if (spark == mSparks[1]) {
             spark.setImageResource(R.drawable.spark2a);
+            mMeasuremeantTypeLabel.setText("Liters per person");
+            mMeasurementValueLabel.setText(String.format("%d.1", (new Random().nextInt() % 10)  + 13));
         }
         else if (spark == mSparks[2]) {
             spark.setImageResource(R.drawable.spark3a);
+            mMeasuremeantTypeLabel.setText("Power");
+            mMeasurementValueLabel.setText(String.format("%d.5W", Math.abs(new Random().nextInt() % 10)  + 13));
         }
         else if (spark == mSparks[3]) {
             spark.setImageResource(R.drawable.spark4a);
+            mMeasuremeantTypeLabel.setText("Water health rating");
+            mMeasurementValueLabel.setText(String.format("%d.0/100", new Random().nextInt() % 25  + 50));
         }
         resetSparksBesides(spark);
     }
@@ -460,7 +472,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
 
         mClaimedLabel.setText(String.format("%s Claimed", mPump.getAddress()));
 
-        mPumpFlowLabel.setText(String.format("%d.0L/hr", 9 + Math.abs(new Random().nextInt() % 20 )));
+        mPumpFlowLabel.setText(String.format("%d.0L/hr", 9 + Math.abs(new Random().nextInt() % 20)));
     }
 
 

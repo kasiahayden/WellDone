@@ -108,13 +108,6 @@
                 android:layout_height="1px"/>
 
             <ImageView
-                android:layout_width="270dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="36dp"
-                android:layout_marginTop="8dp"
-                android:layout_alignTop="@id/sparkTopLayoutGuide"
-                android:src="@drawable/timeslider_july18"/>
-            <ImageView
                 android:id="@+id/spark1"
                 android:layout_centerHorizontal="true"
                 android:layout_width="@dimen/sparkWidth"
@@ -146,6 +139,30 @@
                 android:layout_below="@id/spark3"
                 android:src="@drawable/spark4"
                 android:scaleType="centerInside"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/spark4"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvMeasurementTypeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/spark4"
+                    android:text="Average Output"
+                    android:textSize="16dp"
+                    android:textColor="@color/textGray"/>
+                <TextView
+                    android:id="@+id/tvMeasurementValueLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_below="@id/spark4"
+                    android:text="17.2 L/hr"
+                    android:textSize="18dp"
+                    android:textColor="@color/textRed"/>
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -175,7 +192,7 @@
             android:textColor="@android:color/white"
             android:layout_marginLeft="28dp"
             android:fontFamily="sans-serif-light"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:layout_below="@id/tvLocationDescription"
             android:text="Other technicians have been notified that repairs are in progress"/>
     </RelativeLayout>

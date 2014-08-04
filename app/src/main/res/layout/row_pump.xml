@@ -56,6 +56,7 @@
         android:id="@+id/ivGraphWord"
         android:layout_width="78dp"
         android:layout_height="20dp"
+        android:layout_marginLeft="4dp"
         android:layout_toRightOf="@id/ivPumpStatusIndicator"
         android:layout_alignBottom="@id/ivPumpStatusIndicator"
         android:src="@drawable/graphword_transparent"/>
