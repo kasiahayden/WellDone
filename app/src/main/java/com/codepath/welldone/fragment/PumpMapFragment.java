@@ -28,7 +28,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
 public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.PumpRowDelegate {
-    public static final double MAP_DISPLAY_DELTA = 0.06;
+    public static final double MAP_DISPLAY_DELTA = 0.03;
     public Pump mPump;
     public PumpListAdapter mPumpListAdapter;
     private SupportMapFragment mapFragment;

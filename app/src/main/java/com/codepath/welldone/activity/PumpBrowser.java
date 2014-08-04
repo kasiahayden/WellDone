@@ -24,6 +24,7 @@ import com.codepath.welldone.helper.NetworkUtil;
 import com.codepath.welldone.helper.StringUtil;
 import com.codepath.welldone.model.Pump;
 import com.codepath.welldone.persister.PumpPersister;
+import com.codepath.welldone.receiver.SmsReceiver;
 import com.parse.ParseAnalytics;
 import com.parse.ParseUser;
 
@@ -184,6 +185,9 @@ public class PumpBrowser extends FragmentActivity implements PumpListListener {
             ParseUser.logOut();
             Intent loginIntent = new Intent(this, SignInActivity.class);
             startActivity(loginIntent);
+        }
+        else {
+            SmsReceiver.sendDummyTextBroadcast(this, "eyAicHVtcE9iamVjdElkIiA6ICJoMWhub3ZMczJaIiwgInN0YXR1cyI6ICJCcm9rZW4ifQ==");
         }
         return super.onOptionsItemSelected(item);
     }

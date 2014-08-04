@@ -4,4 +4,7 @@
     <item android:id="@+id/action_log_me_the_fuck_out"
         android:orderInCategory="100"
         android:title="Logout" />
+    <item android:id="@+id/sendDummyMessage"
+        android:orderInCategory="100"
+        android:title="Send message" />
 </menu>

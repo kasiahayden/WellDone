@@ -47,7 +47,6 @@ public class CustomReceiver extends BroadcastReceiver {
                     Intent i = new Intent(context, PumpBrowser.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.putExtra(PumpBrowser.EXTRA_PUMP_OBJECT_ID, objectId);
-//                    context.getApplicationContext().startActivity(i);
                 }
             }
         } catch (JSONException e) {

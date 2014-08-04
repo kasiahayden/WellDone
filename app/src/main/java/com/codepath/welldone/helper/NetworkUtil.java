@@ -22,8 +22,13 @@ public class NetworkUtil {
         final NetworkInfo activeNetworkInfo = connectivityManager
                 .getActiveNetworkInfo();
 
-        //return false;
         return (activeNetworkInfo != null && activeNetworkInfo
                 .isConnectedOrConnecting());
+    }
+
+    public static boolean hasCellPhoneService(Context context) {
+        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        return mobNetInfo.isConnected();
     }
 }

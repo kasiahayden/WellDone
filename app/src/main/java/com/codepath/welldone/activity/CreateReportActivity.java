@@ -472,10 +472,14 @@ public class CreateReportActivity extends Activity {
 
     // This is primarily to distinguish between online and offline toast messages during demo.
     private void showToastBasedOnNetworkAvailability() {
+        String failText = "No networks available. Changes will be synchronized when there is a network available.";
+        String smsSentText = "Report sent over SMS. Changes will be synchronized with the server.";
         if (!NetworkUtil.isNetworkAvailable(this)) {
-            Toast.makeText(getApplicationContext(),
-                    "Report sent over SMS. Changes will be synchronized with the server.",
-                    Toast.LENGTH_LONG).show();
+            if (NetworkUtil.hasCellPhoneService(this)) {
+                Toast.makeText(this, smsSentText, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, failText, Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

@@ -53,6 +53,27 @@ public class SmsReceiver extends BroadcastReceiver {
         }
     }
 
+    public static void sendDummyTextBroadcast(Context context, String textMessageContents) {
+        //---pass object id as intent to PumpBrowser---
+        String objectId;
+        String status;
+        JSONObject textBody;
+        try {
+            textBody = extractEncodedInformation(textMessageContents, context);
+            objectId = textBody.getString(PumpBrowser.EXTRA_PUMP_OBJECT_ID);
+            status = textBody.getString("status");
+
+            Intent i = new Intent();
+            i.setAction(PumpBrowser.RECEIVER_PUMP_UPDATE);
+            i.addCategory(Intent.CATEGORY_DEFAULT);
+            i.putExtra(PumpBrowser.EXTRA_PUMP_OBJECT_ID,
+                    objectId);
+            i.putExtra("status", status);
+            context.sendBroadcast(i);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static JSONObject extractEncodedInformation(String str, Context context) throws JSONException {
         String obj = new String(Base64.decode(str, 0));

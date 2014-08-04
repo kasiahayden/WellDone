@@ -47,8 +47,10 @@ public class Pump extends ParseObject {
     public boolean isClaimedByATechnician() { return getBoolean("isClaimedByATechnician"); }
 
     public void setIsClaimedByATechnician(boolean isClaimed) {
+        if (isClaimed) {
+            setCurrentStatus(FIX_IN_PROGRESS);
+        }
         put("isClaimedByATechnician", isClaimed);
-        setCurrentStatus(FIX_IN_PROGRESS);
     }
 
     public static int getPriorityFromStatus(String status) {
