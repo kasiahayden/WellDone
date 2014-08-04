@@ -90,7 +90,7 @@ public class CreateReportActivity extends Activity {
         setContentView(R.layout.activity_create_report);
         mUpdateStatusPager = (ViewPager)findViewById(R.id.vpUpdateStatus);
         mUpdateStatusPager.setAdapter(getPagerAdapter());
-        mUpdateStatusPager.setPageMargin(-200);
+        mUpdateStatusPager.setPageMargin(-100);
         mUpdateStatusPager.setOnPageChangeListener(getOnPageChangeListener());
         mUpdateStatusPager.setOffscreenPageLimit(2);
         pbLoading = (ProgressBar)findViewById(R.id.pbLoading);

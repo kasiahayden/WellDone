@@ -452,7 +452,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
             viewHolder.tvLastUpdated.setText(mostOfTheTimeCorrectRelativeTime);
         }
         else {
-            viewHolder.tvLastUpdated.setText(String.format("%s ago", mostOfTheTimeCorrectRelativeTime));
+            viewHolder.tvLastUpdated.setText(mostOfTheTimeCorrectRelativeTime);
         }
         viewHolder.tvFlavor.setText(getResources().getString(R.string.default_pump_flavor_text, mPump.getName(), mPump.getName()));
         viewHolder.ivStatusIndicator.setImageResource(mPump.getDrawableBasedOnStatus());

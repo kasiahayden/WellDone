@@ -65,7 +65,7 @@ public class PumpRowView extends RelativeLayout {
             viewHolder.tvLastUpdated.setText(mostOfTheTimeCorrectRelativeTime);
         }
         else {
-            viewHolder.tvLastUpdated.setText(String.format("%s ago", mostOfTheTimeCorrectRelativeTime));
+            viewHolder.tvLastUpdated.setText(mostOfTheTimeCorrectRelativeTime);
         }
 
         viewHolder.ivStatusIndicator.setImageResource(mPump.getDrawableBasedOnStatus());
