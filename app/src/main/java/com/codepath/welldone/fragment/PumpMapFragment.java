@@ -91,7 +91,6 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
 
     private void addPipsToMap() {
         GoogleMap map = getMap();
-        MarkerOptions options = new MarkerOptions();
         double lat;
         double longitude;
         LatLng position;
@@ -100,6 +99,7 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
         }
         for (int i = 0; i < mTechnicianArrayList.getTotalTechCount(); i++) {
             final Technician tech = (Technician) mTechnicianArrayList.TechArray.get(i);
+            MarkerOptions options = new MarkerOptions();
             options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_technician));
             lat = tech.getLatitude();
             longitude = tech.getLongitude();
@@ -110,6 +110,7 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
         }
         for (int i = 0; i < mPumpListAdapter.getTotalPumpCount(); i++) {
             final Pump pump = mPumpListAdapter.getPumpAtIndex(i);
+            MarkerOptions options = new MarkerOptions();
             if (pump.getCurrentStatus().equalsIgnoreCase("broken")) {
                 options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_broken));
             }
@@ -130,10 +131,9 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
     }
 
     public boolean onMarkerClick(Marker marker) {
-        // TODO Auto-generated method stub
-        if(marker.getTitle() == MARKER_TECH_TITLE){
-            Toast.makeText(getActivity(), "TECHNICIAN", Toast.LENGTH_SHORT).show();
-            Log.w("Click", "test");
+        if (marker.getTitle() != null && marker.getTitle().equals(MARKER_TECH_TITLE)) {
+            //TODO popup
+            Log.w("PumpMapFragment", "Clicked on map marker for technician");
             return true;
         }
         return false;
