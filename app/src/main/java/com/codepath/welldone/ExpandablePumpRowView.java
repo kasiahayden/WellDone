@@ -24,6 +24,7 @@ import com.codepath.welldone.model.Pump;
 import com.parse.ParseGeoPoint;
 
 import java.text.DecimalFormat;
+import java.util.Random;
 
 public class ExpandablePumpRowView extends RelativeLayout {
 
@@ -41,6 +42,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
     View mNavigationOverlayViewToBeRevealed;
 
     TextView mClaimedLabel;
+    TextView mPumpFlowLabel;
 
     ImageView mSparks[];
     // average output, precipitation, water pressure, battery charge
@@ -95,6 +97,7 @@ public class ExpandablePumpRowView extends RelativeLayout {
         detailsContainer.setVisibility(View.GONE);
         mClaimedLabel = (TextView)findViewById(R.id.tvLocationDescription);
         mNavigationOverlayViewToBeRevealed = findViewById(R.id.viewToBeRevealed);
+        mPumpFlowLabel = (TextView)findViewById(R.id.tvPumpFlowLabel);
 
         viewHolder = new ViewHolder();
         populateViewHolder();
@@ -456,6 +459,8 @@ public class ExpandablePumpRowView extends RelativeLayout {
         setupLocationLabel(mPump);
 
         mClaimedLabel.setText(String.format("%s Claimed", mPump.getAddress()));
+
+        mPumpFlowLabel.setText(String.format("%d.0L/hr", 9 + Math.abs(new Random().nextInt() % 20 )));
     }
 
 

@@ -26,13 +26,14 @@
                 android:layout_height="36dp"
                 android:src="@drawable/ic_well_broken"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"/>
+                android:layout_margin="4dp"/>
             <TextView
                 android:id="@+id/tvPumpLastUpdated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/lightGrayTextV2"
                 android:layout_gravity="center"
+                android:layout_marginLeft="4dp"
                 android:fontFamily="sans-serif-light"
                 android:textSize="12dp"
                 android:text="Feb. 31" />
@@ -44,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/pumpStatusContainer"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="8dp"
+            android:layout_marginRight="16dp"
             android:includeFontPadding="false"
             android:textColor="@color/wellDoneBlue"
             android:fontFamily="sans-serif-light"
@@ -58,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/pumpStatusContainer"
             android:layout_alignTop="@id/pumpStatusContainer"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="12dp"
             android:textColor="@color/darkGrayTextV2"
             android:textSize="20dp"
@@ -70,11 +71,12 @@
             android:id="@+id/ivGraphWord"
             android:layout_width="78dp"
             android:layout_height="20dp"
-            android:layout_toRightOf="@id/pumpStatusContainer"
+            android:layout_alignLeft="@id/tvPumpLocation"
             android:layout_alignBottom="@id/pumpStatusContainer"
             android:src="@drawable/graphword_transparent"/>
 
         <TextView
+            android:id="@+id/tvPumpFlowLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12dp"
