@@ -21,7 +21,7 @@ public class TechnicianArrayList {
     public TechnicianArrayList() {
         TechArray.add(new Technician("Apiyo", -5.019485, 32.826052, "8575401591"));
         TechArray.add(new Technician("Fenny", -4.999167, 32.797964, "8575401591"));
-        TechArray.add(new Technician("Riffat", -3.000000, 32.797964, "8575401591"));
+        TechArray.add(new Technician("Riffat", -5.076716, 32.695934, "8575401591"));
     }
 
     public int getTotalTechCount() {

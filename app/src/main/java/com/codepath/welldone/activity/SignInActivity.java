@@ -2,6 +2,7 @@ package com.codepath.welldone.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,11 +37,22 @@ public class SignInActivity extends Activity {
         getActionBar().hide();
         setupViews();
 
-        VideoView mVideoView = (VideoView) findViewById(R.id.vvMovieBackground);
+        final VideoView mVideoView = (VideoView) findViewById(R.id.vvMovieBackground);
         mVideoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.welldone_bg));
         mVideoView.setMediaController(new MediaController(this));
         mVideoView.requestFocus();
+        mVideoView.setMediaController(null);
+
+        //Video Loop
+        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            public void onCompletion(MediaPlayer mp) {
+                mVideoView.start(); //need to make transition seamless.
+            }
+        });
+
         mVideoView.start();
+
+
     }
 
     @Override
@@ -96,6 +108,7 @@ public class SignInActivity extends Activity {
                             Toast.makeText(getApplicationContext(),
                                            "Could not login. Please try again later.",
                                            Toast.LENGTH_LONG).show();
+                            Log.d("SignInActivity", "error logging into Parse: " + e.toString());
                         }
                     }
                 } // else failed login
