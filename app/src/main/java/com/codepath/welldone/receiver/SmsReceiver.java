@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Base64;
+import android.widget.Toast;
 
 import com.codepath.welldone.activity.PumpBrowser;
 
@@ -35,10 +36,15 @@ public class SmsReceiver extends BroadcastReceiver {
 
             //---pass object id as intent to PumpBrowser---
             String objectId;
+            String address;
             String status;
             try {
                 objectId = textBody.getString(PumpBrowser.EXTRA_PUMP_OBJECT_ID);
+                address = textBody.getString("address");
                 status = textBody.getString("status");
+
+
+                Toast.makeText(context, "Pump " + address +" : Status changed to " + status, Toast.LENGTH_SHORT).show();
 
                 Intent i = new Intent();
                 i.setAction(PumpBrowser.RECEIVER_PUMP_UPDATE);
