@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:id="@+id/tvTechName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tvTechPhoneNumber"
+        android:layout_marginTop="15px"
+        android:layout_marginBottom="15px"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/infoWindowGrey"
+        android:textStyle="bold"
+        android:text="Abidemi Idir" />
+
+    <ImageView
+        android:id="@+id/ivHangoutTooltip"
+        android:layout_width="52px"
+        android:layout_height="62px"
+        android:layout_alignBottom="@+id/tvTechPhoneNumber"
+        android:layout_marginBottom="2px"
+        android:layout_marginRight="20px"
+        android:layout_marginLeft="20px"
+        android:background="@drawable/hangout_tool_tip" />
+
+    <TextView
+        android:id="@+id/tvTechPhoneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivHangoutTooltip"
+        android:layout_below="@+id/tvTechName"
+        android:layout_marginBottom="20px"
+        android:layout_marginRight="20px"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/infoWindowGrey"
+        android:text="22-2113116-20" />
+
+
+
+
+</RelativeLayout>
+
+
+
+
+<!--
+
+<ImageView
+        android:id="@+id/ivInfoWindow"
+        android:layout_width="335px"
+        android:layout_height="145px"
+        android:background="@drawable/tool_tip" />
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_lat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_lng"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
+
+
+-->

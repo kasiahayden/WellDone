@@ -125,17 +125,33 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
             options.position(position);
             map.addMarker(options);
         }
+        // Setting a custom info window adapter for the google map
+        map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            // Use default InfoWindow frame
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            // Defines the contents of the InfoWindow
+            @Override
+            public View getInfoContents(Marker arg0) {
+                View v = getActivity().getLayoutInflater().inflate(R.layout.marker_info_window, null);
+                return v;
+            }
+        });
         map.setOnMarkerClickListener(this);
         centerMapOnPump(mPump);
     }
 
     public boolean onMarkerClick(Marker marker) {
         if (marker.getTitle() != null && marker.getTitle().equals(MARKER_TECH_TITLE)) {
-            //TODO popup
+            marker.showInfoWindow();
+            //Toast.makeText(getActivity(), "technician clicked", Toast.LENGTH_SHORT).show();
             Log.w("PumpMapFragment", "Clicked on map marker for technician");
-            return true;
         }
-        return false;
+        return true; // false defaults to showing infoWindow set for every marker
     }
 
     void centerMapOnPump(Pump pump) {
