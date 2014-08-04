@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.codepath.welldone.ExpandablePumpRowView;
 import com.codepath.welldone.ExternalNavigation;
@@ -25,12 +26,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
-public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.PumpRowDelegate {
+public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.PumpRowDelegate, GoogleMap.OnMarkerClickListener {
     public static final double MAP_DISPLAY_DELTA = 0.03;
+    public static final String MARKER_TECH_TITLE = "TECH";
     public Pump mPump;
     public PumpListAdapter mPumpListAdapter;
     public TechnicianArrayList mTechnicianArrayList = new TechnicianArrayList();
@@ -102,6 +105,7 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
             longitude = tech.getLongitude();
             position = new LatLng(lat, longitude);
             options.position(position);
+            options.title(MARKER_TECH_TITLE);
             map.addMarker(options);
         }
         for (int i = 0; i < mPumpListAdapter.getTotalPumpCount(); i++) {
@@ -121,7 +125,18 @@ public class PumpMapFragment extends Fragment implements ExpandablePumpRowView.P
             options.position(position);
             map.addMarker(options);
         }
+        map.setOnMarkerClickListener(this);
         centerMapOnPump(mPump);
+    }
+
+    public boolean onMarkerClick(Marker marker) {
+        // TODO Auto-generated method stub
+        if(marker.getTitle() == MARKER_TECH_TITLE){
+            Toast.makeText(getActivity(), "TECHNICIAN", Toast.LENGTH_SHORT).show();
+            Log.w("Click", "test");
+            return true;
+        }
+        return false;
     }
 
     void centerMapOnPump(Pump pump) {
