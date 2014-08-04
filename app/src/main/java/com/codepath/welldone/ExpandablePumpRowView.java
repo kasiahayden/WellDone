@@ -399,8 +399,23 @@ public class ExpandablePumpRowView extends RelativeLayout {
         }
         else {
             beginAnimationToRevealAddReportFab();
-            detailsContainer.setVisibility(View.VISIBLE);
             DropDownAnim anim = new DropDownAnim(detailsContainer, TARGET_DETAILS_HEIGHT, true);
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    detailsContainer.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
             anim.setDuration(ANIMATE_IN_DURATION_MILLIS);
             detailsContainer.startAnimation(anim);
         }
